@@ -1,11 +1,35 @@
 /* ================================================================
-   supra v — DESIGN SYSTEM
+   supra v - DESIGN SYSTEM
    Inspiré du style Agero (Framer)
    
    FONTS À IMPORTER (dans index.html ou _app.js) :
    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
    ================================================================ */
 
+/* Smooth scroll setup */
+html {
+  scroll-behavior: auto;
+  overflow: hidden;
+}
+
+body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  will-change: transform;
+}
+
+/* Hardware acceleration */
+html, body {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Prevent scroll jank */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* ─────────────────────────────────────────────
    1. DESIGN TOKENS
@@ -541,6 +565,7 @@ button {
 
 .text-gradient {
   background: linear-gradient(90deg, #ff6a00, #ff8e3f, #ffd8b6);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

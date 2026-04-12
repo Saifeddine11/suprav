@@ -629,7 +629,7 @@
    ================================================================ */
 .methode-section {
   position: relative;
-  height: 600vh;
+  height: 550vh;
   background: #ffffff;
 }
 
@@ -641,14 +641,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 28px;
+  padding: 50px 28px;
   overflow: hidden;
 }
 
 .methode-panel {
   position: relative;
   width: min(100%, 1500px);
-  min-height: min(860px, calc(100dvh - 80px));
+  min-height: min(820px, calc(100dvh - 90px));
   overflow: hidden;
   border-radius: 30px;
   background: #f8f8f7;
