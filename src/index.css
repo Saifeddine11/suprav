@@ -646,12 +646,6 @@ button {
   transition: transform 0.4s ease;
 }
 
-.service-card:hover::before { transform: scaleX(1); }
-
-.service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
 
 .service-card__icon {
   width: 52px;
@@ -665,21 +659,12 @@ button {
   transition: background var(--duration-normal) ease;
 }
 
-.service-card:hover .service-card__icon {
-  background: var(--color-accent);
-}
-
 .service-card__icon svg {
   width: 24px;
   height: 24px;
   stroke: var(--color-text);
   fill: none;
   stroke-width: 1.5;
-  transition: stroke var(--duration-normal) ease;
-}
-
-.service-card:hover .service-card__icon svg {
-  stroke: white;
 }
 
 .service-card__title {

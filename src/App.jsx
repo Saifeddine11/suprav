@@ -228,8 +228,15 @@ function ServiceScrollCard({ service }) {
       <motion.article
         className="svc-card service-scroll-card"
         style={{ y, opacity, scale }}
-        whileHover={{ y: -8 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+        whileHover={{ 
+          y: -6, 
+          scale: 1.01,
+          boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
+        }}
+        transition={{ 
+          duration: 0.35, 
+          ease: "easeOut"
+        }}
       >
         <div className="svc-card__top">
           <span className="svc-card__num">{service.num}</span>
@@ -397,8 +404,15 @@ function SegmentsSection() {
               key={seg.tag}
               className="seg-card"
               variants={fadeUpChild}
-              whileHover={{ y: -6 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              whileHover={{ 
+                y: -6, 
+                scale: 1.01,
+                boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
+              }}
+              transition={{ 
+                duration: 0.35, 
+                ease: "easeOut"
+              }}
             >
               <span className="seg-card__tag">{seg.tag}</span>
               <h3 className="seg-card__title">{seg.title}</h3>
@@ -873,7 +887,19 @@ function App() {
           <div className="media-clouds__viewport">
             <div className="media-clouds__track">
               {videos.concat(videos).map((videoSrc, index) => (
-                <article className="media-clouds__item" key={`${videoSrc}-${index}`}>
+                <motion.article 
+                  className="media-clouds__item" 
+                  key={`${videoSrc}-${index}`}
+                  whileHover={{ 
+                    y: -6, 
+                    scale: 1.01,
+                    boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
+                  }}
+                  transition={{ 
+                    duration: 0.35, 
+                    ease: "easeOut"
+                  }}
+                >
                   <video
                     className="video-card"
                     src={videoSrc}
@@ -883,7 +909,7 @@ function App() {
                     playsInline
                     aria-label="Réalisation vidéo agence de communication Marrakech"
                   />
-                </article>
+                </motion.article>
               ))}
             </div>
           </div>
