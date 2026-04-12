@@ -1,25 +1,29 @@
 .app {
   min-height: 100vh;
-  background: #f8f7f4;
+  background: #ececec;
   color: #111111;
 }
 
-.site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: transparent;
-  border-bottom: none;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: background, backdrop-filter, border-bottom, height;
+/* Navbar dans le flux (défile avec la page) — seul le pendentif reste fixed */
+.site-nav {
+  position: relative;
+  z-index: 40;
+  width: 100%;
 }
 
-.site-header.scrolled {
-  background: rgba(248, 247, 244, 0.85);
-  backdrop-filter: blur(10px);
+.site-header__bar {
+  position: relative;
+  z-index: 1;
+  transition: background 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-nav--scrolled .site-header__bar--scrolled {
+  background: rgba(240, 240, 240, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  box-shadow: 0 8px 32px rgba(17, 17, 17, 0.04);
 }
 
 .app > main {
@@ -27,14 +31,21 @@
   flex-direction: column;
 }
 
+/* Top badge height scales with SVG width (~2× previous compact size) */
 .page-content {
-  padding-top: 148px;
+  padding-top: clamp(36px, 10vw, 76px);
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding-top: clamp(32px, 12vw, 68px);
+  }
 }
 
 .story-shell {
   position: relative;
   height: 340vh;
-  background: #f8f7f4;
+  background: #ececec;
 }
 
 .story-shell__sticky {
@@ -289,10 +300,6 @@
 }
 
 @media (max-width: 1024px) {
-  .page-content {
-    padding-top: 138px;
-  }
-
   .story-shell {
     height: 320vh;
   }
@@ -324,14 +331,6 @@
 }
 
 @media (max-width: 768px) {
-  .page-content {
-    padding-top: 124px;
-  }
-
-  .site-header {
-    height: 64px;
-  }
-
   .story-shell {
     height: 280vh;
   }

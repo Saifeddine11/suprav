@@ -1,0 +1,93 @@
+.top-navbar-wrap {
+  --top-nav-dark: #2f2f2f;
+  --top-nav-text: #ffffff;
+  --top-nav-dot: #74d25a;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 102;
+  display: flex;
+  justify-content: center;
+  padding: 0 max(16px, env(safe-area-inset-left)) 0 max(16px, env(safe-area-inset-right));
+  pointer-events: none;
+}
+
+.top-navbar-shape {
+  position: relative;
+  /* 2× previous size (was ÷5 with 120–240px caps) */
+  width: max(240px, min(480px, calc((100vw - 32px) * 2 / 5)));
+  color: var(--top-nav-dark);
+  pointer-events: auto;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+  animation: slideDown var(--duration-slow, 0.6s) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.top-navbar-shape__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+.top-navbar-shape__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.top-navbar-shape__dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--top-nav-dot);
+}
+
+.top-navbar-shape__label {
+  font-family: var(--font-body, 'Poppins', system-ui, sans-serif);
+  font-size: clamp(13px, 3.5vw, 22px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: var(--top-nav-text);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .top-navbar-wrap {
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+  }
+
+  /* Pleine largeur utile : texte FR sur une ligne dans la forme (réf. capture) */
+  .top-navbar-shape {
+    width: min(480px, calc(100vw - 16px));
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.14));
+  }
+
+  .top-navbar-shape__inner {
+    padding: 0 12px;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .top-navbar-shape__dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .top-navbar-shape__label {
+    font-size: clamp(10px, 2.85vw, 14px);
+    line-height: 1.15;
+    white-space: nowrap;
+    text-align: center;
+    letter-spacing: 0;
+  }
+}

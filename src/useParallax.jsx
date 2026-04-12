@@ -1,5 +1,8 @@
+/* eslint-disable react-refresh/only-export-components -- parallax hook + components shared module */
 import { useRef } from 'react'
 import { useScroll, useTransform, motion } from 'motion/react'
+
+const MotionDiv = motion.div
 
 // Hook for subtle parallax effects
 export function useParallax(ref, options = {}) {
@@ -29,7 +32,7 @@ export function ParallaxBackground({ children, className, speed = 0.9, ...props 
   const { backgroundY } = useParallax(ref, { backgroundSpeed: speed })
   
   return (
-    <motion.div
+    <MotionDiv
       ref={ref}
       className={className}
       style={{
@@ -39,7 +42,7 @@ export function ParallaxBackground({ children, className, speed = 0.9, ...props 
       {...props}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   )
 }
 
@@ -49,7 +52,7 @@ export function ParallaxForeground({ children, className, speed = 1, ...props })
   const { foregroundY } = useParallax(ref, { foregroundSpeed: speed })
   
   return (
-    <motion.div
+    <MotionDiv
       ref={ref}
       className={className}
       style={{
@@ -59,7 +62,7 @@ export function ParallaxForeground({ children, className, speed = 1, ...props })
       {...props}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   )
 }
 

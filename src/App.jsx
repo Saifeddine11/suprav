@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
-import { ParallaxBackground, ParallaxForeground } from './useParallax.jsx'
+import './TopNavbar.css'
+import { TopNavbar } from './TopNavbar.jsx'
+import { ParallaxBackground } from './useParallax.jsx'
 import { DURATION, EASING, STAGGER, ANIMATE_VARIANTS, TRANSITION_PROPS, VIEWPORT_SETTINGS, HOVER_TRANSITION } from './animationConstants.js'
 import vid1 from '../media/videos/vid1.mp4'
 import vid2 from '../media/videos/vid2.mp4'
@@ -675,16 +677,28 @@ function App() {
   const sectionRef = useRef(null)
   const [progress, setProgress] = useState(0)
   const [viewport, setViewport] = useState({ width: 0, height: 0 })
-  const [headerHidden, setHeaderHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
   const { scrollY } = useScroll()
+
+  useEffect(() => {
+    document.body.style.overflow = navOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [navOpen])
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 768) setNavOpen(false)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   useMotionValueEvent(scrollY, 'change', (current) => {
     const previous = scrollY.getPrevious() ?? 0
-    if (current > previous && current > 150) setHeaderHidden(true)
-    else setHeaderHidden(false)
-    
-    // Set scrolled state for background changes
+    if (current > previous && current > 120) setNavOpen(false)
     setScrolled(current > 50)
   })
 
@@ -770,39 +784,86 @@ function App() {
 
   return (
     <div className="app">
-      {/* ========== HEADER ========== */}
-      <motion.header
-        className={`site-header ${scrolled ? 'scrolled' : ''}`}
-        animate={{ 
-          y: headerHidden ? -140 : 0, 
-          opacity: headerHidden ? 0 : 1,
-          height: scrolled ? 64 : 72
-        }}
-        transition={{ 
-          duration: 0.4, 
-          ease: [0.22, 1, 0.36, 1]
-        }}
-      >
-        <div className="top-banner-wrapper">
-          <div className="top-banner">
-            <span className="top-banner__dot"></span>
-            Disponible pour vos projets à Marrakech
-          </div>
-        </div>
-
-        <nav className="nav">
-          <a href="#" className="nav__logo">supra v.</a>
-          <ul className="nav__links">
-            <li><a href="#works" className="nav__link nav__link--active">Works</a></li>
-            <li><a href="#services" className="nav__link">Services</a></li>
-            <li><a href="#methode" className="nav__link">Méthode</a></li>
-            <li><a href="#faq" className="nav__link">FAQ</a></li>
-          </ul>
-          <a href="#contact" className="btn btn--ghost">Contact</a>
-        </nav>
-      </motion.header>
+      <TopNavbar />
 
       <main className="page-content">
+        <header className={`site-nav ${scrolled ? 'site-nav--scrolled' : ''}`}>
+          <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
+            <nav className="nav" aria-label="Navigation principale">
+              <a href="#" className="nav__logo">
+                supra v.
+              </a>
+              <ul className="nav__links">
+                <li>
+                  <a href="#works" className="nav__link">
+                    Works
+                  </a>
+                </li>
+                <li>
+                  <a href="#services" className="nav__link">
+                    Services
+                  </a>
+                </li>
+                <li>
+                  <a href="#about" className="nav__link">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#faq" className="nav__link">
+                    Blog
+                  </a>
+                </li>
+              </ul>
+              <a href="#contact" className="btn btn--ghost nav__cta">
+                Contact
+              </a>
+              <button
+                type="button"
+                className={`nav__hamburger ${navOpen ? 'is-open' : ''}`}
+                aria-expanded={navOpen}
+                aria-controls="mobile-nav"
+                aria-label={navOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                onClick={() => setNavOpen((o) => !o)}
+              >
+                <span className="nav__hamburger-line nav__hamburger-line--top" />
+                <span className="nav__hamburger-line nav__hamburger-line--bottom" />
+              </button>
+            </nav>
+          </div>
+
+          <div
+            id="mobile-nav"
+            className={`nav__mobile-panel ${navOpen ? 'is-open' : ''}`}
+            aria-hidden={!navOpen}
+          >
+            <ul className="nav__mobile-links">
+              <li>
+                <a href="#works" onClick={() => setNavOpen(false)}>
+                  Works
+                </a>
+              </li>
+              <li>
+                <a href="#services" onClick={() => setNavOpen(false)}>
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="#about" onClick={() => setNavOpen(false)}>
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="#faq" onClick={() => setNavOpen(false)}>
+                  Blog
+                </a>
+              </li>
+            </ul>
+            <a href="#contact" className="btn btn--ghost nav__mobile-cta" onClick={() => setNavOpen(false)}>
+              Contact
+            </a>
+          </div>
+        </header>
         {/* ========== HERO ========== */}
         <motion.section 
           className="hero"
@@ -810,21 +871,25 @@ function App() {
           animate={{ scale: 1.05 }}
           transition={{ duration: DURATION.SLOW, delay: 0.5, ease: EASING }}
         >
-          <ParallaxBackground className="hero__background" speed={0.9}>
-            <motion.div
-              className="trust-bar"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: DURATION.NORMAL, delay: 0.3, ease: EASING }}
-            >
-              <div className="trust-bar__avatars">
+          <ParallaxBackground className="hero__background" speed={0.9} />
+
+          <motion.div
+            className="trust-bar"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: DURATION.NORMAL, delay: 0.3, ease: EASING }}
+          >
+            <div className="trust-bar__inner">
+              <div className="trust-bar__avatars" aria-hidden="true">
                 <div className="trust-bar__avatar">S</div>
                 <div className="trust-bar__avatar">V</div>
                 <div className="trust-bar__avatar">3</div>
               </div>
-              <span className="trust-bar__text">Marrakech · Disponible pour de nouveaux projets</span>
-            </motion.div>
-          </ParallaxBackground>
+              <p className="trust-bar__text">
+                Marrakech · Disponible pour de nouveaux projets
+              </p>
+            </div>
+          </motion.div>
 
           <motion.h1
             className="heading-hero hero__title"
@@ -832,11 +897,20 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: DURATION.SLOW, delay: 0.2, ease: EASING }}
           >
-            Agence de communication
-            <span className="text-accent hero__number"> 360° </span>
-            à Marrakech pour faire grandir
-            <br />
-            votre <span className="text-gradient">marque</span>.
+            <span className="hero__title-line">
+              Agence de communication{' '}
+              <span className="text-accent hero__number">360°</span>
+              {' '}
+              à Marrakech
+            </span>
+            <span className="hero__title-line">
+              <span className="hero__title-muted">pour </span>
+              faire grandir
+            </span>
+            <span className="hero__title-line">
+              <span className="hero__title-muted">votre </span>
+              <span className="text-accent">marque</span>
+            </span>
           </motion.h1>
 
           <motion.p
