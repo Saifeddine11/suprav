@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
-import { motion, useMotionValueEvent, useScroll, useTransform, AnimatePresence } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
 import vid1 from '../media/videos/vid1.mp4'
 import vid2 from '../media/videos/vid2.mp4'
@@ -8,6 +8,7 @@ import vid3 from '../media/videos/vid3.mp4'
 import vid4 from '../media/videos/vid4.mp4'
 import vid5 from '../media/videos/vid5.mp4'
 import vid6 from '../media/videos/vid6.mp4'
+const nousImage = '/nous.webp'
 
 /* ============================================================
    HELPERS
@@ -242,6 +243,19 @@ function ServiceScrollCard({ service }) {
   )
 }
 
+function MethodeOrbitMarker({ method, index, activeIndex, smoothProgress }) {
+  const textRotate = useTransform(smoothProgress, (latest) => 144 * latest + 45 - index * 36)
+
+  return (
+    <span
+      className={`methode-orbit-marker ${activeIndex === index ? 'is-active' : ''}`}
+      style={{ '--method-angle': `${-90 + index * 36}deg` }}
+    >
+      <motion.span style={{ rotate: textRotate }}>{method.num}</motion.span>
+    </span>
+  )
+}
+
 function ServicesSection() {
   return (
     <section className="section services-section" id="services">
@@ -274,16 +288,25 @@ function ServicesSection() {
 
 function MethodeSection() {
   const ref = useRef(null)
+  const activeIndexRef = useRef(0)
   const [activeIndex, setActiveIndex] = useState(0)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end end'],
   })
-  const orbitRotate = useTransform(scrollYProgress, [0, 1], [0, -144])
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 72,
+    damping: 22,
+    mass: 0.32,
+    restDelta: 0.0008,
+  })
+  const orbitRotate = useTransform(smoothProgress, [0, 1], [0, -144])
   const active = METHODE[activeIndex]
 
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+  useMotionValueEvent(smoothProgress, 'change', (latest) => {
     const next = clamp(Math.round(latest * (METHODE.length - 1)), 0, METHODE.length - 1)
+    if (next === activeIndexRef.current) return
+    activeIndexRef.current = next
     setActiveIndex(next)
   })
 
@@ -303,13 +326,13 @@ function MethodeSection() {
             <div className="methode-orbit" aria-hidden="true">
               <motion.div className="methode-orbit-track" style={{ rotate: orbitRotate }}>
                 {METHODE.map((m, i) => (
-                  <span
-                    className={`methode-orbit-marker ${activeIndex === i ? 'is-active' : ''}`}
+                  <MethodeOrbitMarker
                     key={m.num}
-                    style={{ '--method-angle': `${-90 + i * 36}deg` }}
-                  >
-                    <span>{m.num}</span>
-                  </span>
+                    method={m}
+                    index={i}
+                    activeIndex={activeIndex}
+                    smoothProgress={smoothProgress}
+                  />
                 ))}
               </motion.div>
             </div>
@@ -317,9 +340,9 @@ function MethodeSection() {
             <motion.div
               className="methode-stage-copy"
               key={active.num}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 10, filter: 'blur(5px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               <h3>{active.title}</h3>
               <p>{active.desc}</p>
@@ -463,6 +486,24 @@ function FaqSection() {
 }
 
 function CtaSection() {
+  const [formStatus, setFormStatus] = useState('idle')
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const name = formData.get('name')
+    const email = formData.get('email')
+    const project = formData.get('project')
+    const message = formData.get('message')
+    const subject = encodeURIComponent(`Nouveau projet Supra v — ${name}`)
+    const body = encodeURIComponent(
+      `Nom: ${name}\nEmail: ${email}\nProjet: ${project}\n\nMessage:\n${message}`
+    )
+
+    setFormStatus('sent')
+    window.location.href = `mailto:hello@supra-v.ma?subject=${subject}&body=${body}`
+  }
+
   return (
     <section className="cta-final" id="contact">
       <div className="container">
@@ -473,24 +514,85 @@ function CtaSection() {
           whileInView="visible"
           viewport={revealViewport}
         >
-          <motion.p variants={fadeUpChild} className="label label--light">06 — Contact</motion.p>
-          <motion.h2 variants={fadeUpChild} className="cta-final__title">
-            Parlons de votre projet <br /> à <span className="text-accent">Marrakech.</span>
-          </motion.h2>
-          <motion.p variants={fadeUpChild} className="cta-final__lead">
-            Un café à Guéliz, un appel en visio, ou un WhatsApp. La première conversation est toujours offerte et dure environ 30 minutes.
-          </motion.p>
-          <motion.div variants={fadeUpChild} className="cta-final__buttons">
-            <a href="https://wa.me/212600000000" className="btn btn--primary-light">
-              WhatsApp
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-            <a href="mailto:hello@supra-v.ma" className="btn btn--secondary-light">
-              hello@supra-v.ma
-            </a>
-          </motion.div>
+          <motion.form
+            variants={fadeUpChild}
+            className="cta-form"
+            onSubmit={handleSubmit}
+          >
+            <div className="cta-form__fireworks" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+
+            <div className="cta-form__head">
+              <span className="cta-form__pill">Contact</span>
+              <h2>Parlons de votre projet à Marrakech.</h2>
+              <p>Un café à Guéliz, un appel en visio, ou un WhatsApp. La première conversation est offerte.</p>
+            </div>
+
+            <label className="cta-field">
+              <span>Votre nom</span>
+              <input name="name" type="text" placeholder="Nom complet" required />
+            </label>
+
+            <label className="cta-field">
+              <span>Email</span>
+              <input name="email" type="email" placeholder="vous@email.com" required />
+            </label>
+
+            <label className="cta-field">
+              <span>Type de projet</span>
+              <select name="project" defaultValue="" required>
+                <option value="" disabled>Sélectionnez...</option>
+                <option>Branding & site web</option>
+                <option>Production contenu</option>
+                <option>Application ou SaaS</option>
+                <option>Automatisation IA</option>
+                <option>Campagne publicitaire</option>
+              </select>
+            </label>
+
+            <label className="cta-field cta-field--wide">
+              <span>Votre message</span>
+              <textarea name="message" placeholder="Décrivez votre projet en quelques lignes." rows="5" required />
+            </label>
+
+            <div className="cta-form__bottom">
+              <motion.button
+                type="submit"
+                className="cta-form__submit"
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Envoyer
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </motion.button>
+              <a href="https://wa.me/212600000000" className="cta-form__whatsapp">WhatsApp direct</a>
+            </div>
+
+            <AnimatePresence>
+              {formStatus === 'sent' && (
+                <motion.p
+                  className="cta-form__status"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                >
+                  Votre application mail s'ouvre avec le message prêt.
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.form>
         </motion.div>
       </div>
     </section>
@@ -808,14 +910,14 @@ function App() {
               >
                 <img
                   className="story-card__pill"
-                  src="/media/nous.webp"
+                  src={nousImage}
                   alt=""
                   aria-hidden="true"
                   style={{ opacity: pillOpacity }}
                 />
                 <img
                   className="story-card__image"
-                  src="/media/nous.webp"
+                  src={nousImage}
                   alt="L'équipe Supra v — agence de communication Marrakech"
                   style={{
                     opacity: imageOpacity,
