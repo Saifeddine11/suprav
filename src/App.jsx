@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
-import { useSmoothScroll } from './useSmoothScroll.js'
 import vid1 from '../media/videos/vid1.mp4'
 import vid2 from '../media/videos/vid2.mp4'
 import vid3 from '../media/videos/vid3.mp4'
@@ -673,7 +672,6 @@ function App() {
   const [progress, setProgress] = useState(0)
   const [viewport, setViewport] = useState({ width: 0, height: 0 })
   const [headerHidden, setHeaderHidden] = useState(false)
-  const { scrollY: smoothScrollY } = useSmoothScroll()
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, 'change', (current) => {

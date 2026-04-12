@@ -6,34 +6,9 @@
    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
    ================================================================ */
 
-/* Smooth scroll setup */
-html {
-  scroll-behavior: auto;
-  overflow: hidden;
-}
-
-body {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  will-change: transform;
-}
-
-/* Hardware acceleration */
-html, body {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Prevent scroll jank */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ─────────────────────────────────────────────
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
    1. DESIGN TOKENS
-   ───────────────────────────────────────────── */
+   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :root {
   /* ── Couleurs Primaires ── */
