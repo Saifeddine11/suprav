@@ -7,6 +7,13 @@ export const DURATION = {
   SLOW: 1.0,    // Dramatic reveals
 }
 
+// MOBILE-OPTIMIZED DURATION
+export const MOBILE_DURATION = {
+  FAST: 0.4,    // Quick transitions on mobile
+  NORMAL: 0.6,  // Standard animations on mobile
+  SLOW: 0.8,    // Dramatic reveals on mobile
+}
+
 // UNIFIED EASING FUNCTION
 export const EASING = [0.22, 1, 0.36, 1] // Premium cubic-bezier
 

@@ -328,8 +328,12 @@
     padding-top: 124px;
   }
 
+  .site-header {
+    height: 64px;
+  }
+
   .story-shell {
-    height: 300vh;
+    height: 280vh;
   }
 
   .story-shell__sticky,
@@ -343,46 +347,49 @@
 
   .story-copy {
     top: 54%;
-    font-size: clamp(22px, 5.8vw, 34px);
+    font-size: clamp(20px, 5.5vw, 32px);
+    line-height: 1.3;
   }
 
   .story-copy--left {
-    max-width: 26vw;
+    max-width: 32vw;
     white-space: normal;
   }
 
   .story-copy--right {
-    max-width: 24vw;
+    max-width: 30vw;
     white-space: normal;
   }
 
-  .story-card {
-    max-width: calc(100vw - 32px);
-  }
-
   .story-card__caption {
-    top: 31%;
-    width: 84%;
-    font-size: clamp(16px, 5vw, 26px);
-  }
-
-  .story-foot {
-    bottom: 10dvh;
-    font-size: clamp(32px, 9vw, 48px);
+    top: 46%;
+    width: min(90%, 280px);
+    font-size: clamp(24px, 6vw, 36px);
+    line-height: 1.2;
   }
 
   .media-clouds {
-    padding: 48px 16px 60px;
+    padding: var(--space-5xl) 0;
+  }
+
+  .media-clouds__header {
+    padding: 0 var(--space-2xl);
+    margin-bottom: var(--space-3xl);
+  }
+
+  .media-clouds__header .heading-2 {
+    font-size: clamp(28px, 5.5vw, 40px);
+    line-height: 1.2;
+  }
+
+  .media-clouds__lead {
+    font-size: var(--text-base);
+    max-width: 100%;
+    line-height: 1.6;
   }
 
   .media-clouds__viewport {
-    max-width: calc(180px * 4 + 16px * 3);
-  }
-
-  .media-clouds__viewport::before,
-  .media-clouds__viewport::after {
-    width: 24%;
-    opacity: 0.78;
+    padding: 0 var(--space-2xl);
   }
 
   .media-clouds__track {
@@ -392,6 +399,10 @@
 
   .media-clouds__item {
     flex: 0 0 180px;
+  }
+
+  .story-card {
+    box-shadow: 0 20px 50px rgba(34, 39, 46, 0.06);
   }
 }
 
@@ -1779,40 +1790,46 @@
 
 @media (max-width: 768px) {
   .services-scroll-stack {
-    width: min(100%, 430px);
-    padding-bottom: 80px;
+    width: min(100%, 380px);
+    padding-bottom: 60px;
   }
 
   .service-scroll-card-container {
-    min-height: 460px;
-    margin-bottom: -110px;
+    min-height: 420px;
+    margin-bottom: -90px;
   }
 
   .svc-card {
-    min-height: 390px;
-    padding: 28px 24px 24px;
+    min-height: 360px;
+    padding: 24px 20px 20px;
   }
 
   .service-scroll-card {
-    width: min(88vw, 360px);
+    width: min(92vw, 340px);
   }
 
   .service-scroll-card-splash {
-    transform: scale(0.78);
+    transform: scale(0.75);
     transform-origin: center bottom;
   }
 
   .svc-card__top {
-    margin-bottom: 30px;
+    margin-bottom: 24px;
   }
 
   .svc-card__title {
-    font-size: 22px;
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  .svc-card__desc {
+    font-size: var(--text-sm);
+    line-height: 1.6;
   }
 
   .svc-card__icon {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
 
   .methode-section {
@@ -1825,99 +1842,110 @@
 
   .methode-panel {
     min-height: calc(100dvh - 32px);
-    border-radius: 18px;
+    border-radius: 16px;
+    padding: 24px 20px;
   }
 
   .methode-process-label {
-    margin-top: 48px;
-    font-size: 11px;
-    letter-spacing: 0.2em;
+    margin-top: 32px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
   }
 
   .methode-title {
-    width: min(100%, 330px);
-    margin-top: 22px;
-    font-size: clamp(34px, 10vw, 52px);
-    line-height: 1.02;
+    width: min(100%, 300px);
+    margin-top: 16px;
+    font-size: clamp(28px, 8vw, 44px);
+    line-height: 1.1;
   }
 
   .methode-stage {
-    padding-top: 118px;
+    padding-top: 90px;
   }
 
   .methode-orbit {
-    --method-orbit-radius: min(470px, 92vw);
-    top: 58px;
+    --method-orbit-radius: min(380px, 85vw);
+    top: 48px;
   }
 
   .methode-orbit-marker {
-    width: 48px;
-    height: 48px;
-    margin: -24px 0 0 -24px;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
   }
 
   .methode-orbit-marker span {
-    font-size: 17px;
+    font-size: 14px;
   }
 
   .methode-active-step {
-    top: 20px;
+    top: 16px;
   }
 
   .methode-active-step strong {
-    width: 58px;
-    height: 58px;
-    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
   }
 
   .methode-stage-copy {
-    width: min(100% - 36px, 410px);
-    margin-top: 70px;
+    width: min(100% - 32px, 380px);
+    margin-top: 56px;
   }
 
   .methode-stage-copy h3 {
-    font-size: clamp(28px, 8vw, 40px);
+    font-size: clamp(24px, 7vw, 36px);
+    line-height: 1.2;
   }
 
   .methode-stage-copy p {
-    font-size: 17px;
-    line-height: 1.42;
+    font-size: var(--text-base);
+    line-height: 1.5;
   }
 
   .methode-stage-tags {
-    margin-top: 24px;
-    padding: 16px 0;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    line-height: 1.7;
+    margin-top: 20px;
+    padding: 12px 0;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    line-height: 1.6;
   }
 
   .methode-stage-button {
-    min-width: 220px;
-    height: 56px;
-    margin-top: 26px;
-    font-size: 15px;
+    min-width: 200px;
+    height: 48px;
+    margin-top: 20px;
+    font-size: 14px;
   }
 
   .methode-progress {
-    margin-top: 26px;
+    margin-top: 20px;
   }
 
   .methode-progress > span {
-    margin-bottom: 12px;
-    font-size: 15px;
+    margin-bottom: 8px;
+    font-size: 13px;
   }
 
   .segments-grid {
     padding: 0 var(--space-2xl);
+    gap: 16px;
   }
 
   .seg-card {
-    padding: 34px 28px;
+    padding: 28px 24px;
     min-height: auto;
   }
 
-  .seg-card__title { font-size: 24px; }
+  .seg-card__title { 
+    font-size: 20px; 
+    line-height: 1.3;
+  }
+
+  .seg-card__desc {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
 
   .section-head { margin-bottom: var(--space-4xl); padding: 0 var(--space-2xl); }
   .section-head__title { font-size: clamp(28px, 7vw, 42px); }

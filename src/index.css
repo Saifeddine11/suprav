@@ -871,20 +871,39 @@ button {
 @media (max-width: 768px) {
   :root {
     --space-5xl: 24px;
+    --space-4xl: 20px;
+    --space-3xl: 16px;
+    --space-2xl: 12px;
   }
 
   .nav {
     padding: 0 var(--space-2xl);
+    height: 64px;
   }
 
   .nav__links { display: none; }
 
+  .nav__logo {
+    font-size: var(--text-lg);
+  }
+
   .hero {
-    padding: var(--space-5xl) var(--space-2xl) var(--space-4xl);
+    padding: var(--space-6xl) var(--space-2xl) var(--space-5xl);
+    max-width: 100%;
+  }
+
+  .hero__title {
+    font-size: clamp(28px, 8vw, 42px);
+    line-height: 1.1;
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-base);
+    max-width: 100%;
   }
 
   .services {
-    padding: var(--space-5xl) var(--space-2xl);
+    padding: var(--space-6xl) var(--space-2xl);
   }
 
   .services__grid {
@@ -893,13 +912,52 @@ button {
 
   .stats {
     flex-wrap: wrap;
-    gap: var(--space-4xl);
+    gap: var(--space-3xl);
   }
 
   .footer {
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-lg);
     text-align: center;
-    padding: var(--space-3xl) var(--space-2xl);
+    padding: var(--space-4xl) var(--space-2xl);
+  }
+
+  .btn {
+    padding: 12px 24px;
+    font-size: var(--text-sm);
+  }
+
+  .btn--primary {
+    padding: 14px 28px;
+  }
+
+  /* Disable heavy animations on mobile for performance */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Optimize animations for mobile */
+  .hero__background,
+  .services-section__background,
+  .parallax-section__background {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .video-card,
+  .service-scroll-card,
+  .seg-card {
+    transition: transform 0.2s ease-out !important;
+  }
+
+  .video-card:hover,
+  .service-scroll-card:hover,
+  .seg-card:hover {
+    transform: translateY(-2px) scale(1.005) !important;
   }
 }
