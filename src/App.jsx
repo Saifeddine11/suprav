@@ -789,12 +789,17 @@ function App() {
 
       <main className="page-content">
         {/* ========== HERO ========== */}
-        <section className="hero">
+        <motion.section 
+          className="hero"
+          initial={{ scale: 1 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
           <motion.div
             className="trust-bar"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="trust-bar__avatars">
               <div className="trust-bar__avatar">S</div>
@@ -808,7 +813,7 @@ function App() {
             className="heading-hero hero__title"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             Agence de communication
             <span className="text-accent hero__number"> 360° </span>
@@ -821,16 +826,16 @@ function App() {
             className="text-body hero__subtitle"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
-            Branding, contenus premium, sites web, applications et agents IA. Une seule équipe à Marrakech pour penser votre image, l'écrire, la filmer, la diffuser — et la faire tourner en ligne.
+            Branding, contenus premium, sites web, applications et agents IA. Une seule équipe à Marrakech pour penser votre image, l'écrire, la filmer, la diffuser et la faire tourner en ligne.
           </motion.p>
 
           <motion.div
             className="hero__cta"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             <a href="#works" className="btn btn--primary">
               Voir nos réalisations
@@ -842,7 +847,7 @@ function App() {
               Parler de votre projet
             </a>
           </motion.div>
-        </section>
+        </motion.section>
 
         {/* ========== SECTORS BAR ========== */}
         <SectorsMarquee />
@@ -918,7 +923,7 @@ function App() {
                 <img
                   className="story-card__image"
                   src={nousImage}
-                  alt="L'équipe Supra v — agence de communication Marrakech"
+                  alt="L'équipe Supra v - agence de communication Marrakech"
                   style={{
                     opacity: imageOpacity,
                     transform: `scale(${imageScale}) translate(${imageTranslateX}px, ${imageTranslateY}px)`,

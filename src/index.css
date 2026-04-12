@@ -453,6 +453,9 @@ button {
   padding: var(--space-6xl) var(--space-4xl) var(--space-5xl);
   max-width: var(--max-width-text);
   margin: 0 auto;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* Trust bar */
@@ -462,7 +465,6 @@ button {
   justify-content: center;
   gap: 10px;
   margin-bottom: 50px;
-  animation: fadeUp 0.7s var(--ease-out) 0.4s both;
 }
 
 .trust-bar__avatars {
@@ -493,10 +495,6 @@ button {
   font-weight: var(--weight-medium);
 }
 
-/* Hero heading */
-.hero__title {
-  animation: fadeUp 0.8s var(--ease-out) 0.5s both;
-}
 
 /* Inline circular badges in hero text */
 .inline-badge {
@@ -549,12 +547,10 @@ button {
 .hero__subtitle {
   max-width: 560px;
   margin: 36px auto 0;
-  animation: fadeUp 0.8s var(--ease-out) 0.7s both;
 }
 
 .hero__cta {
   margin-top: 44px;
-  animation: fadeUp 0.8s var(--ease-out) 0.9s both;
 }
 
 
