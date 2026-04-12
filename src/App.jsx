@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
+import { ParallaxBackground, ParallaxForeground } from './useParallax.jsx'
+import { DURATION, EASING, STAGGER, ANIMATE_VARIANTS, TRANSITION_PROPS, VIEWPORT_SETTINGS, HOVER_TRANSITION } from './animationConstants.js'
 import vid1 from '../media/videos/vid1.mp4'
 import vid2 from '../media/videos/vid2.mp4'
 import vid3 from '../media/videos/vid3.mp4'
@@ -23,19 +25,11 @@ const easeInOutCubic = (value) => (
 )
 
 /* ============================================================
-   MOTION VARIANTS (réutilisés partout)
+   UNIFIED MOTION VARIANTS (réutilisés partout)
    ============================================================ */
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
-}
-
-const fadeUpChild = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-}
-
-const revealViewport = { once: true, amount: 0.2 }
+const stagger = ANIMATE_VARIANTS.staggerContainer
+const fadeUpChild = ANIMATE_VARIANTS.fadeUp
+const revealViewport = VIEWPORT_SETTINGS
 
 /* ============================================================
    DATA
@@ -233,10 +227,7 @@ function ServiceScrollCard({ service }) {
           scale: 1.01,
           boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
         }}
-        transition={{ 
-          duration: 0.35, 
-          ease: "easeOut"
-        }}
+        transition={HOVER_TRANSITION}
       >
         <div className="svc-card__top">
           <span className="svc-card__num">{service.num}</span>
@@ -266,7 +257,8 @@ function MethodeOrbitMarker({ method, index, activeIndex, smoothProgress }) {
 function ServicesSection() {
   return (
     <section className="section services-section" id="services">
-      <div className="container">
+      <ParallaxBackground className="services-section__background" speed={0.9}>
+        <div className="container">
         <motion.div
           className="section-head"
           variants={stagger}
@@ -289,6 +281,7 @@ function ServicesSection() {
           ))}
         </div>
       </div>
+      </ParallaxBackground>
     </section>
   )
 }
@@ -409,10 +402,7 @@ function SegmentsSection() {
                 scale: 1.01,
                 boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
               }}
-              transition={{ 
-                duration: 0.35, 
-                ease: "easeOut"
-              }}
+              transition={HOVER_TRANSITION}
             >
               <span className="seg-card__tag">{seg.tag}</span>
               <h3 className="seg-card__title">{seg.title}</h3>
@@ -686,12 +676,16 @@ function App() {
   const [progress, setProgress] = useState(0)
   const [viewport, setViewport] = useState({ width: 0, height: 0 })
   const [headerHidden, setHeaderHidden] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, 'change', (current) => {
     const previous = scrollY.getPrevious() ?? 0
     if (current > previous && current > 150) setHeaderHidden(true)
     else setHeaderHidden(false)
+    
+    // Set scrolled state for background changes
+    setScrolled(current > 50)
   })
 
   useEffect(() => {
@@ -778,9 +772,16 @@ function App() {
     <div className="app">
       {/* ========== HEADER ========== */}
       <motion.header
-        className="site-header"
-        animate={{ y: headerHidden ? -140 : 0, opacity: headerHidden ? 0 : 1 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        className={`site-header ${scrolled ? 'scrolled' : ''}`}
+        animate={{ 
+          y: headerHidden ? -140 : 0, 
+          opacity: headerHidden ? 0 : 1,
+          height: scrolled ? 64 : 72
+        }}
+        transition={{ 
+          duration: 0.4, 
+          ease: [0.22, 1, 0.36, 1]
+        }}
       >
         <div className="top-banner-wrapper">
           <div className="top-banner">
@@ -807,27 +808,29 @@ function App() {
           className="hero"
           initial={{ scale: 1 }}
           animate={{ scale: 1.05 }}
-          transition={{ duration: 2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: DURATION.SLOW, delay: 0.5, ease: EASING }}
         >
-          <motion.div
-            className="trust-bar"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="trust-bar__avatars">
-              <div className="trust-bar__avatar">S</div>
-              <div className="trust-bar__avatar">V</div>
-              <div className="trust-bar__avatar">3</div>
-            </div>
-            <span className="trust-bar__text">Marrakech · Disponible pour de nouveaux projets</span>
-          </motion.div>
+          <ParallaxBackground className="hero__background" speed={0.9}>
+            <motion.div
+              className="trust-bar"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: DURATION.NORMAL, delay: 0.3, ease: EASING }}
+            >
+              <div className="trust-bar__avatars">
+                <div className="trust-bar__avatar">S</div>
+                <div className="trust-bar__avatar">V</div>
+                <div className="trust-bar__avatar">3</div>
+              </div>
+              <span className="trust-bar__text">Marrakech · Disponible pour de nouveaux projets</span>
+            </motion.div>
+          </ParallaxBackground>
 
           <motion.h1
             className="heading-hero hero__title"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DURATION.SLOW, delay: 0.2, ease: EASING }}
           >
             Agence de communication
             <span className="text-accent hero__number"> 360° </span>
@@ -838,18 +841,18 @@ function App() {
 
           <motion.p
             className="text-body hero__subtitle"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DURATION.NORMAL, delay: 0.35, ease: EASING }}
           >
             Branding, contenus premium, sites web, applications et agents IA. Une seule équipe à Marrakech pour penser votre image, l'écrire, la filmer, la diffuser et la faire tourner en ligne.
           </motion.p>
 
           <motion.div
             className="hero__cta"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DURATION.NORMAL, delay: 0.5, ease: EASING }}
           >
             <a href="#works" className="btn btn--primary">
               Voir nos réalisations
@@ -895,10 +898,7 @@ function App() {
                     scale: 1.01,
                     boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
                   }}
-                  transition={{ 
-                    duration: 0.35, 
-                    ease: "easeOut"
-                  }}
+                  transition={HOVER_TRANSITION}
                 >
                   <video
                     className="video-card"
