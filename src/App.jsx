@@ -12,6 +12,7 @@ import vid3 from '../media/videos/vid3.mp4'
 import vid4 from '../media/videos/vid4.mp4'
 import vid5 from '../media/videos/vid5.mp4'
 import vid6 from '../media/videos/vid6.mp4'
+import logoImage from '../media/logo.webp'
 const nousImage = '/nous.webp'
 
 /* ============================================================
@@ -33,6 +34,25 @@ const stagger = ANIMATE_VARIANTS.staggerContainer
 const fadeUpChild = ANIMATE_VARIANTS.fadeUp
 const revealViewport = VIEWPORT_SETTINGS
 
+const serviceCardVariants = {
+  offscreen: {
+    y: 300,
+    opacity: 0.24,
+    scale: 0.96,
+  },
+  onscreen: {
+    y: 50,
+    opacity: 1,
+    scale: 1,
+    rotate: 0,
+    transition: {
+      type: 'spring',
+      bounce: 0.34,
+      duration: 0.82,
+    },
+  },
+}
+
 /* ============================================================
    DATA
    ============================================================ */
@@ -40,7 +60,7 @@ const SERVICES = [
   {
     num: '01',
     title: 'Stratégie de marque & branding',
-    desc: "Positionnement, naming, identité visuelle, direction artistique. Un territoire de marque que vos concurrents ne peuvent pas copier.",
+    desc: "On définit qui vous êtes vraiment avant de produire quoi que ce soit : positionnement, promesse, langage, identité visuelle. Vous repartez avec un nom (si besoin), un logo, une charte complète et un brand book qui sert de référence à toute votre équipe. C'est l'étape que la plupart des entreprises sautent — et c'est exactement pour ça que leur communication se dilue six mois plus tard. Nous, on commence par là.",
     kw: 'stratégie de marque Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -51,7 +71,7 @@ const SERVICES = [
   {
     num: '02',
     title: 'Création de site web',
-    desc: "Sites vitrines, one pages et e-commerce. Conçus pour être rapides, référencés et orientés conversion dès la première ligne de code.",
+    desc: "Sites vitrines, one pages, e-commerce, sites corporate. Codés sur-mesure, jamais sur template, pensés pour charger sous deux secondes et être référencés sur Google dès la première ligne de code. Chaque parcours est conçu pour amener le visiteur à faire ce que vous voulez : appeler, remplir, acheter, prendre rendez-vous. La plupart des sites d'agences à Marrakech sont des cartes de visite passives — les nôtres travaillent.",
     kw: 'création site web Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -62,7 +82,7 @@ const SERVICES = [
   {
     num: '03',
     title: 'Production de contenus',
-    desc: "Photo, vidéo, direction artistique, contenus verticaux pour Instagram, TikTok, Meta et YouTube Shorts.",
+    desc: "Photo, vidéo, films de marque, contenus verticaux pour Instagram, TikTok et Reels, captations d'événements, motion design. On vient avec notre matériel, notre équipe et notre direction artistique. L'objectif : que vous arrêtiez d'utiliser des photos de stock fades qui cassent la perception de votre marque. Le contenu est ce que vos prospects voient en premier — il doit être à hauteur de ce que vous facturez.",
     kw: 'production vidéo Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -73,7 +93,7 @@ const SERVICES = [
   {
     num: '04',
     title: 'Publicité digitale & Meta Ads',
-    desc: "Campagnes Meta, TikTok et Snapchat Ads. Création, ciblage, optimisation — un euro dépensé doit rapporter un euro lisible.",
+    desc: "Création des visuels, ciblage précis, optimisation continue sur Meta, TikTok et Snapchat. La règle qu'on s'impose : un dirham dépensé doit rapporter un dirham mesurable. Pas de pub \"de notoriété\" floue qui consomme votre budget sans qu'on sache où il va. Chaque campagne a un objectif chiffré et un tableau de bord que vous lisez en trente secondes.",
     kw: 'agence publicité Meta Ads Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -84,7 +104,7 @@ const SERVICES = [
   {
     num: '05',
     title: 'Social media management',
-    desc: "Ligne éditoriale, calendrier, publication, animation. Une présence qui parle la même langue que votre marque.",
+    desc: "Ligne éditoriale, calendrier mensuel, création des publications, animation au quotidien. Service récurrent, pas projet ponctuel. L'objectif : que votre Instagram, votre LinkedIn ou votre TikTok parlent exactement la même langue que votre marque, sans rupture de ton. Pour beaucoup de PME marrakchies, c'est ce qui fait basculer la perception de \"petit acteur local\" à \"marque sérieuse à suivre\".",
     kw: 'community management Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -95,7 +115,7 @@ const SERVICES = [
   {
     num: '06',
     title: 'Applications web & mobile',
-    desc: "Apps iOS, Android et PWA. Interfaces soignées, code propre, architecture pensée pour durer trois ans minimum.",
+    desc: "Apps iOS, Android et PWA. Cadrage, wireframes, design, développement, mise en production sur les stores, maintenance. Notre obsession : du code propre, une architecture pensée pour durer trois ans minimum, et une interface tellement claire que vos utilisateurs n'ont pas besoin de tutoriel. Typiquement déployé pour des restaurants, des hôtels ou des entreprises avec un besoin métier spécifique.",
     kw: 'développement application mobile Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -106,7 +126,7 @@ const SERVICES = [
   {
     num: '07',
     title: 'SaaS & plateformes sur-mesure',
-    desc: "Dashboards, outils internes, espaces clients. Pour transformer un bon processus en produit digital qui travaille pour vous.",
+    desc: "Quand un processus marche bien chez vous mais vit encore dans un Excel partagé, on le transforme en plateforme web propre : dashboards en temps réel, espace client, outil interne qui remplace cinq logiciels mal connectés. Si vous avez un bon processus, on en fait un produit digital qui travaille pour vous 24h/24. Et si vous voulez un jour le commercialiser comme un vrai SaaS, on sait aussi le construire dans cette logique-là.",
     kw: 'développement SaaS Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -117,7 +137,7 @@ const SERVICES = [
   {
     num: '08',
     title: 'Automatisation & agents IA',
-    desc: "Workflows n8n, intégrations API, agents conversationnels GPT et Claude. L'IA au service de vos opérations, pas de la démonstration.",
+    desc: "On connecte vos outils pour que les tâches répétitives se fassent toutes seules, et on construit des agents IA qui répondent à vos prospects, qualifient vos leads ou traitent vos emails 24h/24. Un agent bien fait gère 80 % des demandes basiques sans intervention humaine. Notre règle : l'IA doit servir vos opérations, pas faire de la démonstration. On ne déploie un agent que s'il vous fait gagner cinq heures par semaine — mesurées.",
     kw: 'automatisation IA Marrakech',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -209,25 +229,21 @@ function SectorsMarquee() {
 }
 
 function ServiceScrollCard({ service }) {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start 92%', 'center 48%'],
-  })
-  const y = useTransform(scrollYProgress, [0, 1], [170, 0])
-  const opacity = useTransform(scrollYProgress, [0, 0.28, 1], [0.18, 0.75, 1])
-  const scale = useTransform(scrollYProgress, [0, 1], [0.94, 1])
-
   return (
-    <div className="service-scroll-card-container" ref={ref}>
+    <motion.div
+      className="service-scroll-card-container"
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ amount: 0.8 }}
+    >
       <div className="service-scroll-card-splash" />
       <motion.article
         className="svc-card service-scroll-card"
-        style={{ y, opacity, scale }}
-        whileHover={{ 
-          y: -6, 
+        variants={serviceCardVariants}
+        whileHover={{
           scale: 1.01,
-          boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
+          boxShadow:
+            '0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)',
         }}
         transition={HOVER_TRANSITION}
       >
@@ -239,7 +255,7 @@ function ServiceScrollCard({ service }) {
         <p className="svc-card__desc">{service.desc}</p>
         <div className="svc-card__kw">{service.kw}</div>
       </motion.article>
-    </div>
+    </motion.div>
   )
 }
 
@@ -261,28 +277,28 @@ function ServicesSection() {
     <section className="section services-section" id="services">
       <ParallaxBackground className="services-section__background" speed={0.9}>
         <div className="container">
-        <motion.div
-          className="section-head"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={revealViewport}
-        >
-          <motion.p variants={fadeUpChild} className="label">02 — Services</motion.p>
-          <motion.h2 variants={fadeUpChild} className="section-head__title">
-            Nos services de communication, création web et <span className="text-accent">intelligence artificielle</span>.
-          </motion.h2>
-          <motion.p variants={fadeUpChild} className="section-head__lead">
-            De la stratégie de marque au produit digital finalisé. Supra v. couvre toute la chaîne, sans sous-traiter, depuis Marrakech.
-          </motion.p>
-        </motion.div>
+          <motion.div
+            className="section-head"
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={revealViewport}
+          >
+            <motion.p variants={fadeUpChild} className="label">02 — Services</motion.p>
+            <motion.h2 variants={fadeUpChild} className="section-head__title">
+              Nos services de communication, création web et <span className="text-accent">intelligence artificielle</span>.
+            </motion.h2>
+            <motion.p variants={fadeUpChild} className="section-head__lead">
+              De la stratégie de marque au produit digital finalisé. Supra v. couvre toute la chaîne, sans sous-traiter, depuis Marrakech.
+            </motion.p>
+          </motion.div>
 
-        <div className="services-scroll-stack">
-          {SERVICES.map((s) => (
-            <ServiceScrollCard service={s} key={s.num} />
-          ))}
+          <div className="services-scroll-stack">
+            {SERVICES.map((s) => (
+              <ServiceScrollCard service={s} key={s.num} />
+            ))}
+          </div>
         </div>
-      </div>
       </ParallaxBackground>
     </section>
   )
@@ -611,7 +627,9 @@ function SiteFooter() {
       <div className="container">
         <div className="site-footer__grid">
           <div className="site-footer__brand">
-            <a href="#" className="site-footer__logo">supra v.</a>
+            <a href="#" className="site-footer__logo" aria-label="Supra v. - Accueil">
+              <img src={logoImage} alt="Supra v." />
+            </a>
             <p className="site-footer__tagline">
               Agence de communication 360° à Marrakech. Branding, sites web, applications et agents IA. Une équipe, de la stratégie au code.
             </p>
@@ -643,7 +661,7 @@ function SiteFooter() {
         </div>
 
         <div className="site-footer__bottom">
-          <span>© 2026 Supra v. — Agence de communication Marrakech</span>
+          <span>© 2026 Supra v. — Agence de communication 360</span>
           <span>Conçu &amp; codé en interne</span>
         </div>
       </div>
@@ -790,8 +808,8 @@ function App() {
         <header className={`site-nav ${scrolled ? 'site-nav--scrolled' : ''}`}>
           <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
             <nav className="nav" aria-label="Navigation principale">
-              <a href="#" className="nav__logo">
-                supra v.
+              <a href="#" className="nav__logo" aria-label="Supra v. - Accueil">
+                <img src={logoImage} alt="Supra v." />
               </a>
               <ul className="nav__links">
                 <li>
