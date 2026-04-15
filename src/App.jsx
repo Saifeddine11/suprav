@@ -203,6 +203,25 @@ const FAQ = [
 
 const SECTORS = ['Immobilier', 'Hôtellerie', 'Restaurants', 'Retail', 'E-commerce', 'Start-ups', 'PME', 'Personal brands']
 
+const COLLABORATORS = [
+  { name: 'Noura', role: 'Direction artistique', image: '/noura-photo.png' },
+  { name: 'Sofia', role: 'Brand strategy', image: '/noura-photo-soft.png' },
+  { name: 'Yassine', role: 'Développement web', image: '/noura-photo-cleaner.png' },
+  { name: 'Mina', role: 'Production contenu', image: nousImage },
+  { name: 'Amine', role: 'Meta Ads', image: '/noura-photo.png' },
+  { name: 'Lina', role: 'Social media', image: '/noura-pill.png' },
+  { name: 'Omar', role: 'Automatisation IA', image: '/noura-photo-soft.png' },
+  { name: 'Salma', role: 'UX writing', image: nousImage },
+  { name: 'Karim', role: 'Motion design', image: '/noura-photo-cleaner.png' },
+  { name: 'Hiba', role: 'Photo & vidéo', image: '/noura-photo.png' },
+  { name: 'Rayan', role: 'SaaS', image: '/noura-photo-soft.png' },
+  { name: 'Sara', role: 'Gestion projet', image: nousImage },
+  { name: 'Mehdi', role: 'Direction créative', image: '/noura-pill.png' },
+  { name: 'Imane', role: 'Design social', image: '/noura-photo.png' },
+  { name: 'Adam', role: 'Lead generation', image: '/noura-photo-cleaner.png' },
+  { name: 'Aya', role: 'Brand content', image: '/noura-photo-soft.png' },
+]
+
 /* ============================================================
    SECTION COMPONENTS
    ============================================================ */
@@ -222,6 +241,71 @@ function SectorsMarquee() {
               {s}
             </span>
           ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+function CollaboratorsSection() {
+  const visibleCollaborators = COLLABORATORS.slice(0, 13)
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 64,
+    damping: 24,
+    mass: 0.55,
+  })
+  const wheelRotate = useTransform(smoothProgress, [0, 1], [-86, 86])
+
+  return (
+    <section className="collaborators-section" id="collaborateurs" ref={ref}>
+      <div className="collaborators-section__inner">
+        <div className="collaborators-wheel-frame" aria-hidden="true">
+          <motion.div className="collaborators-wheel" style={{ rotate: wheelRotate }}>
+            {visibleCollaborators.map((person, index) => {
+              const angle = Math.PI - (Math.PI * index) / (visibleCollaborators.length - 1)
+              const left = 50 + 41.85 * Math.cos(angle)
+              const top = 94 - 70.2 * Math.sin(angle)
+
+              return (
+                <div
+                  className="collaborator-orbit-item"
+                  key={person.name}
+                  style={{ left: `${left}%`, top: `${top}%` }}
+                >
+                  <span className="collaborator-avatar">
+                    <img src={person.image} alt="" loading="lazy" />
+                  </span>
+                </div>
+              )
+            })}
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="collaborators-copy"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={revealViewport}
+        >
+          <motion.h2 variants={fadeUpChild}>
+            <span className="collaborators-copy__line">On accompagne peu de marques,</span>
+            <span className="collaborators-copy__line">mais on les accompagne <em>loin.</em></span>
+          </motion.h2>
+          <motion.a variants={fadeUpChild} href="#contact" className="collab-call-pill magnetic-btn">
+            <span className="collab-call-pill__avatar">
+              <img src="/noura-photo-cleaner.png" alt="" />
+            </span>
+            <span>
+              <strong>Réserver un appel gratuit</strong>
+              <small><span aria-hidden="true" /> Disponible</small>
+            </span>
+          </motion.a>
         </motion.div>
       </div>
     </section>
@@ -509,21 +593,72 @@ function FaqSection() {
 
 function CtaSection() {
   const [formStatus, setFormStatus] = useState('idle')
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const [bookingStep, setBookingStep] = useState('date')
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1))
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const nextDate = new Date(today)
+    nextDate.setDate(nextDate.getDate() + 1)
+    return nextDate
+  })
+  const timeSlots = ['10h - 12h', '14h - 16h', '17h - 21h']
+  const [selectedTime, setSelectedTime] = useState(timeSlots[0])
+  const monthLabel = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(calendarMonth)
+  const selectedDateLabel = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(selectedDate)
+  const selectedDateParts = new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'short',
+    day: 'numeric',
+  }).formatToParts(selectedDate)
+  const selectedDateShortLabel = `${selectedDateParts.find((part) => part.type === 'weekday')?.value ?? ''} ${selectedDateParts.find((part) => part.type === 'day')?.value ?? ''}`.replace('.', '').trim()
+  const calendarDays = Array.from(
+    { length: new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate() },
+    (_, index) => new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), index + 1)
+  )
+  const calendarOffset = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay()
+  const availableFrom = new Date(today)
+  availableFrom.setDate(availableFrom.getDate() + 1)
+  const weekdays = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM']
+
+  const changeCalendarMonth = (amount) => {
+    setCalendarMonth((current) => new Date(current.getFullYear(), current.getMonth() + amount, 1))
+  }
+
+  const isSameDay = (first, second) => (
+    first.getFullYear() === second.getFullYear()
+    && first.getMonth() === second.getMonth()
+    && first.getDate() === second.getDate()
+  )
+
+  const formatDateValue = (date) => (
+    new Intl.DateTimeFormat('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date)
+  )
 
   const handleSubmit = (event) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const name = formData.get('name')
     const email = formData.get('email')
-    const project = formData.get('project')
+    const phone = formData.get('phone')
+    const project = formData.get('project') || 'Non précisé'
     const message = formData.get('message')
     const subject = encodeURIComponent(`Nouveau projet Supra v — ${name}`)
     const body = encodeURIComponent(
-      `Nom: ${name}\nEmail: ${email}\nProjet: ${project}\n\nMessage:\n${message}`
+      `Date souhaitée: ${formatDateValue(selectedDate)}\nCréneau: ${selectedTime}\nNom: ${name}\nEmail: ${email}\nTéléphone: ${phone}\nProjet: ${project}\n\nMessage:\n${message}`
     )
 
     setFormStatus('sent')
-    window.location.href = `mailto:hello@supra-v.ma?subject=${subject}&body=${body}`
+    window.location.href = `mailto:contact@suprav3.com?subject=${subject}&body=${body}`
   }
 
   return (
@@ -536,85 +671,169 @@ function CtaSection() {
           whileInView="visible"
           viewport={revealViewport}
         >
-          <motion.form
-            variants={fadeUpChild}
-            className="cta-form"
-            onSubmit={handleSubmit}
-          >
-            <div className="cta-form__fireworks" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
+          <motion.div className="cta-final__panel" variants={fadeUpChild}>
+            <div className="cta-final__ambient" aria-hidden="true" />
 
-            <div className="cta-form__head">
-              <span className="cta-form__pill">Contact</span>
-              <h2>Parlons de votre projet à Marrakech.</h2>
-              <p>Un café à Guéliz, un appel en visio, ou un WhatsApp. La première conversation est offerte.</p>
-            </div>
+            <motion.div className="cta-contact-copy" variants={stagger}>
+              <motion.div className="cta-contact-copy__head" variants={fadeUpChild}>
+                <span className="cta-form__pill">Contact</span>
+                <h2>Démarrons votre projet.</h2>
+                <p>Construisons une marque, un site ou un outil digital qui travaille vraiment pour vous.</p>
+              </motion.div>
 
-            <label className="cta-field">
-              <span>Votre nom</span>
-              <input name="name" type="text" placeholder="Nom complet" required />
-            </label>
+              <motion.div className="cta-contact-copy__details" variants={fadeUpChild}>
+                <a href="tel:+212600000000">+33 7 44 20 86 73</a>
+                <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
+              </motion.div>
 
-            <label className="cta-field">
-              <span>Email</span>
-              <input name="email" type="email" placeholder="vous@email.com" required />
-            </label>
+              <motion.div className="cta-social-proof" variants={fadeUpChild} aria-label="Note clients 4.9 sur 5">
+                <div className="cta-social-proof__avatars" aria-hidden="true">
+                  <span>S</span>
+                  <span>V</span>
+                  <span>3</span>
+                  <span>+</span>
+                </div>
+                <p><strong>4.9 / 5</strong> clients accompagnés</p>
+              </motion.div>
+            </motion.div>
 
-            <label className="cta-field">
-              <span>Type de projet</span>
-              <select name="project" defaultValue="" required>
-                <option value="" disabled>Sélectionnez...</option>
-                <option>Branding & site web</option>
-                <option>Production contenu</option>
-                <option>Application ou SaaS</option>
-                <option>Automatisation IA</option>
-                <option>Campagne publicitaire</option>
-              </select>
-            </label>
-
-            <label className="cta-field cta-field--wide">
-              <span>Votre message</span>
-              <textarea name="message" placeholder="Décrivez votre projet en quelques lignes." rows="5" required />
-            </label>
-
-            <div className="cta-form__bottom">
-              <motion.button
-                type="submit"
-                className="cta-form__submit"
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Envoyer
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </motion.button>
-              <a href="https://wa.me/212600000000" className="cta-form__whatsapp">WhatsApp direct</a>
-            </div>
-
-            <AnimatePresence>
-              {formStatus === 'sent' && (
-                <motion.p
-                  className="cta-form__status"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
+            <AnimatePresence mode="wait">
+              {bookingStep === 'date' ? (
+                <motion.div
+                  key="date-step"
+                  className="cta-form cta-booking"
+                  initial={{ opacity: 0, x: 24, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, x: -24, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.45, ease: EASING }}
                 >
-                  Votre application mail s'ouvre avec le message prêt.
-                </motion.p>
+                  <div className="cta-booking__top">
+                    <h3>{monthLabel}</h3>
+                    <div className="cta-booking__month-controls">
+                      <button type="button" onClick={() => changeCalendarMonth(-1)} aria-label="Mois précédent">‹</button>
+                      <button type="button" onClick={() => changeCalendarMonth(1)} aria-label="Mois suivant">›</button>
+                    </div>
+                  </div>
+
+                  <div className="cta-calendar" aria-label="Choisir une date">
+                    {weekdays.map((day) => (
+                      <span key={day} className="cta-calendar__weekday">{day}</span>
+                    ))}
+                    {Array.from({ length: calendarOffset }).map((_, index) => (
+                      <span key={`blank-${index}`} className="cta-calendar__blank" />
+                    ))}
+                    {calendarDays.map((date) => {
+                      const disabled = date < availableFrom
+                      const selected = isSameDay(date, selectedDate)
+                      const available = date >= availableFrom
+                      return (
+                        <button
+                          type="button"
+                          key={date.toISOString()}
+                          className={`cta-calendar__day ${available ? 'is-available' : ''} ${selected ? 'is-selected' : ''}`}
+                          disabled={disabled}
+                          onClick={() => setSelectedDate(date)}
+                        >
+                          {date.getDate()}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  <div className="cta-booking__schedule">
+                    <strong>{selectedDateShortLabel}</strong>
+                  </div>
+
+                  <div className="cta-booking__time-slots" aria-label="Choisir une heure">
+                    {timeSlots.map((time) => (
+                      <motion.button
+                        type="button"
+                        key={time}
+                        className={`cta-booking__time-slot ${selectedTime === time ? 'is-selected' : ''}`}
+                        whileHover={{ y: -2, scale: 1.02 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => {
+                          setSelectedTime(time)
+                          setBookingStep('details')
+                        }}
+                      >
+                        {time}
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="details-step"
+                  variants={stagger}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, x: 24, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.45, ease: EASING }}
+                  className="cta-form"
+                  onSubmit={handleSubmit}
+                >
+                  <input type="hidden" name="date" value={formatDateValue(selectedDate)} />
+                  <input type="hidden" name="time" value={selectedTime} />
+
+                  <motion.div className="cta-form__selected-date" variants={fadeUpChild}>
+                    <button type="button" onClick={() => setBookingStep('date')}>Changer</button>
+                    <span>{selectedDateLabel}</span>
+                  </motion.div>
+
+                  <motion.label className="cta-field" variants={fadeUpChild}>
+                    <span>Nom</span>
+                    <input name="name" type="text" placeholder="Jane Smith" required />
+                  </motion.label>
+
+                  <motion.label className="cta-field" variants={fadeUpChild}>
+                    <span>Email</span>
+                    <input name="email" type="email" placeholder="vous@email.com" required />
+                  </motion.label>
+
+                  <motion.label className="cta-field" variants={fadeUpChild}>
+                    <span>Numéro</span>
+                    <input name="phone" type="tel" placeholder="+33 7 44 20 86 73" required />
+                  </motion.label>
+
+                  <motion.label className="cta-field cta-field--wide" variants={fadeUpChild}>
+                    <span>Message</span>
+                    <textarea name="message" placeholder="Décrivez votre projet" rows="5" required />
+                  </motion.label>
+
+                  <motion.div className="cta-form__bottom" variants={fadeUpChild}>
+                    <motion.button
+                      type="submit"
+                      className="cta-form__submit"
+                      whileHover={{ y: -2, scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      Envoyer
+                      <span className="cta-form__submit-icon" aria-hidden="true">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </motion.button>
+                    <a href="https://wa.me/212600000000" className="cta-form__whatsapp">WhatsApp direct</a>
+                  </motion.div>
+
+                  <AnimatePresence>
+                    {formStatus === 'sent' && (
+                      <motion.p
+                        className="cta-form__status"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                      >
+                        Votre application mail s'ouvre avec le message prêt.
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </motion.form>
               )}
             </AnimatePresence>
-          </motion.form>
+          </motion.div>
         </motion.div>
       </div>
     </section>
@@ -654,7 +873,7 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Contact</h4>
-            <a href="mailto:hello@supra-v.ma">hello@supra-v.ma</a>
+            <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
             <a href="https://wa.me/212600000000">WhatsApp</a>
             <p>Marrakech, Maroc</p>
           </div>
@@ -918,10 +1137,9 @@ function App() {
             <span className="hero__title-line">
               Agence de communication{' '}
               <span className="text-accent hero__number">360°</span>
-              {' '}
-              à Marrakech
             </span>
             <span className="hero__title-line">
+              à Marrakech{' '}
               <span className="hero__title-muted">pour </span>
               faire grandir
             </span>
@@ -960,6 +1178,9 @@ function App() {
 
         {/* ========== SECTORS BAR ========== */}
         <SectorsMarquee />
+
+        {/* ========== COLLABORATEURS ========== */}
+        <CollaboratorsSection />
 
         {/* ========== RÉALISATIONS (existant) ========== */}
         <section className="media-clouds section" id="works">
