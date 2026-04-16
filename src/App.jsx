@@ -25,6 +25,7 @@ import partner9 from '../media/partners/9.webp'
 import partner10 from '../media/partners/10.webp'
 import partner11 from '../media/partners/11.webp'
 import partner12 from '../media/partners/12.webp'
+import partner13 from '../media/partners/13.webp'
 const nousImage = '/nous.webp'
 
 /* ============================================================
@@ -285,6 +286,8 @@ const FAQ = [
 
 const SECTORS = ['Immobilier', 'Hôtellerie', 'Restaurants', 'Retail', 'E-commerce', 'Start-ups', 'PME', 'Personal brands']
 
+const DESKTOP_COLLABORATOR_SLOTS = [4, 5, 6, 7, 8, 0, 1, 2, 3, 9, 10, 11]
+
 const COLLABORATORS = [
   { name: 'Partner 3', role: 'Collaborateur', image: partner3 },
   { name: 'Partner 5', role: 'Collaborateur', image: partner5 },
@@ -299,6 +302,8 @@ const COLLABORATORS = [
   { name: 'Partner 10', role: 'Collaborateur', image: partner10 },
   { name: 'Partner 11', role: 'Collaborateur', image: partner11 },
 ]
+
+const BELOW_WHEEL_COLLABORATOR = { name: 'Trips Experts', image: partner13 }
 
 /* ============================================================
    SECTION COMPONENTS
@@ -326,7 +331,7 @@ function SectorsMarquee() {
 }
 
 function CollaboratorsSection() {
-  const visibleCollaborators = COLLABORATORS.slice(0, 13)
+  const visibleCollaborators = COLLABORATORS
   const ref = useRef(null)
   const [isDesktopWheel, setIsDesktopWheel] = useState(() => (
     typeof window === 'undefined' ? true : window.matchMedia('(min-width: 769px)').matches
@@ -359,7 +364,8 @@ function CollaboratorsSection() {
         <div className="collaborators-wheel-frame" aria-hidden="true">
           <motion.div className="collaborators-wheel" style={{ rotate: wheelRotate }}>
             {visibleCollaborators.map((person, index) => {
-              const angle = Math.PI - (Math.PI * index) / (visibleCollaborators.length - 1)
+              const slotIndex = isDesktopWheel ? DESKTOP_COLLABORATOR_SLOTS[index] : index
+              const angle = Math.PI - (Math.PI * slotIndex) / (visibleCollaborators.length - 1)
               const left = 50 + 41.85 * Math.cos(angle)
               const top = 94 - 70.2 * Math.sin(angle)
 
@@ -376,6 +382,11 @@ function CollaboratorsSection() {
               )
             })}
           </motion.div>
+          {isDesktopWheel && (
+            <span className="collaborators-below-logo">
+              <img src={BELOW_WHEEL_COLLABORATOR.image} alt="" loading="lazy" />
+            </span>
+          )}
         </div>
 
         <motion.div
@@ -999,16 +1010,185 @@ function WhatsappFab() {
   )
 }
 
+function MediaVideoCard({ videoSrc, index }) {
+  const videoRef = useRef(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {})
+        } else {
+          video.pause()
+        }
+      },
+      { threshold: 0.35 }
+    )
+
+    observer.observe(video)
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <motion.article
+      className="media-clouds__item"
+      whileHover={{
+        y: -6,
+        scale: 1.01,
+        boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
+      }}
+      transition={HOVER_TRANSITION}
+    >
+      <video
+        ref={videoRef}
+        className="video-card"
+        src={videoSrc}
+        muted
+        loop
+        preload={index < 4 ? 'metadata' : 'none'}
+        playsInline
+        aria-label="Réalisation vidéo agence de communication Marrakech"
+      />
+    </motion.article>
+  )
+}
+
+function StorySection() {
+  const sectionRef = useRef(null)
+  const [isMobile, setIsMobile] = useState(() => (
+    typeof window === 'undefined' ? false : window.matchMedia('(max-width: 768px)').matches
+  ))
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  })
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 32,
+    mass: 0.35,
+  })
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)')
+    const updateMobile = () => setIsMobile(mediaQuery.matches)
+
+    updateMobile()
+    mediaQuery.addEventListener('change', updateMobile)
+
+    return () => mediaQuery.removeEventListener('change', updateMobile)
+  }, [])
+
+  const growPhase = useTransform(progress, (latest) => easeInOutCubic(clamp((latest - 0.08) / 0.72, 0, 1)))
+  const introPhase = useTransform(progress, (latest) => clamp(latest / 0.18, 0, 1))
+  const footerPhase = useTransform(progress, (latest) => easeOutCubic(clamp((latest - 0.78) / 0.16, 0, 1)))
+  const labelFade = useTransform(progress, (latest) => 1 - easeOutCubic(clamp((latest - 0.26) / 0.28, 0, 1)))
+  const captionOpacity = useTransform(progress, (latest) => {
+    const captionPhase = easeOutCubic(clamp((latest - 0.22) / 0.22, 0, 1))
+    const footer = easeOutCubic(clamp((latest - 0.78) / 0.16, 0, 1))
+    return mix(0, 1, captionPhase) * (1 - footer * 0.35)
+  })
+  const captionTranslate = useTransform(progress, (latest) => {
+    const captionPhase = easeOutCubic(clamp((latest - 0.22) / 0.22, 0, 1))
+    return `translate(-50%, ${mix(18, 0, captionPhase)}px)`
+  })
+  const storyClipPath = useTransform(growPhase, (latest) => {
+    const clipStartX = mix(isMobile ? 32 : 42, 0, latest)
+    const clipEndX = mix(isMobile ? 68 : 58, 100, latest)
+    const clipStartY = mix(isMobile ? 31 : 16, 0, latest)
+    const clipEndY = mix(isMobile ? 69 : 84, 100, latest)
+    const radius = mix(50, 0, latest)
+
+    return `inset(${clipStartY}% ${100 - clipEndX}% ${100 - clipEndY}% ${clipStartX}% round ${radius}px)`
+  })
+  const storyBackgroundSize = useTransform(progress, (latest) => (
+    `${isMobile ? 260 : mix(170, 100, clamp(latest / 0.9, 0, 1))}%`
+  ))
+  const storyRadius = useTransform(growPhase, (latest) => `${mix(50, 0, latest)}px`)
+  const storyShadeOpacity = useTransform(growPhase, (latest) => mix(0.38, 0, latest))
+  const leftCopyRight = useTransform([introPhase, growPhase], ([intro, grow]) => {
+    const copyGap = mix(18, isMobile ? 28 : 36, intro)
+    const sideAnchor = mix(isMobile ? 66 : 90, isMobile ? 148 : 290, grow) + copyGap
+    const sideDrift = mix(0, isMobile ? 8 : 18, grow)
+
+    return `calc(50% + ${sideAnchor - sideDrift}px)`
+  })
+  const rightCopyLeft = leftCopyRight
+  const copyTransform = useTransform(footerPhase, (footer) => (
+    `translateY(calc(-50% + ${mix(0, -18, footer)}px))`
+  ))
+
+  return (
+    <section className="story-shell lstory-shel" ref={sectionRef} id="about">
+      <div className="story-shell__sticky">
+        <div className="story-scene">
+          <motion.div
+            className="story-copy story-copy--left"
+            style={{
+              right: leftCopyRight,
+              opacity: labelFade,
+              transform: copyTransform,
+            }}
+          >
+            Nous sommes
+          </motion.div>
+
+          <motion.div
+            className="story-card"
+            style={{
+              clipPath: storyClipPath,
+              backgroundImage: `url(${nousImage})`,
+              backgroundSize: storyBackgroundSize,
+              borderRadius: storyRadius,
+            }}
+          >
+            <motion.div className="story-card__shade" style={{ opacity: storyShadeOpacity }} />
+            <div className="story-card__veil" />
+            <motion.div
+              className="story-card__caption"
+              style={{
+                opacity: captionOpacity,
+                transform: captionTranslate,
+              }}
+            >
+              Pas qu'une
+              <br />
+              agence.
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="story-copy story-copy--right"
+            style={{
+              left: rightCopyLeft,
+              opacity: labelFade,
+              transform: copyTransform,
+            }}
+          >
+            Supra<span className="story-copy__mark">v3</span>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 /* ============================================================
    MAIN APP
    ============================================================ */
 function App() {
-  const sectionRef = useRef(null)
-  const [progress, setProgress] = useState(0)
-  const [viewport, setViewport] = useState({ width: 0, height: 0 })
   const [scrolled, setScrolled] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
+  const scrolledRef = useRef(false)
+  const navOpenRef = useRef(false)
   const { scrollY } = useScroll()
+
+  useEffect(() => {
+    navOpenRef.current = navOpen
+  }, [navOpen])
 
   useEffect(() => {
     document.body.style.overflow = navOpen ? 'hidden' : ''
@@ -1027,89 +1207,19 @@ function App() {
 
   useMotionValueEvent(scrollY, 'change', (current) => {
     const previous = scrollY.getPrevious() ?? 0
-    if (current > previous && current > 120) setNavOpen(false)
-    setScrolled(current > 50)
+    const nextScrolled = current > 50
+
+    if (current > previous && current > 120 && navOpenRef.current) {
+      setNavOpen(false)
+    }
+
+    if (scrolledRef.current !== nextScrolled) {
+      scrolledRef.current = nextScrolled
+      setScrolled(nextScrolled)
+    }
   })
 
-  useEffect(() => {
-    let frameId = 0
-    const updateProgress = () => {
-      if (!sectionRef.current) return
-      const rect = sectionRef.current.getBoundingClientRect()
-      const viewportHeight = window.visualViewport?.height ?? window.innerHeight
-      const viewportWidth = window.visualViewport?.width ?? window.innerWidth
-      const sectionTop = window.scrollY + rect.top
-      const sectionHeight = sectionRef.current.offsetHeight
-      const scrollable = Math.max(sectionHeight - viewportHeight, 1)
-      const next = clamp((window.scrollY - sectionTop) / scrollable, 0, 1)
-      setViewport((current) => (
-        current.width === viewportWidth && current.height === viewportHeight
-          ? current
-          : { width: viewportWidth, height: viewportHeight }
-      ))
-      setProgress(next)
-      frameId = 0
-    }
-    const onScroll = () => {
-      if (frameId) return
-      frameId = window.requestAnimationFrame(updateProgress)
-    }
-    updateProgress()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    window.visualViewport?.addEventListener('resize', onScroll)
-    window.visualViewport?.addEventListener('scroll', onScroll)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      window.visualViewport?.removeEventListener('resize', onScroll)
-      window.visualViewport?.removeEventListener('scroll', onScroll)
-      if (frameId) window.cancelAnimationFrame(frameId)
-    }
-  }, [])
-
   const videos = [vid1, vid2, vid3, vid4, vid5, vid6]
-  const viewportWidth = viewport.width || 430
-  const viewportHeight = viewport.height || 932
-  const isMobile = viewportWidth <= 768
-
-  const introPhase = clamp(progress / 0.18, 0, 1)
-  const growPhase = easeInOutCubic(clamp((progress - 0.08) / 0.72, 0, 1))
-  const labelFade = 1 - easeOutCubic(clamp((progress - 0.26) / 0.28, 0, 1))
-  const captionPhase = easeOutCubic(clamp((progress - 0.22) / 0.22, 0, 1))
-  const footerPhase = easeOutCubic(clamp((progress - 0.78) / 0.16, 0, 1))
-
-  const collapsedWidth = isMobile ? 38 : 72
-  const collapsedHeight = isMobile ? 158 : 230
-  const expandedWidth = isMobile
-    ? Math.min(viewportWidth * 0.82, 360)
-    : Math.min(viewportWidth * 0.92, 1480)
-  const expandedHeight = isMobile
-    ? Math.min(viewportHeight * 0.66, 620)
-    : Math.min(viewportHeight * 0.84, 920)
-
-  const cardWidth = mix(collapsedWidth, expandedWidth, growPhase)
-  const cardHeight = mix(collapsedHeight, expandedHeight, growPhase)
-  const cardRadius = mix(26, isMobile ? 30 : 40, growPhase)
-  const cardTop = mix(isMobile ? 54 : 57, isMobile ? 44 : 48, footerPhase)
-
-  const imageScale = mix(1.28, 1, growPhase)
-  const imageTranslateX = mix(isMobile ? 18 : 28, 0, growPhase)
-  const imageTranslateY = mix(0, isMobile ? -16 : -8, footerPhase)
-  const imageOpacity = isMobile
-    ? clamp((progress - 0.08) / 0.18, 0, 1)
-    : mix(0.28, 1, growPhase)
-  const pillOpacity = isMobile
-    ? 1 - easeOutCubic(clamp((progress - 0.04) / 0.18, 0, 1))
-    : 1 - easeOutCubic(clamp((progress - 0.18) / 0.28, 0, 1))
-
-  const copyGap = mix(18, isMobile ? 28 : 36, introPhase)
-  const sideAnchor = cardWidth / 2 + copyGap
-  const sideDrift = mix(0, isMobile ? 8 : 18, growPhase)
-  const copyYOffset = mix(0, -18, footerPhase)
-
-  const captionOpacity = mix(0, 1, captionPhase) * (1 - footerPhase * 0.35)
-  const captionTranslate = mix(18, 0, captionPhase)
 
   return (
     <div className="app">
@@ -1295,98 +1405,18 @@ function App() {
           <div className="media-clouds__viewport">
             <div className="media-clouds__track">
               {videos.concat(videos).map((videoSrc, index) => (
-                <motion.article 
-                  className="media-clouds__item" 
+                <MediaVideoCard
                   key={`${videoSrc}-${index}`}
-                  whileHover={{ 
-                    y: -6, 
-                    scale: 1.01,
-                    boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
-                  }}
-                  transition={HOVER_TRANSITION}
-                >
-                  <video
-                    className="video-card"
-                    src={videoSrc}
-                    muted
-                    loop
-                    autoPlay
-                    playsInline
-                    aria-label="Réalisation vidéo agence de communication Marrakech"
-                  />
-                </motion.article>
+                  videoSrc={videoSrc}
+                  index={index}
+                />
               ))}
             </div>
           </div>
         </section>
 
-        {/* ========== STORY (existant) ========== */}
-        <section className="story-shell lstory-shel" ref={sectionRef} id="about">
-          <div className="story-shell__sticky">
-            <div className="story-scene">
-              <div
-                className="story-copy story-copy--left"
-                style={{
-                  right: `calc(50% + ${sideAnchor - sideDrift}px)`,
-                  opacity: labelFade,
-                  transform: `translateY(calc(-50% + ${copyYOffset}px))`,
-                }}
-              >
-                Nous sommes
-              </div>
-
-              <div
-                className="story-card"
-                style={{
-                  width: `${cardWidth}px`,
-                  height: `${cardHeight}px`,
-                  borderRadius: `${cardRadius}px`,
-                  top: `${cardTop}%`,
-                }}
-              >
-                <img
-                  className="story-card__pill"
-                  src={nousImage}
-                  alt=""
-                  aria-hidden="true"
-                  style={{ opacity: pillOpacity }}
-                />
-                <img
-                  className="story-card__image"
-                  src={nousImage}
-                  alt="L'équipe Supra v - agence de communication Marrakech"
-                  style={{
-                    opacity: imageOpacity,
-                    transform: `scale(${imageScale}) translate(${imageTranslateX}px, ${imageTranslateY}px)`,
-                  }}
-                />
-                <div className="story-card__veil" />
-                <div
-                  className="story-card__caption"
-                  style={{
-                    opacity: captionOpacity,
-                    transform: `translate(-50%, ${captionTranslate}px)`,
-                  }}
-                >
-                  Pas qu'une
-                  <br />
-                  agence.
-                </div>
-              </div>
-
-              <div
-                className="story-copy story-copy--right"
-                style={{
-                  left: `calc(50% + ${sideAnchor - sideDrift}px)`,
-                  opacity: labelFade,
-                  transform: `translateY(calc(-50% + ${copyYOffset}px))`,
-                }}
-              >
-                Supra<span className="story-copy__mark">v3</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* ========== STORY ========== */}
+        <StorySection />
 
         {/* ========== NEW SECTIONS ========== */}
         <ServicesSection />
