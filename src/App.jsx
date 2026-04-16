@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
@@ -33,6 +33,76 @@ const easeInOutCubic = (value) => (
 const stagger = ANIMATE_VARIANTS.staggerContainer
 const fadeUpChild = ANIMATE_VARIANTS.fadeUp
 const revealViewport = VIEWPORT_SETTINGS
+
+function HoverButtonLink({ href, className = '', children }) {
+  const buttonRef = useRef(null)
+  const lastAddedRef = useRef(0)
+  const [isListening, setIsListening] = useState(false)
+  const [circles, setCircles] = useState([])
+
+  const createCircle = useCallback((x, y) => {
+    const buttonWidth = buttonRef.current?.offsetWidth || 1
+    const xPos = x / buttonWidth
+    const color = `linear-gradient(to right, var(--circle-start) ${xPos * 100}%, var(--circle-end) ${xPos * 100}%)`
+    setCircles((current) => [
+      ...current,
+      { id: `${Date.now()}-${Math.random()}`, x, y, color, fadeState: null },
+    ])
+  }, [])
+
+  const handlePointerMove = useCallback((event) => {
+    if (!isListening) return
+    const currentTime = Date.now()
+    if (currentTime - lastAddedRef.current <= 100) return
+
+    lastAddedRef.current = currentTime
+    const rect = event.currentTarget.getBoundingClientRect()
+    createCircle(event.clientX - rect.left, event.clientY - rect.top)
+  }, [createCircle, isListening])
+
+  useEffect(() => {
+    const timers = circles
+      .filter((circle) => !circle.fadeState)
+      .flatMap((circle) => [
+        window.setTimeout(() => {
+          setCircles((current) => current.map((item) => (
+            item.id === circle.id ? { ...item, fadeState: 'in' } : item
+          )))
+        }, 0),
+        window.setTimeout(() => {
+          setCircles((current) => current.map((item) => (
+            item.id === circle.id ? { ...item, fadeState: 'out' } : item
+          )))
+        }, 1000),
+        window.setTimeout(() => {
+          setCircles((current) => current.filter((item) => item.id !== circle.id))
+        }, 2200),
+      ])
+
+    return () => timers.forEach((timer) => window.clearTimeout(timer))
+  }, [circles])
+
+  return (
+    <a
+      ref={buttonRef}
+      href={href}
+      className={className}
+      onPointerMove={handlePointerMove}
+      onPointerEnter={() => setIsListening(true)}
+      onPointerLeave={() => setIsListening(false)}
+    >
+      {circles.map(({ id, x, y, color, fadeState }) => (
+        <span
+          key={id}
+          className={`hover-button-circle ${fadeState ? `is-${fadeState}` : ''}`}
+          style={{ left: x, top: y, background: color }}
+          aria-hidden="true"
+        />
+      ))}
+      <span className="hover-button-label">{children}</span>
+    </a>
+  )
+}
 
 const serviceCardVariants = {
   offscreen: {
@@ -250,6 +320,9 @@ function SectorsMarquee() {
 function CollaboratorsSection() {
   const visibleCollaborators = COLLABORATORS.slice(0, 13)
   const ref = useRef(null)
+  const [isDesktopWheel, setIsDesktopWheel] = useState(() => (
+    typeof window === 'undefined' ? true : window.matchMedia('(min-width: 769px)').matches
+  ))
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
@@ -259,7 +332,18 @@ function CollaboratorsSection() {
     damping: 24,
     mass: 0.55,
   })
-  const wheelRotate = useTransform(smoothProgress, [0, 1], [-86, 86])
+  const wheelRotationRange = isDesktopWheel ? 42 : 86
+  const wheelRotate = useTransform(smoothProgress, [0, 1], [-wheelRotationRange, wheelRotationRange])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 769px)')
+    const updateDesktopWheel = () => setIsDesktopWheel(mediaQuery.matches)
+
+    updateDesktopWheel()
+    mediaQuery.addEventListener('change', updateDesktopWheel)
+
+    return () => mediaQuery.removeEventListener('change', updateDesktopWheel)
+  }, [])
 
   return (
     <section className="collaborators-section" id="collaborateurs" ref={ref}>
@@ -778,7 +862,7 @@ function CtaSection() {
 
                   <motion.div className="cta-form__selected-date" variants={fadeUpChild}>
                     <button type="button" onClick={() => setBookingStep('date')}>Changer</button>
-                    <span>{selectedDateLabel}</span>
+                    <span>{selectedDateLabel} · {selectedTime}</span>
                   </motion.div>
 
                   <motion.label className="cta-field" variants={fadeUpChild}>
@@ -1170,9 +1254,9 @@ function App() {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
-            <a href="#contact" className="btn btn--secondary">
+            <HoverButtonLink href="#contact" className="btn btn--secondary hero-hover-button">
               Parler de votre projet
-            </a>
+            </HoverButtonLink>
           </motion.div>
         </motion.section>
 
