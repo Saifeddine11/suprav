@@ -13,6 +13,18 @@ import vid4 from '../media/videos/vid4.mp4'
 import vid5 from '../media/videos/vid5.mp4'
 import vid6 from '../media/videos/vid6.mp4'
 import logoImage from '../media/logo.webp'
+import partner1 from '../media/partners/1.webp'
+import partner2 from '../media/partners/2.webp'
+import partner3 from '../media/partners/3.webp'
+import partner4 from '../media/partners/4.webp'
+import partner5 from '../media/partners/5.webp'
+import partner6 from '../media/partners/6.webp'
+import partner7 from '../media/partners/7.webp'
+import partner8 from '../media/partners/8.webp'
+import partner9 from '../media/partners/9.webp'
+import partner10 from '../media/partners/10.webp'
+import partner11 from '../media/partners/11.webp'
+import partner12 from '../media/partners/12.webp'
 const nousImage = '/nous.webp'
 
 /* ============================================================
@@ -274,22 +286,18 @@ const FAQ = [
 const SECTORS = ['Immobilier', 'Hôtellerie', 'Restaurants', 'Retail', 'E-commerce', 'Start-ups', 'PME', 'Personal brands']
 
 const COLLABORATORS = [
-  { name: 'Noura', role: 'Direction artistique', image: '/noura-photo.png' },
-  { name: 'Sofia', role: 'Brand strategy', image: '/noura-photo-soft.png' },
-  { name: 'Yassine', role: 'Développement web', image: '/noura-photo-cleaner.png' },
-  { name: 'Mina', role: 'Production contenu', image: nousImage },
-  { name: 'Amine', role: 'Meta Ads', image: '/noura-photo.png' },
-  { name: 'Lina', role: 'Social media', image: '/noura-pill.png' },
-  { name: 'Omar', role: 'Automatisation IA', image: '/noura-photo-soft.png' },
-  { name: 'Salma', role: 'UX writing', image: nousImage },
-  { name: 'Karim', role: 'Motion design', image: '/noura-photo-cleaner.png' },
-  { name: 'Hiba', role: 'Photo & vidéo', image: '/noura-photo.png' },
-  { name: 'Rayan', role: 'SaaS', image: '/noura-photo-soft.png' },
-  { name: 'Sara', role: 'Gestion projet', image: nousImage },
-  { name: 'Mehdi', role: 'Direction créative', image: '/noura-pill.png' },
-  { name: 'Imane', role: 'Design social', image: '/noura-photo.png' },
-  { name: 'Adam', role: 'Lead generation', image: '/noura-photo-cleaner.png' },
-  { name: 'Aya', role: 'Brand content', image: '/noura-photo-soft.png' },
+  { name: 'Partner 3', role: 'Collaborateur', image: partner3 },
+  { name: 'Partner 5', role: 'Collaborateur', image: partner5 },
+  { name: 'Partner 12', role: 'Collaborateur', image: partner12 },
+  { name: 'Partner 2', role: 'Collaborateur', image: partner2 },
+  { name: 'Partner 1', role: 'Collaborateur', image: partner1 },
+  { name: 'Partner 4', role: 'Collaborateur', image: partner4 },
+  { name: 'Partner 6', role: 'Collaborateur', image: partner6 },
+  { name: 'Partner 7', role: 'Collaborateur', image: partner7 },
+  { name: 'Partner 8', role: 'Collaborateur', image: partner8 },
+  { name: 'Partner 9', role: 'Collaborateur', image: partner9 },
+  { name: 'Partner 10', role: 'Collaborateur', image: partner10 },
+  { name: 'Partner 11', role: 'Collaborateur', image: partner11 },
 ]
 
 /* ============================================================
@@ -383,7 +391,7 @@ function CollaboratorsSection() {
           </motion.h2>
           <motion.a variants={fadeUpChild} href="#contact" className="collab-call-pill magnetic-btn">
             <span className="collab-call-pill__avatar">
-              <img src="/noura-photo-cleaner.png" alt="" />
+              <img src={partner1} alt="" />
             </span>
             <span>
               <strong>Réserver un appel gratuit</strong>

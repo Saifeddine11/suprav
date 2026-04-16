@@ -214,7 +214,7 @@
 .collaborator-avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 50%;
 }
 
@@ -277,7 +277,7 @@
 .collab-call-pill__avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .collab-call-pill strong,
