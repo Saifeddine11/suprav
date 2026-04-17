@@ -3005,12 +3005,10 @@
 }
 
 .cta-booking__eyebrow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: block;
-  margin-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: -4px;
   color: rgba(247, 244, 235, 0.58);
   font-family: var(--font-body);
   font-size: 13px;
@@ -3089,6 +3087,10 @@
 .cta-calendar__day {
   aspect-ratio: 1;
   min-height: 50px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border-radius: 8px;
   background: transparent;
   color: rgba(247, 244, 235, 0.72);
@@ -3114,10 +3116,27 @@
   font-weight: 800;
 }
 
+.cta-calendar__day.is-fully-booked:not(:disabled) {
+  color: rgba(247, 244, 235, 0.42);
+}
+
+.cta-calendar__day.is-fully-booked:not(:disabled)::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: rgba(247, 244, 235, 0.28);
+}
+
 .cta-calendar__day.is-selected {
   background: #f7f7f0;
-  color: #070707;
+  color: #070707 !important;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+.cta-calendar__day.is-selected::after {
+  display: none;
 }
 
 .cta-calendar__day:disabled {
@@ -3149,6 +3168,15 @@
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 800;
+  white-space: nowrap;
+}
+
+.cta-booking__schedule span {
+  color: rgba(247, 244, 235, 0.58);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -3203,6 +3231,59 @@
   border-color: #f7f7f0;
   background: #f7f7f0;
   color: #070707;
+}
+
+.cta-booking__fully-booked {
+  grid-column: 1 / -1;
+  min-height: 54px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(247, 244, 235, 0.22);
+  border-radius: 16px;
+  color: rgba(247, 244, 235, 0.64);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cta-booking__emergency {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgba(247, 244, 235, 0.22);
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(247, 244, 235, 0.86);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    background 0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out),
+    color 0.28s var(--ease-out),
+    transform 0.28s var(--ease-out);
+}
+
+.cta-booking__emergency::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 6px var(--color-accent-light);
+}
+
+.cta-booking__emergency:hover {
+  transform: translateY(-2px);
+  border-color: rgba(247, 244, 235, 0.48);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f7f4eb;
 }
 
 .cta-form__selected-date {

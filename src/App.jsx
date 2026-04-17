@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
@@ -285,6 +285,109 @@ const FAQ = [
 ]
 
 const SECTORS = ['Immobilier', 'Hôtellerie', 'Restaurants', 'Retail', 'E-commerce', 'Start-ups', 'PME', 'Personal brands']
+
+const BOOKING_TIME_SLOTS = ['10h - 12h', '11h - 13h', '14h - 16h', '16h - 18h', '17h - 21h']
+const BOOKING_AVAILABILITY = {
+  firstDaysSingleSlotChance: 0.05,
+  nearThreeSlotChance: 0.8,
+  nearRestrictedChance: 0.5,
+  laterOpenChance: 0.99,
+  laterThreeSlotChance: 0.65,
+}
+
+const toLocalDateKey = (date) => {
+  const year = date.getFullYear()
+  const month = `${date.getMonth() + 1}`.padStart(2, '0')
+  const day = `${date.getDate()}`.padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+const startOfLocalDay = (date) => {
+  const nextDate = new Date(date)
+  nextDate.setHours(0, 0, 0, 0)
+  return nextDate
+}
+
+const getDayDifference = (date, todayDate = new Date()) => {
+  const target = startOfLocalDay(date)
+  const todayStart = startOfLocalDay(todayDate)
+  return Math.round((target.getTime() - todayStart.getTime()) / 86400000)
+}
+
+// Deterministic hash-based random: stable for the same seed, unlike Math.random().
+const seededRandom = (seed) => {
+  let hash = 2166136261
+  for (let index = 0; index < seed.length; index += 1) {
+    hash ^= seed.charCodeAt(index)
+    hash = Math.imul(hash, 16777619)
+  }
+  return ((hash >>> 0) % 1000000) / 1000000
+}
+
+const pickDeterministicSlots = (seed, count, possibleSlots = BOOKING_TIME_SLOTS) => (
+  [...possibleSlots]
+    .map((slot) => ({ slot, score: seededRandom(`${seed}:${slot}`) }))
+    .sort((first, second) => first.score - second.score)
+    .slice(0, count)
+    .map(({ slot }) => slot)
+)
+
+function getAvailableTimeSlotsForDate(date, todayDate = new Date()) {
+  const dayDifference = getDayDifference(date, todayDate)
+  const todayKey = toLocalDateKey(startOfLocalDay(todayDate))
+  const dateKey = toLocalDateKey(date)
+
+  if (dayDifference < 0) return []
+
+  if (dayDifference === 0) return []
+
+  if (dayDifference <= 2) {
+    const hasFirstDaysAvailability = seededRandom(`${todayKey}:${dateKey}:first-days-slot`) < BOOKING_AVAILABILITY.firstDaysSingleSlotChance
+    if (!hasFirstDaysAvailability) return []
+
+    return pickDeterministicSlots(`${todayKey}:${dateKey}:first-days-slot`, 1)
+  }
+
+  if (dayDifference <= 4) {
+    const nearScore = seededRandom(`${todayKey}:${dateKey}:near-availability`)
+    if (nearScore < BOOKING_AVAILABILITY.nearThreeSlotChance) {
+      return pickDeterministicSlots(`${todayKey}:${dateKey}:near-three-slots`, 3)
+    }
+
+    const hasRestrictedAvailability = seededRandom(`${todayKey}:${dateKey}:near-restricted`) < BOOKING_AVAILABILITY.nearRestrictedChance
+    if (!hasRestrictedAvailability) return []
+
+    return pickDeterministicSlots(`${todayKey}:${dateKey}:near-restricted-slot`, 1)
+  }
+
+  const hasLaterAvailability = seededRandom(`${todayKey}:${dateKey}:later-open`) < BOOKING_AVAILABILITY.laterOpenChance
+  if (!hasLaterAvailability) return []
+
+  const slotCount = seededRandom(`${dateKey}:later-slot-count`) < BOOKING_AVAILABILITY.laterThreeSlotChance ? 3 : 2
+  return pickDeterministicSlots(`${dateKey}:later-slots`, slotCount)
+}
+
+const findFirstAvailableBookingDate = (todayDate = new Date(), lookAheadDays = 45) => {
+  const todayStart = startOfLocalDay(todayDate)
+
+  for (let offset = 0; offset <= lookAheadDays; offset += 1) {
+    const date = new Date(todayStart)
+    date.setDate(todayStart.getDate() + offset)
+
+    if (getAvailableTimeSlotsForDate(date, todayStart).length > 0) return date
+  }
+
+  return todayStart
+}
+
+const getMillisecondsUntilNextDay = (date = new Date()) => {
+  const tomorrow = new Date(date)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(0, 0, 1, 0)
+
+  return Math.max(tomorrow.getTime() - date.getTime(), 1000)
+}
 
 const DESKTOP_COLLABORATOR_SLOTS = [4, 5, 6, 7, 8, 0, 1, 2, 3, 9, 10, 11]
 
@@ -696,17 +799,20 @@ function FaqSection() {
 
 function CtaSection() {
   const [formStatus, setFormStatus] = useState('idle')
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const [today, setToday] = useState(() => startOfLocalDay(new Date()))
+  const initialBookingDate = useMemo(() => findFirstAvailableBookingDate(today), [today])
   const [bookingStep, setBookingStep] = useState('date')
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1))
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const nextDate = new Date(today)
-    nextDate.setDate(nextDate.getDate() + 1)
-    return nextDate
-  })
-  const timeSlots = ['10h - 12h', '14h - 16h', '17h - 21h']
-  const [selectedTime, setSelectedTime] = useState(timeSlots[0])
+  const [selectedDate, setSelectedDate] = useState(initialBookingDate)
+  const selectedAvailableSlots = useMemo(() => (
+    getAvailableTimeSlotsForDate(selectedDate, today)
+  ), [selectedDate, today])
+  const [selectedTime, setSelectedTime] = useState(() => (
+    getAvailableTimeSlotsForDate(initialBookingDate, today)[0] ?? ''
+  ))
+  const effectiveSelectedTime = selectedAvailableSlots.includes(selectedTime)
+    ? selectedTime
+    : selectedAvailableSlots[0] ?? ''
   const monthLabel = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(calendarMonth)
   const selectedDateLabel = new Intl.DateTimeFormat('fr-FR', {
     weekday: 'long',
@@ -724,9 +830,15 @@ function CtaSection() {
     (_, index) => new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), index + 1)
   )
   const calendarOffset = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay()
-  const availableFrom = new Date(today)
-  availableFrom.setDate(availableFrom.getDate() + 1)
   const weekdays = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM']
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setToday(startOfLocalDay(new Date()))
+    }, getMillisecondsUntilNextDay())
+
+    return () => window.clearTimeout(timer)
+  }, [today])
 
   const changeCalendarMonth = (amount) => {
     setCalendarMonth((current) => new Date(current.getFullYear(), current.getMonth() + amount, 1))
@@ -755,9 +867,13 @@ function CtaSection() {
     const phone = formData.get('phone')
     const project = formData.get('project') || 'Non précisé'
     const message = formData.get('message')
+    if (!effectiveSelectedTime) {
+      setBookingStep('date')
+      return
+    }
     const subject = encodeURIComponent(`Nouveau projet Supra v — ${name}`)
     const body = encodeURIComponent(
-      `Date souhaitée: ${formatDateValue(selectedDate)}\nCréneau: ${selectedTime}\nNom: ${name}\nEmail: ${email}\nTéléphone: ${phone}\nProjet: ${project}\n\nMessage:\n${message}`
+      `Date souhaitée: ${formatDateValue(selectedDate)}\nCréneau: ${effectiveSelectedTime}\nNom: ${name}\nEmail: ${email}\nTéléphone: ${phone}\nProjet: ${project}\n\nMessage:\n${message}`
     )
 
     setFormStatus('sent')
@@ -785,7 +901,7 @@ function CtaSection() {
               </motion.div>
 
               <motion.div className="cta-contact-copy__details" variants={fadeUpChild}>
-                <a href="tel:+212600000000">+33 7 44 20 86 73</a>
+                <a href="tel:+33744208673">+33 7 44 20 86 73</a>
                 <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
               </motion.div>
 
@@ -810,6 +926,7 @@ function CtaSection() {
                   exit={{ opacity: 0, x: -24, filter: 'blur(8px)' }}
                   transition={{ duration: 0.45, ease: EASING }}
                 >
+                  <span className="cta-booking__eyebrow">Prendre rendez-vous</span>
                   <div className="cta-booking__top">
                     <h3>{monthLabel}</h3>
                     <div className="cta-booking__month-controls">
@@ -826,16 +943,22 @@ function CtaSection() {
                       <span key={`blank-${index}`} className="cta-calendar__blank" />
                     ))}
                     {calendarDays.map((date) => {
-                      const disabled = date < availableFrom
+                      const daySlots = getAvailableTimeSlotsForDate(date, today)
+                      const disabled = date < today
                       const selected = isSameDay(date, selectedDate)
-                      const available = date >= availableFrom
+                      const available = daySlots.length > 0
                       return (
                         <button
                           type="button"
                           key={date.toISOString()}
-                          className={`cta-calendar__day ${available ? 'is-available' : ''} ${selected ? 'is-selected' : ''}`}
+                          className={`cta-calendar__day ${available ? 'is-available' : 'is-fully-booked'} ${selected ? 'is-selected' : ''}`}
                           disabled={disabled}
-                          onClick={() => setSelectedDate(date)}
+                          aria-label={`${formatDateValue(date)} · ${available ? `${daySlots.length} créneau${daySlots.length > 1 ? 'x' : ''} disponible${daySlots.length > 1 ? 's' : ''}` : 'Complet'}`}
+                          onClick={() => {
+                            setSelectedDate(date)
+                            setSelectedTime(daySlots[0] ?? '')
+                            setBookingStep('date')
+                          }}
                         >
                           {date.getDate()}
                         </button>
@@ -845,25 +968,40 @@ function CtaSection() {
 
                   <div className="cta-booking__schedule">
                     <strong>{selectedDateShortLabel}</strong>
+                    <span>{selectedAvailableSlots.length > 0 ? `${selectedAvailableSlots.length} créneau${selectedAvailableSlots.length > 1 ? 'x' : ''} disponible${selectedAvailableSlots.length > 1 ? 's' : ''}` : 'Complet'}</span>
                   </div>
 
-                  <div className="cta-booking__time-slots" aria-label="Choisir une heure">
-                    {timeSlots.map((time) => (
-                      <motion.button
-                        type="button"
-                        key={time}
-                        className={`cta-booking__time-slot ${selectedTime === time ? 'is-selected' : ''}`}
-                        whileHover={{ y: -2, scale: 1.02 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => {
-                          setSelectedTime(time)
-                          setBookingStep('details')
-                        }}
-                      >
-                        {time}
-                      </motion.button>
-                    ))}
+                  <div className="cta-booking__time-slots" aria-label="Choisir un créneau">
+                    {selectedAvailableSlots.length > 0 ? (
+                      selectedAvailableSlots.map((time) => (
+                        <motion.button
+                          type="button"
+                          key={time}
+                          className={`cta-booking__time-slot ${effectiveSelectedTime === time ? 'is-selected' : ''}`}
+                          whileHover={{ y: -2, scale: 1.02 }}
+                          whileTap={{ scale: 0.97 }}
+                          onClick={() => {
+                            setSelectedTime(time)
+                            setBookingStep('details')
+                          }}
+                        >
+                          {time}
+                        </motion.button>
+                      ))
+                    ) : (
+                      <div className="cta-booking__fully-booked" role="status">
+                        Complet
+                      </div>
+                    )}
                   </div>
+                  <a
+                    className="cta-booking__emergency"
+                    href="https://wa.me/33744208673?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Appel d'urgence
+                  </a>
                 </motion.div>
               ) : (
                 <motion.form
@@ -877,11 +1015,11 @@ function CtaSection() {
                   onSubmit={handleSubmit}
                 >
                   <input type="hidden" name="date" value={formatDateValue(selectedDate)} />
-                  <input type="hidden" name="time" value={selectedTime} />
+                  <input type="hidden" name="time" value={effectiveSelectedTime} />
 
                   <motion.div className="cta-form__selected-date" variants={fadeUpChild}>
                     <button type="button" onClick={() => setBookingStep('date')}>Changer</button>
-                    <span>{selectedDateLabel} · {selectedTime}</span>
+                    <span>{selectedDateLabel} · {effectiveSelectedTime || 'Complet'}</span>
                   </motion.div>
 
                   <motion.label className="cta-field" variants={fadeUpChild}>
@@ -918,7 +1056,7 @@ function CtaSection() {
                         </svg>
                       </span>
                     </motion.button>
-                    <a href="https://wa.me/212600000000" className="cta-form__whatsapp">WhatsApp direct</a>
+                    <a href="https://wa.me/33744208673" className="cta-form__whatsapp">WhatsApp direct</a>
                   </motion.div>
 
                   <AnimatePresence>
@@ -977,7 +1115,7 @@ function SiteFooter() {
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Contact</h4>
             <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
-            <a href="https://wa.me/212600000000">WhatsApp</a>
+            <a href="https://wa.me/33744208673">WhatsApp</a>
             <p>Marrakech, Maroc</p>
           </div>
         </div>
@@ -994,7 +1132,7 @@ function SiteFooter() {
 function WhatsappFab() {
   return (
     <motion.a
-      href="https://wa.me/212600000000"
+      href="https://wa.me/33744208673"
       className="whatsapp-fab"
       aria-label="Contacter Supra v sur WhatsApp"
       initial={{ opacity: 0, scale: 0 }}
