@@ -1243,7 +1243,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 28px;
+  padding: 8px 28px 112px;
+  transform: translateY(-22px);
   overflow: hidden;
 }
 
