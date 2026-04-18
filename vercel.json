@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/works",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

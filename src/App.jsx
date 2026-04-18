@@ -4,6 +4,7 @@ import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, Animat
 import './App.css'
 import './TopNavbar.css'
 import { TopNavbar } from './TopNavbar.jsx'
+import ScrollMorphHero from '../components/ui/scroll-morph-hero.tsx'
 import { ParallaxBackground } from './useParallax.jsx'
 import { DURATION, EASING, STAGGER, ANIMATE_VARIANTS, TRANSITION_PROPS, VIEWPORT_SETTINGS, HOVER_TRANSITION } from './animationConstants.js'
 import vid1 from '../media/videos/vid1.mp4'
@@ -114,6 +115,97 @@ function HoverButtonLink({ href, className = '', children }) {
       ))}
       <span className="hover-button-label">{children}</span>
     </a>
+  )
+}
+
+function AnimatedHeroLine({ words, start = 0 }) {
+  return (
+    <span className="hero__title-line">
+      {words.map((word, index) => {
+        const className = [
+          'hero-word',
+          word.className,
+        ].filter(Boolean).join(' ')
+
+        return (
+          <span
+            key={`${word.text}-${index}`}
+            className={className}
+            style={{ animationDelay: `${start + index * 0.055}s` }}
+          >
+            {word.text}
+          </span>
+        )
+      })}
+    </span>
+  )
+}
+
+function BlurredStaggerHeading({ lines }) {
+  const container = {
+    hidden: { opacity: 1 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.015,
+      },
+    },
+  }
+
+  const letterAnimation = {
+    hidden: {
+      opacity: 0,
+      y: 8,
+      filter: 'blur(10px)',
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      transition: {
+        duration: 0.34,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  }
+
+  const label = lines
+    .map((line) => line.parts.map((part) => part.text).join(''))
+    .join(' ')
+
+  return (
+    <motion.h2
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={revealViewport}
+      aria-label={label}
+    >
+      {lines.map((line, lineIndex) => (
+        <span className="collaborators-copy__line" aria-hidden="true" key={lineIndex}>
+          {line.parts.map((part, partIndex) => {
+            const Wrapper = part.em ? 'em' : 'span'
+
+            return (
+              <Wrapper
+                className={part.zoom ? 'collaborators-zoom-word' : undefined}
+                key={`${part.text}-${partIndex}`}
+              >
+                {part.text.split('').map((char, charIndex) => (
+                  <motion.span
+                    className="blurred-stagger-char"
+                    variants={letterAnimation}
+                    key={`${char}-${charIndex}`}
+                  >
+                    {char === ' ' ? '\u00A0' : char}
+                  </motion.span>
+                ))}
+              </Wrapper>
+            )
+          })}
+        </span>
+      ))}
+    </motion.h2>
   )
 }
 
@@ -236,6 +328,129 @@ const METHODE = [
   { num: '03', title: 'Créer', desc: "Identité, contenus, interfaces, code. Produits livrables concrets.", tags: 'Branding • Design • Contenu' },
   { num: '04', title: 'Déployer', desc: "Mise en ligne, diffusion, campagnes, mise sous tension.", tags: 'Setup • Lancement • Campagnes' },
   { num: '05', title: 'Optimiser', desc: "Mesure, ajustements, itération. Un projet vivant, pas un livrable figé.", tags: 'Testing • Mesure • Amélioration continue' },
+]
+
+const WORK_PROJECTS = [
+  {
+    num: '01',
+    category: 'Identité de marque',
+    client: 'Programme immobilier haut standing — Marrakech',
+    mission: 'Positionnement, naming, logo, charte graphique, supports de commercialisation print et digital.',
+    result: "Le projet est passé d'une plaquette Word envoyée par WhatsApp à une identité complète déclinée sur 12 supports — du panneau chantier à la story Instagram. Première vente signée 3 semaines après le lancement de la communication.",
+    tag: 'Branding · Immobilier · Marrakech',
+    video: vid1,
+  },
+  {
+    num: '02',
+    category: 'Film de marque + contenus sociaux',
+    client: 'Restaurant gastronomique — Guéliz, Marrakech',
+    mission: 'Film de marque 60 secondes, 15 capsules verticales pour Instagram Reels et TikTok, direction artistique photo du menu.',
+    result: "Taux d'engagement Instagram passé de 1,2 % à 6,8 % en deux mois. Le film a été repris en story par trois influenceurs Marrakech sans achat média.",
+    tag: 'Contenus · Hospitality · Marrakech',
+    video: vid2,
+  },
+  {
+    num: '03',
+    category: 'Site web vitrine + SEO local',
+    client: "Cabinet d'architecture — Marrakech",
+    mission: 'Site one-page codé sur-mesure, référencement naturel ciblé "architecte Marrakech", intégration du formulaire de contact connecté au CRM.',
+    result: 'Page 1 de Google sur "architecte intérieur Marrakech" en 8 semaines. Le site génère en moyenne 14 demandes de devis par mois depuis la mise en ligne.',
+    tag: 'Site web · SEO · Marrakech',
+    video: vid3,
+  },
+  {
+    num: '04',
+    category: 'Campagne Meta Ads immobilière',
+    client: "Promoteur résidentiel — Route de l'Ourika",
+    mission: 'Création des visuels publicitaires, ciblage géolocalisé Marrakech + diaspora MRE, landing page de captation, suivi des leads.',
+    result: '217 leads qualifiés en 45 jours de campagne. Coût par lead : 38 MAD. Trois lots vendus directement via les leads Facebook, soit un retour publicitaire estimé à ×42.',
+    tag: 'Meta Ads · Immobilier · Acquisition',
+    video: vid4,
+  },
+  {
+    num: '05',
+    category: 'Social media management',
+    client: 'Marque de prêt-à-porter féminin — Marrakech',
+    mission: "Prise en main complète d'Instagram et TikTok pendant 6 mois. Ligne éditoriale, calendrier, 4 publications par semaine, gestion des messages privés.",
+    result: 'Passage de 1 800 à 11 400 abonnés Instagram en 6 mois. Le canal Instagram est devenu la première source de ventes en boutique — les clientes arrivent en disant "j\'ai vu ça sur votre Insta".',
+    tag: 'Social media · Retail · Marrakech',
+    video: vid5,
+  },
+  {
+    num: '06',
+    category: 'Application web + automatisation IA',
+    client: 'Agence de location courte durée — Palmeraie, Marrakech',
+    mission: "Développement d'une plateforme de gestion des réservations multi-canaux (Airbnb, Booking, direct), agent IA conversationnel pour qualifier les demandes WhatsApp entrantes, automatisation des factures et rappels.",
+    result: "Temps de gestion administrative réduit de 4 heures par jour à 45 minutes. L'agent IA traite 73 % des demandes WhatsApp sans intervention humaine. Le taux de réponse est passé sous 3 minutes en moyenne, contre 4 heures avant.",
+    tag: 'Application · IA · Automatisation · Marrakech',
+    video: vid6,
+  },
+]
+
+const WEBSITE_TABS = [
+  {
+    id: 'vitrine',
+    label: 'Site vitrine',
+    title: 'Un site clair qui transforme les visiteurs en demandes.',
+    text: "Pour les marques, cabinets, restaurants, riads et programmes immobiliers qui veulent une présence premium, rapide et crédible. On structure le message, on design l'interface et on code une page qui guide vers l'appel, le formulaire ou WhatsApp.",
+    tags: ['UX/UI Design', 'SEO local', 'Responsive'],
+    price: 'à partir de 15 000 MAD',
+    timeline: '3 - 5 semaines',
+    video: vid3,
+  },
+  {
+    id: 'landing',
+    label: 'Landing page',
+    title: 'Une page de campagne pensée pour capter des leads.',
+    text: "Pour Meta Ads, lancement immobilier, offre saisonnière ou campagne événementielle. Une seule promesse, un parcours court, un tracking propre et une prise de contact sans friction.",
+    tags: ['Meta Ads', 'Lead capture', 'Tracking'],
+    price: 'à partir de 8 000 MAD',
+    timeline: '7 - 12 jours',
+    video: vid4,
+  },
+  {
+    id: 'ecommerce',
+    label: 'E-commerce',
+    title: 'Une boutique en ligne qui garde la marque au centre.',
+    text: "Catalogue, fiches produit, paiement, livraison, gestion des commandes et storytelling visuel. On conçoit l'expérience pour vendre sans dégrader la perception de votre marque.",
+    tags: ['Shop', 'Paiement', 'Catalogue'],
+    price: 'à partir de 35 000 MAD',
+    timeline: '5 - 8 semaines',
+    video: vid5,
+  },
+  {
+    id: 'webapp',
+    label: 'Application web',
+    title: 'Un outil métier pour remplacer les fichiers dispersés.',
+    text: "Dashboards, espaces clients, réservation, automatisation, CRM léger ou plateforme interne. On transforme votre processus en interface fiable, lisible et prête à évoluer.",
+    tags: ['Dashboard', 'Automatisation', 'IA'],
+    price: 'sur devis',
+    timeline: '6 - 12 semaines',
+    video: vid6,
+  },
+]
+
+const WEBSITE_PROJECTS = [
+  {
+    name: 'Palmeraie Stays',
+    type: 'Plateforme de location courte durée',
+    video: vid6,
+  },
+  {
+    name: 'Ourika Living',
+    type: 'Landing page immobilière',
+    video: vid4,
+  },
+  {
+    name: 'Studio Medina',
+    type: 'Site vitrine créatif',
+    video: vid3,
+  },
+  {
+    name: 'Maison Noura',
+    type: 'Site e-commerce retail',
+    video: vid5,
+  },
 ]
 
 const SEGMENTS = [
@@ -499,10 +714,12 @@ function CollaboratorsSection() {
           whileInView="visible"
           viewport={revealViewport}
         >
-          <motion.h2 variants={fadeUpChild}>
-            <span className="collaborators-copy__line">On accompagne peu de marques,</span>
-            <span className="collaborators-copy__line">mais on les accompagne <em>loin.</em></span>
-          </motion.h2>
+          <BlurredStaggerHeading
+            lines={[
+              { parts: [{ text: 'On accompagne peu de marques,' }] },
+              { parts: [{ text: 'mais on les accompagne ' }, { text: 'loin.', em: true, zoom: true }] },
+            ]}
+          />
           <motion.a variants={fadeUpChild} href="#contact" className="collab-call-pill magnetic-btn">
             <span className="collab-call-pill__avatar">
               <img src={partner1} alt="" />
@@ -1087,7 +1304,7 @@ function SiteFooter() {
       <div className="container">
         <div className="site-footer__grid">
           <div className="site-footer__brand">
-            <a href="#" className="site-footer__logo" aria-label="Supra v. - Accueil">
+            <a href="/" className="site-footer__logo" aria-label="Supra v. - Accueil">
               <img src={logoImage} alt="Supra v." />
             </a>
             <p className="site-footer__tagline">
@@ -1097,19 +1314,19 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Navigation</h4>
-            <a href="#works">Réalisations</a>
-            <a href="#services">Services</a>
-            <a href="#methode">Méthode</a>
-            <a href="#segments">Pour qui</a>
-            <a href="#faq">FAQ</a>
+            <a href="/works">Réalisations</a>
+            <a href="/#services">Services</a>
+            <a href="/#methode">Méthode</a>
+            <a href="/#segments">Pour qui</a>
+            <a href="/#faq">FAQ</a>
           </div>
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Services</h4>
-            <a href="#services">Stratégie de marque</a>
-            <a href="#services">Création site web Marrakech</a>
-            <a href="#services">Applications mobiles</a>
-            <a href="#services">Automatisation IA</a>
+            <a href="/#services">Stratégie de marque</a>
+            <a href="/#services">Création site web Marrakech</a>
+            <a href="/#services">Applications mobiles</a>
+            <a href="/#services">Automatisation IA</a>
           </div>
 
           <div className="site-footer__col">
@@ -1145,6 +1362,90 @@ function WhatsappFab() {
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
       </svg>
     </motion.a>
+  )
+}
+
+function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
+  return (
+    <header className={`site-nav ${className} ${scrolled ? 'site-nav--scrolled' : ''}`}>
+      <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
+        <nav className="nav" aria-label="Navigation principale">
+          <a href="/" className="nav__logo" aria-label="Supra v. - Accueil">
+            <img src={logoImage} alt="Supra v." />
+          </a>
+          <ul className="nav__links">
+            <li>
+              <a href="/works" className="nav__link">
+                Réalisations
+              </a>
+            </li>
+            <li>
+              <a href="/#services" className="nav__link">
+                Services
+              </a>
+            </li>
+            <li>
+              <a href="/#about" className="nav__link">
+                L'agence
+              </a>
+            </li>
+            <li>
+              <a href="/#faq" className="nav__link">
+                FAQ
+              </a>
+            </li>
+          </ul>
+          <span className="nav__separator" aria-hidden="true" />
+          <a href="/#contact" className="btn btn--primary nav__cta">
+            Parlons de votre projet →
+          </a>
+          <button
+            type="button"
+            className={`nav__hamburger ${navOpen ? 'is-open' : ''}`}
+            aria-expanded={navOpen}
+            aria-controls="mobile-nav"
+            aria-label={navOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            onClick={() => setNavOpen((open) => !open)}
+          >
+            <span className="nav__hamburger-line nav__hamburger-line--top" />
+            <span className="nav__hamburger-line nav__hamburger-line--bottom" />
+          </button>
+        </nav>
+      </div>
+
+      <div
+        id="mobile-nav"
+        className={`nav__mobile-panel ${navOpen ? 'is-open' : ''}`}
+        aria-hidden={!navOpen}
+      >
+        <ul className="nav__mobile-links">
+          <li>
+            <a href="/works" onClick={() => setNavOpen(false)}>
+              Réalisations
+            </a>
+          </li>
+          <li>
+            <a href="/#services" onClick={() => setNavOpen(false)}>
+              Services
+            </a>
+          </li>
+          <li>
+            <a href="/#about" onClick={() => setNavOpen(false)}>
+              L'agence
+            </a>
+          </li>
+          <li>
+            <a href="/#faq" onClick={() => setNavOpen(false)}>
+              FAQ
+            </a>
+          </li>
+        </ul>
+        <span className="nav__mobile-separator" aria-hidden="true" />
+        <a href="/#contact" className="btn btn--primary nav__mobile-cta" onClick={() => setNavOpen(false)}>
+          Parlons de votre projet →
+        </a>
+      </div>
+    </header>
   )
 }
 
@@ -1192,6 +1493,218 @@ function MediaVideoCard({ videoSrc, index }) {
         aria-label="Réalisation vidéo agence de communication Marrakech"
       />
     </motion.article>
+  )
+}
+
+function MediaCloudsSection({ videos }) {
+  const sectionRef = useRef(null)
+  const [shouldLoadVideos, setShouldLoadVideos] = useState(false)
+
+  useEffect(() => {
+    if (shouldLoadVideos) return undefined
+
+    const section = sectionRef.current
+    if (!section) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setShouldLoadVideos(true)
+        observer.disconnect()
+      },
+      { rootMargin: '900px 0px' }
+    )
+
+    observer.observe(section)
+
+    return () => observer.disconnect()
+  }, [shouldLoadVideos])
+
+  return (
+    <section className="media-clouds section" id="works" ref={sectionRef}>
+      <motion.div
+        className="media-clouds__header"
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={revealViewport}
+      >
+        <motion.p variants={fadeUpChild} className="label">01 — Réalisations</motion.p>
+        <motion.h2 variants={fadeUpChild} className="heading-2">
+          Du brand book à la campagne, les projets qui ont tourné en 2025.
+        </motion.h2>
+        <motion.p variants={fadeUpChild} className="media-clouds__lead">
+          Six extraits de productions récentes — identités, films de marque, contenus publicitaires diffusés sur Meta et TikTok.
+        </motion.p>
+      </motion.div>
+
+      <div className="media-clouds__viewport">
+        <div className="media-clouds__track">
+          {shouldLoadVideos && videos.concat(videos).map((videoSrc, index) => (
+            <MediaVideoCard
+              key={`${videoSrc}-${index}`}
+              videoSrc={videoSrc}
+              index={index}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function WorkProjectCard({ project, shouldLoadVideo }) {
+  return (
+    <motion.article
+      className="work-card"
+      variants={fadeUpChild}
+      whileHover={{ y: -6 }}
+      transition={HOVER_TRANSITION}
+    >
+      <div className="work-card__media">
+        <video
+          className="work-card__video"
+          src={shouldLoadVideo ? project.video : undefined}
+          muted
+          loop
+          preload={project.num <= '03' ? 'metadata' : 'none'}
+          playsInline
+          controls
+          aria-label={`${project.category} pour ${project.client}`}
+        />
+      </div>
+      <div className="work-card__body">
+        <div className="work-card__topline">
+          <span>Projet {project.num}</span>
+          <span>{project.category}</span>
+        </div>
+        <h3>{project.category}</h3>
+        <dl className="work-card__details">
+          <div>
+            <dt>Client</dt>
+            <dd>{project.client}</dd>
+          </div>
+          <div>
+            <dt>Mission</dt>
+            <dd>{project.mission}</dd>
+          </div>
+          <div>
+            <dt>Ce qui a changé</dt>
+            <dd>{project.result}</dd>
+          </div>
+        </dl>
+        <p className="work-card__tag">{project.tag}</p>
+      </div>
+    </motion.article>
+  )
+}
+
+function WorkProjectRow({ project, shouldLoadVideo }) {
+  return (
+    <motion.article className="work-row" variants={fadeUpChild}>
+      <h3 className="work-row__title">Projet {project.num} — {project.category}</h3>
+
+      <div className="work-row__media-wrap">
+        <video
+          className="work-row__video"
+          src={shouldLoadVideo ? project.video : undefined}
+          muted
+          loop
+          preload={project.num <= '03' ? 'metadata' : 'none'}
+          playsInline
+          controls
+          aria-label={`${project.category} pour ${project.client}`}
+        />
+        <div className="work-row__chips" aria-label={`Tags ${project.category}`}>
+          {project.tag.split(' · ').map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="work-row__copy">
+        <p className="work-row__client">{project.client}</p>
+        <p className="work-row__mission">{project.mission}</p>
+        <dl className="work-row__stats">
+          <div>
+            <dt>Client</dt>
+            <dd>{project.client}</dd>
+          </div>
+          <div>
+            <dt>Ce qui a changé</dt>
+            <dd>{project.result}</dd>
+          </div>
+        </dl>
+      </div>
+    </motion.article>
+  )
+}
+
+function WorksPage() {
+  return (
+    <div id="works">
+      <div className="works-page">
+        <ScrollMorphHero />
+      </div>
+      <WebsiteProjectsSection />
+    </div>
+  )
+}
+
+function WebsiteProjectsSection() {
+  return (
+    <section className="website-projects-section" aria-label="Sites web réalisés">
+      <div className="website-projects-section__grid-bg" aria-hidden="true" />
+      <div className="website-projects-section__inner">
+        <div className="website-projects-section__pill">
+          <span className="website-projects-section__pill-avatar">
+            <img src={partner1} alt="" />
+          </span>
+          <strong>Supra v.</strong>
+          <small aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </small>
+        </div>
+
+        <div className="website-projects-section__head">
+          <p>Réalisations</p>
+          <h2>
+            Sites <span>web</span>
+          </h2>
+        </div>
+
+        <div className="website-projects-grid">
+          {WEBSITE_PROJECTS.map((project) => (
+            <article className="website-project-card" key={project.name}>
+              <a href="/#contact" className="website-project-card__media" aria-label={`Voir le projet ${project.name}`}>
+                <video
+                  src={project.video}
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  preload="metadata"
+                />
+                <span className="website-project-card__brand">Supra v.</span>
+              </a>
+
+              <div className="website-project-card__bottom">
+                <div>
+                  <h3>{project.name}</h3>
+                  <p>{project.type}</p>
+                </div>
+                <a href="/#contact">
+                  Voir le projet
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -1314,15 +1827,60 @@ function StorySection() {
   )
 }
 
+const DEFAULT_SEO = {
+  title: 'Supra v. | Agence communication Marrakech',
+  description: 'Agence de communication à Marrakech : branding, sites web, contenus, marketing digital et automatisation IA pour faire grandir votre marque.',
+  canonical: 'https://suprav.vercel.app/',
+}
+
+const WORKS_SEO = {
+  title: 'Réalisations Supra v. | Projets de communication à Marrakech',
+  description: 'Découvrez les réalisations de Supra v., agence de communication à Marrakech : identités de marque, sites web, campagnes Meta Ads, applications et automatisation IA.',
+  canonical: 'https://suprav.vercel.app/works',
+}
+
+function setMetaContent(selector, content) {
+  const element = document.head.querySelector(selector)
+  if (element) element.setAttribute('content', content)
+}
+
+function useCurrentPath() {
+  const [path, setPath] = useState(() => window.location.pathname)
+
+  useEffect(() => {
+    const handleNavigation = () => setPath(window.location.pathname)
+    window.addEventListener('popstate', handleNavigation)
+
+    return () => window.removeEventListener('popstate', handleNavigation)
+  }, [])
+
+  return path
+}
+
 /* ============================================================
    MAIN APP
    ============================================================ */
 function App() {
+  const currentPath = useCurrentPath()
+  const isWorksPage = currentPath === '/works'
   const [scrolled, setScrolled] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
   const scrolledRef = useRef(false)
   const navOpenRef = useRef(false)
   const { scrollY } = useScroll()
+  const seo = isWorksPage ? WORKS_SEO : DEFAULT_SEO
+
+  useEffect(() => {
+    document.title = seo.title
+    setMetaContent('meta[name="description"]', seo.description)
+    setMetaContent('meta[property="og:title"]', seo.title)
+    setMetaContent('meta[property="og:description"]', seo.description)
+    setMetaContent('meta[name="twitter:title"]', seo.title)
+    setMetaContent('meta[name="twitter:description"]', seo.description)
+
+    const canonical = document.head.querySelector('link[rel="canonical"]')
+    if (canonical) canonical.setAttribute('href', seo.canonical)
+  }, [seo])
 
   useEffect(() => {
     navOpenRef.current = navOpen
@@ -1357,6 +1915,25 @@ function App() {
     }
   })
 
+  if (isWorksPage) {
+    return (
+      <div className="app app--works">
+        <TopNavbar />
+        <main className="page-content works-page-content">
+          <SiteHeader
+            scrolled={scrolled}
+            navOpen={navOpen}
+            setNavOpen={setNavOpen}
+            className="works-site-nav"
+          />
+          <div className="works-only">
+            <WorksPage />
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   const videos = [vid1, vid2, vid3, vid4, vid5, vid6]
 
   return (
@@ -1364,147 +1941,69 @@ function App() {
       <TopNavbar />
 
       <main className="page-content">
-        <header className={`site-nav ${scrolled ? 'site-nav--scrolled' : ''}`}>
-          <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
-            <nav className="nav" aria-label="Navigation principale">
-              <a href="#" className="nav__logo" aria-label="Supra v. - Accueil">
-                <img src={logoImage} alt="Supra v." />
-              </a>
-              <ul className="nav__links">
-                <li>
-                  <a href="#works" className="nav__link">
-                    Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#services" className="nav__link">
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a href="#about" className="nav__link">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#faq" className="nav__link">
-                    Blog
-                  </a>
-                </li>
-              </ul>
-              <a href="#contact" className="btn btn--ghost nav__cta">
-                Contact
-              </a>
-              <button
-                type="button"
-                className={`nav__hamburger ${navOpen ? 'is-open' : ''}`}
-                aria-expanded={navOpen}
-                aria-controls="mobile-nav"
-                aria-label={navOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-                onClick={() => setNavOpen((o) => !o)}
-              >
-                <span className="nav__hamburger-line nav__hamburger-line--top" />
-                <span className="nav__hamburger-line nav__hamburger-line--bottom" />
-              </button>
-            </nav>
-          </div>
-
-          <div
-            id="mobile-nav"
-            className={`nav__mobile-panel ${navOpen ? 'is-open' : ''}`}
-            aria-hidden={!navOpen}
-          >
-            <ul className="nav__mobile-links">
-              <li>
-                <a href="#works" onClick={() => setNavOpen(false)}>
-                  Works
-                </a>
-              </li>
-              <li>
-                <a href="#services" onClick={() => setNavOpen(false)}>
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="#about" onClick={() => setNavOpen(false)}>
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#faq" onClick={() => setNavOpen(false)}>
-                  Blog
-                </a>
-              </li>
-            </ul>
-            <a href="#contact" className="btn btn--ghost nav__mobile-cta" onClick={() => setNavOpen(false)}>
-              Contact
-            </a>
-          </div>
-        </header>
+        <SiteHeader
+          scrolled={scrolled}
+          navOpen={navOpen}
+          setNavOpen={setNavOpen}
+        />
         {/* ========== HERO ========== */}
-        <motion.section 
-          className="hero"
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.05 }}
-          transition={{ duration: DURATION.SLOW, delay: 0.5, ease: EASING }}
-        >
-          <ParallaxBackground className="hero__background" speed={0.9} />
+        <section className="hero">
+          <div className="hero__background" aria-hidden="true" />
 
-          <motion.div
-            className="trust-bar"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: DURATION.NORMAL, delay: 0.3, ease: EASING }}
-          >
+          <div className="trust-bar">
             <div className="trust-bar__inner">
               <div className="trust-bar__avatars" aria-hidden="true">
-                <div className="trust-bar__avatar">S</div>
-                <div className="trust-bar__avatar">V</div>
-                <div className="trust-bar__avatar">3</div>
+                <div className="trust-bar__avatar">
+                  <img src={partner3} alt="" />
+                </div>
+                <div className="trust-bar__avatar">
+                  <img src={partner5} alt="" />
+                </div>
+                <div className="trust-bar__avatar">
+                  <img src={partner12} alt="" />
+                </div>
               </div>
               <p className="trust-bar__text">
                 Marrakech · Disponible pour de nouveaux projets
               </p>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.h1
-            className="heading-hero hero__title"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: DURATION.SLOW, delay: 0.2, ease: EASING }}
-          >
-            <span className="hero__title-line">
-              Agence de communication{' '}
-              <span className="text-accent hero__number">360°</span>
-            </span>
-            <span className="hero__title-line">
-              à Marrakech{' '}
-              <span className="hero__title-muted">pour </span>
-              faire grandir
-            </span>
-            <span className="hero__title-line">
-              <span className="hero__title-muted">votre </span>
-              <span className="text-accent">marque</span>
-            </span>
-          </motion.h1>
+          <h1 className="heading-hero hero__title">
+            <AnimatedHeroLine
+              start={0.1}
+              words={[
+                { text: 'Agence' },
+                { text: 'de' },
+                { text: 'communication' },
+                { text: '360°', className: 'text-accent hero__number' },
+              ]}
+            />
+            <AnimatedHeroLine
+              start={0.32}
+              words={[
+                { text: 'à' },
+                { text: 'Marrakech' },
+                { text: 'pour', className: 'hero__title-muted' },
+                { text: 'faire' },
+                { text: 'grandir' },
+              ]}
+            />
+            <AnimatedHeroLine
+              start={0.62}
+              words={[
+                { text: 'votre', className: 'hero__title-muted' },
+                { text: 'marque', className: 'text-accent' },
+              ]}
+            />
+          </h1>
 
-          <motion.p
-            className="text-body hero__subtitle"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: DURATION.NORMAL, delay: 0.35, ease: EASING }}
-          >
+          <p className="text-body hero__subtitle">
             Branding, contenus premium, sites web, applications et agents IA. Une seule équipe à Marrakech pour penser votre image, l'écrire, la filmer, la diffuser et la faire tourner en ligne.
-          </motion.p>
+          </p>
 
-          <motion.div
-            className="hero__cta"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: DURATION.NORMAL, delay: 0.5, ease: EASING }}
-          >
-            <a href="#works" className="btn btn--primary">
+          <div className="hero__cta">
+            <a href="/works" className="btn btn--primary">
               Voir nos réalisations
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
@@ -1513,8 +2012,8 @@ function App() {
             <HoverButtonLink href="#contact" className="btn btn--secondary hero-hover-button">
               Parler de votre projet
             </HoverButtonLink>
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
         {/* ========== SECTORS BAR ========== */}
         <SectorsMarquee />
@@ -1523,35 +2022,7 @@ function App() {
         <CollaboratorsSection />
 
         {/* ========== RÉALISATIONS (existant) ========== */}
-        <section className="media-clouds section" id="works">
-          <motion.div
-            className="media-clouds__header"
-            variants={stagger}
-            initial="hidden"
-            whileInView="visible"
-            viewport={revealViewport}
-          >
-            <motion.p variants={fadeUpChild} className="label">01 — Réalisations</motion.p>
-            <motion.h2 variants={fadeUpChild} className="heading-2">
-              Du brand book à la campagne, les projets qui ont tourné en 2025.
-            </motion.h2>
-            <motion.p variants={fadeUpChild} className="media-clouds__lead">
-              Six extraits de productions récentes — identités, films de marque, contenus publicitaires diffusés sur Meta et TikTok.
-            </motion.p>
-          </motion.div>
-
-          <div className="media-clouds__viewport">
-            <div className="media-clouds__track">
-              {videos.concat(videos).map((videoSrc, index) => (
-                <MediaVideoCard
-                  key={`${videoSrc}-${index}`}
-                  videoSrc={videoSrc}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+        <MediaCloudsSection videos={videos} />
 
         {/* ========== STORY ========== */}
         <StorySection />
