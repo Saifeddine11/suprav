@@ -4083,8 +4083,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #ffffff;
-  color: var(--color-accent);
+  background: #070707;
+  color: #fbf59a;
 }
 
 .cta-form__submit:hover .cta-form__submit-icon svg {
@@ -4614,8 +4614,8 @@
   border: 0;
   border-radius: 999px;
   background:
-    radial-gradient(72% 140% at 50% -36%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.06) 48%, rgba(255, 255, 255, 0) 76%),
-    linear-gradient(180deg, #f16437 0%, var(--color-accent) 100%);
+    radial-gradient(72% 140% at 50% -36%, rgba(232, 73, 28, 0.46) 0%, rgba(232, 73, 28, 0.08) 48%, rgba(232, 73, 28, 0) 76%),
+    linear-gradient(180deg, #21110d 0%, #0d0908 100%);
   color: #ffffff;
   font-family: var(--font-body);
   font-size: 16px;
@@ -4639,8 +4639,8 @@
 .cta-form__submit:hover,
 .collab-call-pill:hover {
   background:
-    radial-gradient(82% 150% at 50% -30%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.1) 52%, rgba(255, 255, 255, 0) 78%),
-    linear-gradient(180deg, #ff784a 0%, #d93d15 100%);
+    radial-gradient(82% 150% at 50% -30%, rgba(232, 73, 28, 0.72) 0%, rgba(232, 73, 28, 0.2) 52%, rgba(232, 73, 28, 0) 78%),
+    linear-gradient(180deg, #311409 0%, #130b08 100%);
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow:
