@@ -1965,7 +1965,7 @@ function App() {
                 </div>
               </div>
               <p className="trust-bar__text">
-                Marrakech · Disponibleee pour de nouveaux projets
+                Marrakech · Disponible pour de nouveaux projets
               </p>
             </div>
           </div>
