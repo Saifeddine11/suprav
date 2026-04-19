@@ -1830,13 +1830,13 @@ function StorySection() {
 const DEFAULT_SEO = {
   title: 'Supra v. | Agence communication Marrakech',
   description: 'Agence de communication à Marrakech : branding, sites web, contenus, marketing digital et automatisation IA pour faire grandir votre marque.',
-  canonical: 'https://suprav.vercel.app/',
+  canonical: 'https://suprav3.com/',
 }
 
 const WORKS_SEO = {
   title: 'Réalisations Supra v. | Projets de communication à Marrakech',
   description: 'Découvrez les réalisations de Supra v., agence de communication à Marrakech : identités de marque, sites web, campagnes Meta Ads, applications et automatisation IA.',
-  canonical: 'https://suprav.vercel.app/works',
+  canonical: 'https://suprav3.com/works',
 }
 
 function setMetaContent(selector, content) {
@@ -1862,7 +1862,8 @@ function useCurrentPath() {
    ============================================================ */
 function App() {
   const currentPath = useCurrentPath()
-  const isWorksPage = currentPath === '/works'
+  const normalizedPath = currentPath.replace(/\/+$/, '') || '/'
+  const isWorksPage = normalizedPath === '/works'
   const [scrolled, setScrolled] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
   const scrolledRef = useRef(false)
@@ -1964,7 +1965,7 @@ function App() {
                 </div>
               </div>
               <p className="trust-bar__text">
-                Marrakech · Diisponible pour de nouveaux projets
+                Marrakech · Disponible pour de nouveaux projets
               </p>
             </div>
           </div>
