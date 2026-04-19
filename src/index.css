@@ -13,6 +13,8 @@
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :root {
+  color-scheme: light;
+
   /* ── Couleurs Primaires ── */
   --color-accent:          #E8491C;           /* Orange-100% */
   --color-accent-hover:    #D03A10;
@@ -144,6 +146,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
 }
 
 body {
