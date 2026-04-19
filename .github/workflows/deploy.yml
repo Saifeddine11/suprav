@@ -24,11 +24,25 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Check FTP secrets
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          test -n "$FTP_SERVER" || (echo "FTP_SERVER secret is missing" && exit 1)
+          test -n "$FTP_USERNAME" || (echo "FTP_USERNAME secret is missing" && exit 1)
+          test -n "$FTP_PASSWORD" || (echo "FTP_PASSWORD secret is missing" && exit 1)
+
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
           local-dir: ./dist/
           server-dir: ./public_html/
+          timeout: 60000
+          log-level: verbose
