@@ -75,11 +75,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          REMOTE_PATH="${SFTP_REMOTE_PATH:-public_html}"
+          REMOTE_PATH="${SFTP_REMOTE_PATH:-/public_html}"
           REMOTE_PATH="${REMOTE_PATH%/}"
+          if [[ "$REMOTE_PATH" != /* ]]; then
+            REMOTE_PATH="/${REMOTE_PATH}"
+          fi
           ATTEMPTS=3
 
-          echo "Deploying dist/ to sftp://${SFTP_HOST}:${SFTP_PORT}/${REMOTE_PATH}"
+          echo "Deploying the contents of dist/ to sftp://${SFTP_HOST}:${SFTP_PORT}${REMOTE_PATH}"
           echo "Remote config file api/contact-config.php will be preserved."
 
           for attempt in $(seq 1 "$ATTEMPTS"); do
@@ -92,10 +95,12 @@ jobs:
               set net:max-retries 4;
               set net:reconnect-interval-base 8;
               set net:reconnect-interval-max 45;
+              lcd dist;
+              cd \"${REMOTE_PATH}\";
               mirror -R --delete --verbose --parallel=2 \
                 --exclude-glob api/contact-config.php \
                 --exclude-glob api/contact-config.example.php \
-                dist/ \"${REMOTE_PATH}/\";
+                . .;
               bye;
             "
             then
