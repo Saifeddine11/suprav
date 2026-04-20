@@ -48,7 +48,6 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./dist/
-          server-dir: ./
-          timeout: 60000
-          log-level: verbose
-          dangerous-clean-slate: true
+          server-dir: ./public_html/
+          timeout: 180000
+          log-level: standard
