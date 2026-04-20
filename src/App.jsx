@@ -1762,6 +1762,8 @@ function StorySection() {
   ))
   const storyRadius = useTransform(growPhase, (latest) => `${mix(50, 0, latest)}px`)
   const storyShadeOpacity = useTransform(growPhase, (latest) => mix(0.38, 0, latest))
+  const storyIntroOpacity = useTransform(progress, (latest) => 1 - easeOutCubic(clamp((latest - 0.15) / 0.1, 0, 1)))
+  const storyPhotoOpacity = useTransform(progress, (latest) => easeOutCubic(clamp((latest - 0.15) / 0.1, 0, 1)))
   const leftCopyRight = useTransform([introPhase, growPhase], ([intro, grow]) => {
     const copyGap = mix(18, isMobile ? 28 : 36, intro)
     const sideAnchor = mix(isMobile ? 66 : 90, isMobile ? 148 : 290, grow) + copyGap
@@ -1793,11 +1795,17 @@ function StorySection() {
             className="story-card"
             style={{
               clipPath: storyClipPath,
-              backgroundImage: `url(${nousImage})`,
-              backgroundSize: storyBackgroundSize,
               borderRadius: storyRadius,
             }}
           >
+            <motion.div
+              className="story-card__photo"
+              style={{
+                backgroundImage: `url(${nousImage})`,
+                backgroundSize: storyBackgroundSize,
+                opacity: storyPhotoOpacity,
+              }}
+            />
             <motion.div className="story-card__shade" style={{ opacity: storyShadeOpacity }} />
             <div className="story-card__veil" />
             <motion.div
@@ -1810,6 +1818,9 @@ function StorySection() {
               Pas qu'une
               <br />
               agence.
+            </motion.div>
+            <motion.div className="story-card__intro" style={{ opacity: storyIntroOpacity }}>
+              <img src="/favicon.svg" alt="" aria-hidden="true" />
             </motion.div>
           </motion.div>
 

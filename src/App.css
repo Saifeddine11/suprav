@@ -635,11 +635,20 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-color: #ffffff;
+  background-color: #000000;
   background-position: center;
   background-repeat: no-repeat;
   box-shadow: none;
   will-change: clip-path, background-size, border-radius;
+}
+
+.story-card__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: opacity, background-size;
 }
 
 .story-card__shade {
@@ -706,6 +715,23 @@
   color: #ffffff;
   text-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
   will-change: transform, opacity;
+}
+
+.story-card__intro {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  background: #000000;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.story-card__intro img {
+  width: clamp(42px, 8vw, 92px);
+  height: clamp(42px, 8vw, 92px);
+  object-fit: contain;
 }
 
 .story-foot {
