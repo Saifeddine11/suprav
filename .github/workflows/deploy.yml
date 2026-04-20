@@ -114,7 +114,7 @@ jobs:
               echo "bye"
             } > "$COMMAND_FILE"
 
-            if lftp -u "${SFTP_USERNAME},${SFTP_PASSWORD}" "sftp://${SFTP_HOST}:${SFTP_PORT}" -f "$COMMAND_FILE"
+            if lftp -u "${SFTP_USERNAME},${SFTP_PASSWORD}" "sftp://${SFTP_HOST}:${SFTP_PORT}" < "$COMMAND_FILE"
             then
               rm -f "$COMMAND_FILE"
               echo "Deployment completed successfully."
