@@ -22,18 +22,18 @@ interface FlipCardProps {
     index: number;
     total: number;
     phase: AnimationPhase;
+    cardWidth: number;
+    cardHeight: number;
     target: { x: number; y: number; rotation: number; scale: number; opacity: number };
 }
-
-// --- FlipCard Component ---
-const IMG_WIDTH = 60;  // Reduced from 100
-const IMG_HEIGHT = 85; // Reduced from 140
 
 function FlipCard({
     src,
     index,
     total,
     phase,
+    cardWidth,
+    cardHeight,
     target,
 }: FlipCardProps) {
     return (
@@ -55,12 +55,12 @@ function FlipCard({
             // Initial style
             style={{
                 position: "absolute",
-                width: IMG_WIDTH,
-                height: IMG_HEIGHT,
+                width: cardWidth,
+                height: cardHeight,
                 transformStyle: "preserve-3d", // Essential for the 3D hover effect
                 perspective: "1000px",
             }}
-            className="cursor-pointer group"
+            className="scroll-morph-card cursor-pointer group"
         >
             <motion.div
                 className="relative h-full w-full"
@@ -103,8 +103,6 @@ function FlipCard({
 
 // --- Main Hero Component ---
 const TOTAL_IMAGES = 20;
-const MAX_SCROLL = 3000; // Virtual scroll range
-
 // Supra v. local video assets
 const IMAGES = [
     vid1,
@@ -136,6 +134,12 @@ export default function IntroAnimation() {
     const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter");
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
+    const isCompact = containerSize.width > 0 && containerSize.width < 768;
+    const isNarrow = containerSize.width > 0 && containerSize.width < 480;
+    const morphEnd = isCompact ? 460 : 600;
+    const maxScroll = isCompact ? 1900 : 2600;
+    const cardWidth = isNarrow ? 48 : isCompact ? 54 : containerSize.width > 1280 ? 66 : 60;
+    const cardHeight = Math.round(cardWidth * 1.42);
 
     // --- Container Size ---
     useEffect(() => {
@@ -171,7 +175,7 @@ export default function IntroAnimation() {
         if (!container) return;
 
         const handleWheel = (e: WheelEvent) => {
-            const newScroll = Math.min(Math.max(scrollRef.current + e.deltaY, 0), MAX_SCROLL);
+            const newScroll = Math.min(Math.max(scrollRef.current + e.deltaY, 0), maxScroll);
             if (newScroll !== scrollRef.current) {
                 // Prevent default only while the hero animation is still consuming scroll.
                 e.preventDefault();
@@ -190,7 +194,7 @@ export default function IntroAnimation() {
             const deltaY = touchStartY - touchY;
             touchStartY = touchY;
 
-            const newScroll = Math.min(Math.max(scrollRef.current + deltaY, 0), MAX_SCROLL);
+            const newScroll = Math.min(Math.max(scrollRef.current + deltaY, 0), maxScroll);
             if (newScroll !== scrollRef.current) {
                 e.preventDefault();
             }
@@ -208,16 +212,24 @@ export default function IntroAnimation() {
             container.removeEventListener("touchstart", handleTouchStart);
             container.removeEventListener("touchmove", handleTouchMove);
         };
-    }, [virtualScroll]);
+    }, [maxScroll, virtualScroll]);
+
+    useEffect(() => {
+        const clampedScroll = Math.min(scrollRef.current, maxScroll);
+        if (clampedScroll !== scrollRef.current) {
+            scrollRef.current = clampedScroll;
+            virtualScroll.set(clampedScroll);
+        }
+    }, [maxScroll, virtualScroll]);
 
     // 1. Morph Progress: 0 (Circle) -> 1 (Bottom Arc)
     // Happens between scroll 0 and 600
-    const morphProgress = useTransform(virtualScroll, [0, 600], [0, 1]);
+    const morphProgress = useTransform(virtualScroll, [0, morphEnd], [0, 1]);
     const smoothMorph = useSpring(morphProgress, { stiffness: 40, damping: 20 });
 
     // 2. Scroll Rotation (Shuffling): Starts after morph (e.g., > 600)
     // Rotates the bottom arc as user continues scrolling
-    const scrollRotate = useTransform(virtualScroll, [600, 3000], [0, 360]);
+    const scrollRotate = useTransform(virtualScroll, [morphEnd, maxScroll], [0, 360]);
     const smoothScrollRotate = useSpring(scrollRotate, { stiffness: 40, damping: 20 });
 
     // --- Mouse Parallax ---
@@ -234,8 +246,7 @@ export default function IntroAnimation() {
 
             // Normalize -1 to 1
             const normalizedX = (relativeX / rect.width) * 2 - 1;
-            // Move +/- 100px
-            mouseX.set(normalizedX * 100);
+            mouseX.set(normalizedX * (containerSize.width < 768 ? 0 : 100));
         };
         container.addEventListener("mousemove", handleMouseMove);
         return () => container.removeEventListener("mousemove", handleMouseMove);
@@ -281,7 +292,7 @@ export default function IntroAnimation() {
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
     return (
-        <div ref={containerRef} className="relative w-full h-full bg-[#FAFAFA] overflow-hidden">
+        <div ref={containerRef} className="scroll-morph-hero relative w-full h-full bg-[#FAFAFA] overflow-hidden">
             {/* Container */}
             <div className="flex h-full w-full flex-col items-center justify-center perspective-1000">
 
@@ -308,7 +319,7 @@ export default function IntroAnimation() {
                 {/* Arc Active Content (Fades in) */}
                 <motion.div
                     style={{ opacity: contentOpacity, y: contentY }}
-                    className="absolute top-[11%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
+                    className="scroll-morph-hero__copy absolute top-[11%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
                     <h2 className="text-3xl md:text-5xl font-bold text-gray-950 tracking-tight mb-4">
                         Du brief au <span className="text-[#E8491C]">résultat.</span>
@@ -328,7 +339,7 @@ export default function IntroAnimation() {
                         if (introPhase === "scatter") {
                             target = scatterPositions[i];
                         } else if (introPhase === "line") {
-                            const lineSpacing = 70; // Adjusted for smaller images (60px width + 10px gap)
+                            const lineSpacing = cardWidth + (isCompact ? 8 : 12);
                             const lineTotalWidth = TOTAL_IMAGES * lineSpacing;
                             const lineX = i * lineSpacing - lineTotalWidth / 2;
                             target = { x: lineX, y: 0, rotation: 0, scale: 1, opacity: 1 };
@@ -340,7 +351,7 @@ export default function IntroAnimation() {
                             const minDimension = Math.min(containerSize.width, containerSize.height);
 
                             // A. Calculate Circle Position
-                            const circleRadius = Math.min(minDimension * 0.35, 350);
+                            const circleRadius = Math.min(minDimension * (isMobile ? 0.29 : 0.35), isMobile ? 210 : 350);
 
                             const circleAngle = (i / TOTAL_IMAGES) * 360;
                             const circleRad = (circleAngle * Math.PI) / 180;
@@ -355,14 +366,14 @@ export default function IntroAnimation() {
 
                             // Radius:
                             const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5);
-                            const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1);
+                            const arcRadius = baseRadius * (isMobile ? 1.28 : 1.1);
 
                             // Position:
-                            const arcApexY = containerSize.height * (isMobile ? 0.42 : 0.34);
+                            const arcApexY = containerSize.height * (isMobile ? 0.46 : 0.34);
                             const arcCenterY = arcApexY + arcRadius;
 
                             // Spread angle:
-                            const spreadAngle = isMobile ? 100 : 130;
+                            const spreadAngle = isMobile ? 92 : 130;
                             const startAngle = -90 - (spreadAngle / 2);
                             const step = spreadAngle / (TOTAL_IMAGES - 1);
 
@@ -397,7 +408,7 @@ export default function IntroAnimation() {
                                 x: Math.cos(arcRad) * arcRadius + parallaxValue,
                                 y: Math.sin(arcRad) * arcRadius + arcCenterY,
                                 rotation: currentArcAngle + 90,
-                                scale: isMobile ? 1.45 : 2.35, // Larger final cards, like the reference
+                                scale: isMobile ? 1.38 : 2.25,
                             };
 
                             // C. Interpolate (Morph)
@@ -417,6 +428,8 @@ export default function IntroAnimation() {
                                 index={i}
                                 total={TOTAL_IMAGES}
                                 phase={introPhase} // Pass intro phase for initial animations
+                                cardWidth={cardWidth}
+                                cardHeight={cardHeight}
                                 target={target}
                             />
                         );
