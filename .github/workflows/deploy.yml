@@ -1,13 +1,19 @@
-name: Deploy React to Hostinger
+name: Deploy to Hostinger via SFTP
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: hostinger-production
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -17,37 +23,92 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
         run: npm run build
 
-      - name: Check FTP secrets
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          test -n "$FTP_SERVER" || (echo "FTP_SERVER secret is missing" && exit 1)
-          test -n "$FTP_USERNAME" || (echo "FTP_USERNAME secret is missing" && exit 1)
-          test -n "$FTP_PASSWORD" || (echo "FTP_PASSWORD secret is missing" && exit 1)
-
       - name: Verify build output
         run: |
-          test -f dist/index.html || (echo "dist/index.html is missing" && exit 1)
-          test -f dist/.htaccess || (echo "dist/.htaccess is missing" && exit 1)
+          set -euo pipefail
+          test -f dist/index.html || (echo "::error::dist/index.html is missing" && exit 1)
+          test -f dist/.htaccess || (echo "::error::dist/.htaccess is missing" && exit 1)
+          test -f dist/api/contact.php || (echo "::error::dist/api/contact.php is missing" && exit 1)
 
-      - name: Deploy to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          protocol: ftp
-          local-dir: ./dist/
-          server-dir: ./public_html/
-          timeout: 180000
-          log-level: standard
+      - name: Check SFTP secrets
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+        run: |
+          set -euo pipefail
+
+          test -n "$SFTP_HOST" || (echo "::error::SFTP_HOST secret is missing" && exit 1)
+          test -n "$SFTP_USERNAME" || (echo "::error::SFTP_USERNAME secret is missing" && exit 1)
+          test -n "$SFTP_PASSWORD" || (echo "::error::SFTP_PASSWORD secret is missing" && exit 1)
+          test -n "$SFTP_PORT" || (echo "::error::SFTP_PORT secret is missing. Use 22 for SFTP." && exit 1)
+
+          if ! [[ "$SFTP_PORT" =~ ^[0-9]+$ ]]; then
+            echo "::error::SFTP_PORT must be a number. Use 22 for SFTP."
+            exit 1
+          fi
+
+          echo "SFTP host: $SFTP_HOST"
+          echo "SFTP port: $SFTP_PORT"
+
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy via SFTP
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
+        run: |
+          set -euo pipefail
+
+          REMOTE_PATH="${SFTP_REMOTE_PATH:-public_html}"
+          REMOTE_PATH="${REMOTE_PATH%/}"
+          ATTEMPTS=3
+
+          echo "Deploying dist/ to sftp://${SFTP_HOST}:${SFTP_PORT}/${REMOTE_PATH}"
+          echo "Remote config file api/contact-config.php will be preserved."
+
+          for attempt in $(seq 1 "$ATTEMPTS"); do
+            echo "SFTP deployment attempt ${attempt}/${ATTEMPTS}"
+
+            if lftp -u "${SFTP_USERNAME},${SFTP_PASSWORD}" "sftp://${SFTP_HOST}:${SFTP_PORT}" -e "
+              set cmd:fail-exit yes;
+              set sftp:auto-confirm yes;
+              set net:timeout 45;
+              set net:max-retries 4;
+              set net:reconnect-interval-base 8;
+              set net:reconnect-interval-max 45;
+              mirror -R --delete --verbose --parallel=2 \
+                --exclude-glob api/contact-config.php \
+                --exclude-glob api/contact-config.example.php \
+                dist/ \"${REMOTE_PATH}/\";
+              bye;
+            "
+            then
+              echo "Deployment completed successfully."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt "$ATTEMPTS" ]; then
+              sleep_seconds=$((attempt * 20))
+              echo "::warning::SFTP deployment failed. Retrying in ${sleep_seconds}s..."
+              sleep "$sleep_seconds"
+            fi
+          done
+
+          echo "::error::SFTP deployment failed after ${ATTEMPTS} attempts. Check SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD and Hostinger SFTP access."
+          exit 1

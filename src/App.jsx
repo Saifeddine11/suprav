@@ -51,21 +51,21 @@ const INITIAL_CONTACT_VALUES = {
   website: '',
 }
 const ERROR_MESSAGES = {
-  requiredName: 'Indiquez votre vrai nom complet.',
-  invalidName: 'Utilisez uniquement un vrai nom, sans chiffre, email, téléphone ou lien.',
-  requiredEmail: 'Indiquez une adresse email.',
-  invalidEmail: 'Indiquez une adresse email valide.',
-  requiredPhone: 'Indiquez un numéro de téléphone.',
-  invalidPhone: 'Indiquez un vrai numéro avec indicatif, par exemple +33 7 44 20 86 73.',
-  requiredMessage: 'Décrivez votre projet.',
-  invalidMessage: 'Votre message doit être plus précis et ne pas ressembler à du spam.',
-  nameContainsEmail: 'Le nom ne doit pas contenir votre email.',
-  nameContainsPhone: 'Le nom ne doit pas contenir votre numéro.',
-  emailContainsPhone: "L'email ne doit pas contenir votre numéro.",
-  phoneContainsEmail: "Le numéro ne doit pas contenir votre email.",
-  honeypot: "Le formulaire n'a pas pu être envoyé.",
-  tooFast: 'Prenez quelques secondes pour compléter le formulaire avant de l’envoyer.',
-  turnstile: 'Validez la protection anti-spam.',
+  requiredName: 'Veuillez indiquer votre nom complet.',
+  invalidName: 'Veuillez indiquer votre nom complet.',
+  requiredEmail: 'Merci de saisir votre adresse email.',
+  invalidEmail: 'Merci de saisir une adresse email valide.',
+  requiredPhone: 'Merci d’indiquer votre numéro de téléphone.',
+  invalidPhone: 'Merci d’indiquer un numéro de téléphone valide.',
+  requiredMessage: 'Pouvez-vous nous en dire un peu plus sur votre projet ?',
+  invalidMessage: 'Merci de détailler légèrement votre demande pour que nous puissions mieux vous accompagner.',
+  nameContainsEmail: 'Veuillez indiquer uniquement votre nom complet dans ce champ.',
+  nameContainsPhone: 'Veuillez indiquer uniquement votre nom complet dans ce champ.',
+  emailContainsPhone: 'Merci de vérifier votre adresse email.',
+  phoneContainsEmail: 'Merci de vérifier votre numéro de téléphone.',
+  honeypot: 'Certaines informations semblent incorrectes, merci de vérifier vos champs.',
+  tooFast: 'Merci de prendre un instant pour vérifier vos informations avant l’envoi.',
+  turnstile: 'Merci de confirmer le formulaire avant l’envoi.',
 }
 const EMAIL_PATTERN = /^[^\s@<>()[\]\\,;:"']+@[^\s@<>()[\]\\,;:"']+\.[^\s@<>()[\]\\,;:"']{2,}$/i
 const NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+){1,5}$/
@@ -1328,7 +1328,7 @@ function CtaSection() {
         if (payload.errors && typeof payload.errors === 'object') {
           setContactErrors(payload.errors)
         } else {
-          setContactErrors({ form: payload.message || "L'envoi est momentanément indisponible." })
+          setContactErrors({ form: payload.message || 'Certaines informations semblent incorrectes, merci de vérifier vos champs.' })
         }
         setTouchedFields({ name: true, email: true, phone: true, message: true, turnstile: true })
         setFormStatus('blocked')
@@ -1343,7 +1343,7 @@ function CtaSection() {
       setFormStatus('sent')
       resetTurnstile()
     } catch {
-      setContactErrors({ form: "Impossible d'envoyer le message pour le moment. Réessayez dans quelques instants." })
+      setContactErrors({ form: 'Votre message n’a pas pu être envoyé pour le moment. Merci de réessayer dans quelques instants.' })
       setFormStatus('blocked')
       resetTurnstile()
     }
