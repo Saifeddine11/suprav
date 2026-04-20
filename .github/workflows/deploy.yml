@@ -82,24 +82,46 @@ jobs:
           for attempt in $(seq 1 "$ATTEMPTS"); do
             echo "SFTP deployment attempt ${attempt}/${ATTEMPTS}"
 
-            if lftp -u "${SFTP_USERNAME},${SFTP_PASSWORD}" "sftp://${SFTP_HOST}:${SFTP_PORT}" -e "
-              set cmd:fail-exit yes;
-              set sftp:auto-confirm yes;
-              set net:timeout 45;
-              set net:max-retries 4;
-              set net:reconnect-interval-base 8;
-              set net:reconnect-interval-max 45;
-              lcd dist;
-              mirror -R --delete --verbose --parallel=2 \
-                --exclude-glob api/contact-config.php \
-                --exclude-glob api/contact-config.example.php \
-                . .;
-              bye;
-            "
+            COMMAND_FILE="$(mktemp)"
+            {
+              echo "set cmd:fail-exit yes"
+              echo "set sftp:auto-confirm yes"
+              echo "set net:timeout 45"
+              echo "set net:max-retries 3"
+              echo "set net:reconnect-interval-base 5"
+              echo "set net:reconnect-interval-max 30"
+              echo "lcd dist"
+
+              find dist -type d -mindepth 1 | sort | while IFS= read -r directory; do
+                remote_directory="${directory#dist/}"
+                printf 'mkdir -p "./%s"\n' "$remote_directory"
+              done
+
+              find dist -type f | sort | while IFS= read -r file; do
+                remote_file="${file#dist/}"
+                if [ "$remote_file" = "api/contact-config.php" ]; then
+                  continue
+                fi
+
+                remote_directory="$(dirname "$remote_file")"
+                if [ "$remote_directory" = "." ]; then
+                  printf 'put "%s"\n' "$remote_file"
+                else
+                  printf 'put -O "./%s" "%s"\n' "$remote_directory" "$remote_file"
+                fi
+              done
+
+              echo "bye"
+            } > "$COMMAND_FILE"
+
+            if lftp -u "${SFTP_USERNAME},${SFTP_PASSWORD}" "sftp://${SFTP_HOST}:${SFTP_PORT}" -f "$COMMAND_FILE"
             then
+              rm -f "$COMMAND_FILE"
               echo "Deployment completed successfully."
               exit 0
             fi
+
+            rm -f "$COMMAND_FILE"
 
             if [ "$attempt" -lt "$ATTEMPTS" ]; then
               sleep_seconds=$((attempt * 20))
