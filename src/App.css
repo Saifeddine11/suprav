@@ -580,6 +580,19 @@
     transform: scale(0.92);
     transform-origin: center;
   }
+
+  .scroll-morph-hero__intro {
+    width: 64%;
+  }
+
+  .scroll-morph-hero__intro h1 {
+    font-size: 1.12rem;
+  }
+
+  .scroll-morph-hero__intro p {
+    font-size: 0.48rem;
+    letter-spacing: 0.1em;
+  }
 }
 
 .story-shell {
@@ -914,6 +927,33 @@
   touch-action: pan-y;
   user-select: none;
   overscroll-behavior: contain;
+}
+
+.scroll-morph-hero__intro {
+  z-index: 24;
+  width: min(58%, 520px);
+  padding: 0 14px;
+  transform: translateY(-50%);
+}
+
+.scroll-morph-hero__intro h1 {
+  max-width: 100%;
+  font-size: 2rem;
+  line-height: 1.08;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  text-shadow: 0 1px 18px rgba(255, 255, 255, 0.82);
+}
+
+.scroll-morph-hero__intro p {
+  max-width: 100%;
+  margin-top: 12px;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  letter-spacing: 0.18em;
+  overflow-wrap: anywhere;
+  text-shadow: 0 1px 14px rgba(255, 255, 255, 0.88);
 }
 
 .scroll-morph-hero__copy {
@@ -1819,6 +1859,23 @@
   .scroll-morph-hero__copy {
     top: 10%;
     width: min(100% - 28px, 420px);
+  }
+
+  .scroll-morph-hero__intro {
+    width: min(62%, 320px);
+    padding: 0 10px;
+  }
+
+  .scroll-morph-hero__intro h1 {
+    font-size: 1.35rem;
+    line-height: 1.12;
+  }
+
+  .scroll-morph-hero__intro p {
+    margin-top: 8px;
+    font-size: 0.55rem;
+    line-height: 1.35;
+    letter-spacing: 0.14em;
   }
 
   .scroll-morph-hero__copy h2 {
@@ -4151,6 +4208,37 @@
   transform: translateY(-1px);
 }
 
+.cta-field input[aria-invalid="true"],
+.cta-field textarea[aria-invalid="true"] {
+  box-shadow: 0 0 0 2px rgba(255, 116, 116, 0.55);
+}
+
+.cta-field__error {
+  display: block;
+  margin: -2px 0 0;
+  color: #ffb4a8;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.cta-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cta-turnstile {
+  display: grid;
+  gap: 10px;
+  min-height: 70px;
+}
+
 .cta-form__bottom {
   grid-column: auto;
   display: flex;
@@ -4186,6 +4274,12 @@
   box-shadow: 0 20px 46px rgba(0, 0, 0, 0.22);
 }
 
+.cta-form__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+  transform: none;
+}
+
 .cta-form__submit-icon {
   width: 34px;
   height: 34px;
@@ -4216,9 +4310,18 @@
   grid-column: auto;
   margin: 0;
   padding: 12px 16px;
-  border-radius: 999px;
+  border-radius: 8px;
   background: rgba(251, 245, 154, 0.12);
   color: #fbf59a;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.cta-form__status--error {
+  background: rgba(255, 116, 116, 0.12);
+  color: #ffb4a8;
 }
 
 .cta-booking {
@@ -4671,6 +4774,10 @@
     font-size: 12px;
   }
 
+  .cta-field__error {
+    font-size: 11px;
+  }
+
   .cta-field input {
     height: 44px;
     padding: 0 18px;
@@ -4691,6 +4798,12 @@
     align-items: flex-start;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .cta-turnstile {
+    min-height: 64px;
+    transform-origin: left center;
+    transform: scale(0.9);
   }
 
   .cta-form__submit {

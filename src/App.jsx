@@ -40,6 +40,118 @@ const easeInOutCubic = (value) => (
     ? 4 * value * value * value
     : 1 - Math.pow(-2 * value + 2, 3) / 2
 )
+const CONTACT_API_ENDPOINT = '/api/contact.php'
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
+const MIN_FORM_TIME_MS = 4000
+const INITIAL_CONTACT_VALUES = {
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+  website: '',
+}
+const ERROR_MESSAGES = {
+  requiredName: 'Indiquez votre vrai nom complet.',
+  invalidName: 'Utilisez uniquement un vrai nom, sans chiffre, email, téléphone ou lien.',
+  requiredEmail: 'Indiquez une adresse email.',
+  invalidEmail: 'Indiquez une adresse email valide.',
+  requiredPhone: 'Indiquez un numéro de téléphone.',
+  invalidPhone: 'Indiquez un vrai numéro avec indicatif, par exemple +33 7 44 20 86 73.',
+  requiredMessage: 'Décrivez votre projet.',
+  invalidMessage: 'Votre message doit être plus précis et ne pas ressembler à du spam.',
+  nameContainsEmail: 'Le nom ne doit pas contenir votre email.',
+  nameContainsPhone: 'Le nom ne doit pas contenir votre numéro.',
+  emailContainsPhone: "L'email ne doit pas contenir votre numéro.",
+  phoneContainsEmail: "Le numéro ne doit pas contenir votre email.",
+  honeypot: "Le formulaire n'a pas pu être envoyé.",
+  tooFast: 'Prenez quelques secondes pour compléter le formulaire avant de l’envoyer.',
+  turnstile: 'Validez la protection anti-spam.',
+}
+const EMAIL_PATTERN = /^[^\s@<>()[\]\\,;:"']+@[^\s@<>()[\]\\,;:"']+\.[^\s@<>()[\]\\,;:"']{2,}$/i
+const NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+){1,5}$/
+const URL_PATTERN = /(?:https?:\/\/|www\.|[a-z0-9-]+\.(?:com|net|org|io|co|ma|fr|info|biz|ru|cn)\b)/i
+const SPAM_PATTERN = /\b(?:casino|crypto|bitcoin|forex|loan|viagra|porn|seo backlinks?|whatsapp marketing|telegram)\b/i
+
+const cleanTextInput = (value) => String(value ?? '')
+  .split('')
+  .filter((char) => {
+    const code = char.charCodeAt(0)
+    return code > 31 && code !== 127
+  })
+  .join('')
+  .replace(/\s+/g, ' ')
+  .trim()
+
+const normalizeForCompare = (value) => cleanTextInput(value).toLowerCase()
+const phoneDigits = (value) => String(value ?? '').replace(/\D/g, '')
+
+const isLikelyPhone = (value) => {
+  const raw = cleanTextInput(value)
+  const digits = phoneDigits(raw)
+  if (!/^\+?[0-9()[\]\s.-]{8,24}$/.test(raw)) return false
+  if (digits.length < 8 || digits.length > 15) return false
+  if (/^(\d)\1{7,}$/.test(digits)) return false
+  if (/(?:0123456789|1234567890|9876543210|0987654321)/.test(digits)) return false
+  return true
+}
+
+const validateContactForm = (values, options = {}) => {
+  const requireTurnstile = options.requireTurnstile ?? true
+  const now = options.now ?? Date.now()
+  const startedAt = Number(options.startedAt ?? now)
+  const turnstileToken = String(options.turnstileToken ?? '')
+  const normalized = {
+    name: cleanTextInput(values.name),
+    email: cleanTextInput(values.email).toLowerCase(),
+    phone: cleanTextInput(values.phone),
+    message: cleanTextInput(values.message),
+    website: cleanTextInput(values.website),
+  }
+  const errors = {}
+  const digits = phoneDigits(normalized.phone)
+  const comparableEmail = normalizeForCompare(normalized.email)
+  const comparableName = normalizeForCompare(normalized.name)
+  const comparablePhone = normalizeForCompare(normalized.phone)
+
+  if (!normalized.name) errors.name = ERROR_MESSAGES.requiredName
+  else if (
+    normalized.name.length < 5
+    || normalized.name.length > 80
+    || !NAME_PATTERN.test(normalized.name)
+    || EMAIL_PATTERN.test(normalized.name)
+    || URL_PATTERN.test(normalized.name)
+    || /\d/.test(normalized.name)
+  ) errors.name = ERROR_MESSAGES.invalidName
+
+  if (!normalized.email) errors.email = ERROR_MESSAGES.requiredEmail
+  else if (normalized.email.length > 120 || !EMAIL_PATTERN.test(normalized.email)) errors.email = ERROR_MESSAGES.invalidEmail
+
+  if (!normalized.phone) errors.phone = ERROR_MESSAGES.requiredPhone
+  else if (!isLikelyPhone(normalized.phone)) errors.phone = ERROR_MESSAGES.invalidPhone
+
+  if (!normalized.message) errors.message = ERROR_MESSAGES.requiredMessage
+  else if (
+    normalized.message.length < 30
+    || normalized.message.length > 2000
+    || URL_PATTERN.test(normalized.message)
+    || SPAM_PATTERN.test(normalized.message)
+    || /(.)\1{9,}/i.test(normalized.message)
+  ) errors.message = ERROR_MESSAGES.invalidMessage
+
+  if (normalized.website) errors.website = ERROR_MESSAGES.honeypot
+  if (comparableEmail && comparableName.includes(comparableEmail)) errors.name = ERROR_MESSAGES.nameContainsEmail
+  if (digits.length >= 6 && phoneDigits(normalized.name).includes(digits)) errors.name = ERROR_MESSAGES.nameContainsPhone
+  if (digits.length >= 6 && phoneDigits(normalized.email).includes(digits)) errors.email = ERROR_MESSAGES.emailContainsPhone
+  if (comparableEmail && comparablePhone.includes(comparableEmail)) errors.phone = ERROR_MESSAGES.phoneContainsEmail
+  if (now - startedAt < MIN_FORM_TIME_MS) errors.form = ERROR_MESSAGES.tooFast
+  if (requireTurnstile && !turnstileToken) errors.turnstile = ERROR_MESSAGES.turnstile
+
+  return {
+    errors,
+    sanitized: normalized,
+    isValid: Object.keys(errors).length === 0,
+  }
+}
 
 /* ============================================================
    UNIFIED MOTION VARIANTS (réutilisés partout)
@@ -1016,6 +1128,14 @@ function FaqSection() {
 
 function CtaSection() {
   const [formStatus, setFormStatus] = useState('idle')
+  const [contactValues, setContactValues] = useState(INITIAL_CONTACT_VALUES)
+  const [contactErrors, setContactErrors] = useState({})
+  const [touchedFields, setTouchedFields] = useState({})
+  const [formStartedAt, setFormStartedAt] = useState(() => Date.now())
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const [turnstileReady, setTurnstileReady] = useState(false)
+  const turnstileRef = useRef(null)
+  const turnstileWidgetRef = useRef(null)
   const [today, setToday] = useState(() => startOfLocalDay(new Date()))
   const initialBookingDate = useMemo(() => findFirstAvailableBookingDate(today), [today])
   const [bookingStep, setBookingStep] = useState('date')
@@ -1057,6 +1177,97 @@ function CtaSection() {
     return () => window.clearTimeout(timer)
   }, [today])
 
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return undefined
+
+    if (window.turnstile) {
+      queueMicrotask(() => setTurnstileReady(true))
+      return undefined
+    }
+
+    const existingScript = document.querySelector('script[data-turnstile-script="true"]')
+    const script = existingScript || document.createElement('script')
+    const handleLoad = () => setTurnstileReady(true)
+    script.addEventListener('load', handleLoad)
+
+    if (!existingScript) {
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+      script.async = true
+      script.defer = true
+      script.dataset.turnstileScript = 'true'
+      document.head.appendChild(script)
+    }
+
+    return () => {
+      script.removeEventListener('load', handleLoad)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (bookingStep !== 'details') {
+      if (turnstileWidgetRef.current !== null && window.turnstile?.remove) {
+        window.turnstile.remove(turnstileWidgetRef.current)
+      }
+      turnstileWidgetRef.current = null
+      return
+    }
+    if (!TURNSTILE_SITE_KEY || !turnstileReady || !turnstileRef.current || turnstileWidgetRef.current !== null) return
+
+    turnstileWidgetRef.current = window.turnstile.render(turnstileRef.current, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: 'dark',
+      callback: (token) => {
+        setTurnstileToken(token)
+        setContactErrors((current) => {
+          const next = { ...current }
+          delete next.turnstile
+          return next
+        })
+      },
+      'expired-callback': () => setTurnstileToken(''),
+      'error-callback': () => setTurnstileToken(''),
+    })
+  }, [bookingStep, turnstileReady])
+
+  const resetTurnstile = () => {
+    setTurnstileToken('')
+    if (turnstileWidgetRef.current !== null && window.turnstile) {
+      window.turnstile.reset(turnstileWidgetRef.current)
+    }
+  }
+
+  const handleContactChange = (event) => {
+    const { name, value } = event.target
+    setFormStatus('idle')
+    const next = { ...contactValues, [name]: value }
+    const result = validateContactForm(next, {
+      requireTurnstile: false,
+      startedAt: formStartedAt - MIN_FORM_TIME_MS,
+    })
+    setContactValues(next)
+    setContactErrors((currentErrors) => {
+      const updatedErrors = { ...currentErrors }
+      if (result.errors[name]) updatedErrors[name] = result.errors[name]
+      else delete updatedErrors[name]
+      return updatedErrors
+    })
+  }
+
+  const handleContactBlur = (event) => {
+    const { name } = event.target
+    setTouchedFields((current) => ({ ...current, [name]: true }))
+    const result = validateContactForm(contactValues, {
+      requireTurnstile: false,
+      startedAt: formStartedAt - MIN_FORM_TIME_MS,
+    })
+    setContactErrors((current) => {
+      const next = { ...current }
+      if (result.errors[name]) next[name] = result.errors[name]
+      else delete next[name]
+      return next
+    })
+  }
+
   const changeCalendarMonth = (amount) => {
     setCalendarMonth((current) => new Date(current.getFullYear(), current.getMonth() + amount, 1))
   }
@@ -1076,26 +1287,74 @@ function CtaSection() {
     }).format(date)
   )
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const name = formData.get('name')
-    const email = formData.get('email')
-    const phone = formData.get('phone')
-    const project = formData.get('project') || 'Non précisé'
-    const message = formData.get('message')
     if (!effectiveSelectedTime) {
       setBookingStep('date')
       return
     }
-    const subject = encodeURIComponent(`Nouveau projet Supra v — ${name}`)
-    const body = encodeURIComponent(
-      `Date souhaitée: ${formatDateValue(selectedDate)}\nCréneau: ${effectiveSelectedTime}\nNom: ${name}\nEmail: ${email}\nTéléphone: ${phone}\nProjet: ${project}\n\nMessage:\n${message}`
-    )
 
-    setFormStatus('sent')
-    window.location.href = `mailto:contact@suprav3.com?subject=${subject}&body=${body}`
+    const validation = validateContactForm(contactValues, {
+      requireTurnstile: Boolean(TURNSTILE_SITE_KEY),
+      startedAt: formStartedAt,
+      turnstileToken,
+    })
+    if (!validation.isValid) {
+      setTouchedFields({ name: true, email: true, phone: true, message: true, turnstile: true })
+      setContactErrors(validation.errors)
+      setFormStatus('blocked')
+      return
+    }
+
+    setFormStatus('sending')
+    try {
+      const response = await fetch(CONTACT_API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          ...validation.sanitized,
+          date: formatDateValue(selectedDate),
+          time: effectiveSelectedTime,
+          startedAt: formStartedAt,
+          turnstileToken,
+        }),
+      })
+      const payload = await response.json().catch(() => ({}))
+
+      if (!response.ok || !payload.ok) {
+        if (payload.errors && typeof payload.errors === 'object') {
+          setContactErrors(payload.errors)
+        } else {
+          setContactErrors({ form: payload.message || "L'envoi est momentanément indisponible." })
+        }
+        setTouchedFields({ name: true, email: true, phone: true, message: true, turnstile: true })
+        setFormStatus('blocked')
+        resetTurnstile()
+        return
+      }
+
+      setContactValues(INITIAL_CONTACT_VALUES)
+      setTouchedFields({})
+      setContactErrors({})
+      setFormStartedAt(Date.now())
+      setFormStatus('sent')
+      resetTurnstile()
+    } catch {
+      setContactErrors({ form: "Impossible d'envoyer le message pour le moment. Réessayez dans quelques instants." })
+      setFormStatus('blocked')
+      resetTurnstile()
+    }
   }
+
+  const currentValidation = validateContactForm(contactValues, {
+    requireTurnstile: Boolean(TURNSTILE_SITE_KEY),
+    startedAt: formStartedAt - MIN_FORM_TIME_MS,
+    turnstileToken,
+  })
+  const isSubmitDisabled = formStatus === 'sending' || !currentValidation.isValid
 
   return (
     <section className="cta-final" id="contact">
@@ -1199,6 +1458,8 @@ function CtaSection() {
                           whileTap={{ scale: 0.97 }}
                           onClick={() => {
                             setSelectedTime(time)
+                            setFormStartedAt(Date.now())
+                            setFormStatus('idle')
                             setBookingStep('details')
                           }}
                         >
@@ -1233,6 +1494,18 @@ function CtaSection() {
                 >
                   <input type="hidden" name="date" value={formatDateValue(selectedDate)} />
                   <input type="hidden" name="time" value={effectiveSelectedTime} />
+                  <input type="hidden" name="startedAt" value={formStartedAt} />
+                  <label className="cta-honeypot" aria-hidden="true">
+                    <span>Site web</span>
+                    <input
+                      name="website"
+                      type="text"
+                      tabIndex="-1"
+                      autoComplete="off"
+                      value={contactValues.website}
+                      onChange={handleContactChange}
+                    />
+                  </label>
 
                   <motion.div className="cta-form__selected-date" variants={fadeUpChild}>
                     <button type="button" onClick={() => setBookingStep('date')}>Changer</button>
@@ -1241,32 +1514,106 @@ function CtaSection() {
 
                   <motion.label className="cta-field" variants={fadeUpChild}>
                     <span>Nom</span>
-                    <input name="name" type="text" placeholder="Jane Smith" required />
+                    <input
+                      name="name"
+                      type="text"
+                      placeholder="Jane Smith"
+                      autoComplete="name"
+                      minLength="5"
+                      maxLength="80"
+                      required
+                      value={contactValues.name}
+                      onChange={handleContactChange}
+                      onBlur={handleContactBlur}
+                      aria-invalid={Boolean(touchedFields.name && contactErrors.name)}
+                      aria-describedby="contact-name-error"
+                    />
+                    {touchedFields.name && contactErrors.name && (
+                      <small id="contact-name-error" className="cta-field__error">{contactErrors.name}</small>
+                    )}
                   </motion.label>
 
                   <motion.label className="cta-field" variants={fadeUpChild}>
                     <span>Email</span>
-                    <input name="email" type="email" placeholder="vous@email.com" required />
+                    <input
+                      name="email"
+                      type="email"
+                      placeholder="vous@email.com"
+                      autoComplete="email"
+                      inputMode="email"
+                      maxLength="120"
+                      required
+                      value={contactValues.email}
+                      onChange={handleContactChange}
+                      onBlur={handleContactBlur}
+                      aria-invalid={Boolean(touchedFields.email && contactErrors.email)}
+                      aria-describedby="contact-email-error"
+                    />
+                    {touchedFields.email && contactErrors.email && (
+                      <small id="contact-email-error" className="cta-field__error">{contactErrors.email}</small>
+                    )}
                   </motion.label>
 
                   <motion.label className="cta-field" variants={fadeUpChild}>
                     <span>Numéro</span>
-                    <input name="phone" type="tel" placeholder="+33 7 44 20 86 73" required />
+                    <input
+                      name="phone"
+                      type="tel"
+                      placeholder="+33 7 44 20 86 73"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      minLength="8"
+                      maxLength="24"
+                      required
+                      value={contactValues.phone}
+                      onChange={handleContactChange}
+                      onBlur={handleContactBlur}
+                      aria-invalid={Boolean(touchedFields.phone && contactErrors.phone)}
+                      aria-describedby="contact-phone-error"
+                    />
+                    {touchedFields.phone && contactErrors.phone && (
+                      <small id="contact-phone-error" className="cta-field__error">{contactErrors.phone}</small>
+                    )}
                   </motion.label>
 
                   <motion.label className="cta-field cta-field--wide" variants={fadeUpChild}>
                     <span>Message</span>
-                    <textarea name="message" placeholder="Décrivez votre projet" rows="5" required />
+                    <textarea
+                      name="message"
+                      placeholder="Décrivez votre projet en quelques phrases"
+                      rows="5"
+                      minLength="30"
+                      maxLength="2000"
+                      required
+                      value={contactValues.message}
+                      onChange={handleContactChange}
+                      onBlur={handleContactBlur}
+                      aria-invalid={Boolean(touchedFields.message && contactErrors.message)}
+                      aria-describedby="contact-message-error"
+                    />
+                    {touchedFields.message && contactErrors.message && (
+                      <small id="contact-message-error" className="cta-field__error">{contactErrors.message}</small>
+                    )}
                   </motion.label>
+
+                  {TURNSTILE_SITE_KEY && (
+                    <motion.div className="cta-turnstile" variants={fadeUpChild}>
+                      <div ref={turnstileRef} />
+                      {touchedFields.turnstile && contactErrors.turnstile && (
+                        <small className="cta-field__error">{contactErrors.turnstile}</small>
+                      )}
+                    </motion.div>
+                  )}
 
                   <motion.div className="cta-form__bottom" variants={fadeUpChild}>
                     <motion.button
                       type="submit"
                       className="cta-form__submit"
+                      disabled={isSubmitDisabled}
                       whileHover={{ y: -2, scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
                     >
-                      Envoyer
+                      {formStatus === 'sending' ? 'Envoi...' : 'Envoyer'}
                       <span className="cta-form__submit-icon" aria-hidden="true">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M5 12h14M12 5l7 7-7 7" />
@@ -1279,12 +1626,22 @@ function CtaSection() {
                   <AnimatePresence>
                     {formStatus === 'sent' && (
                       <motion.p
-                        className="cta-form__status"
+                        className="cta-form__status cta-form__status--success"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                       >
-                        Votre application mail s'ouvre avec le message prêt.
+                        Message envoyé. Nous revenons vers vous rapidement.
+                      </motion.p>
+                    )}
+                    {contactErrors.form && (
+                      <motion.p
+                        className="cta-form__status cta-form__status--error"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                      >
+                        {contactErrors.form}
                       </motion.p>
                     )}
                   </AnimatePresence>
@@ -1978,7 +2335,7 @@ function App() {
                 </div>
               </div>
               <p className="trust-bar__text">
-                Marrakech · Disponible pour de nouveaux projets
+                Marrakecddh · Disponible pour de nouveaux projets
               </p>
             </div>
           </div>
