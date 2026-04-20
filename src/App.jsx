@@ -2335,7 +2335,7 @@ function App() {
                 </div>
               </div>
               <p className="trust-bar__text">
-                Marrakecddh · Disponible pour de nouveaux projets
+                Marrakech · Disponible pour de nouveaux projets
               </p>
             </div>
           </div>
