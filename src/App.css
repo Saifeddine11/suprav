@@ -780,12 +780,21 @@
 
 .media-clouds__viewport {
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
   padding: 22px 0;
   min-height: 592px;
   max-width: calc(260px * 4 + 24px * 3);
   margin: 0 auto;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 90%);
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.media-clouds__viewport::-webkit-scrollbar {
+  display: none;
 }
 
 .media-clouds__viewport::before,
@@ -819,10 +828,17 @@
   transform: translate3d(0, 0, 0);
 }
 
+.media-clouds__viewport:hover .media-clouds__track,
+.media-clouds__viewport:focus-within .media-clouds__track,
+.media-clouds__viewport:active .media-clouds__track {
+  animation-play-state: paused;
+}
+
 .media-clouds__item {
   flex: 0 0 260px;
   transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
   will-change: transform, box-shadow;
+  scroll-snap-align: center;
 }
 
 .video-card {
