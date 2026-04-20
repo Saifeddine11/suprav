@@ -1538,15 +1538,17 @@ function MediaCloudsSection({ videos }) {
         </motion.p>
       </motion.div>
 
-      <div className="media-clouds__viewport">
-        <div className="media-clouds__track">
-          {shouldLoadVideos && videos.concat(videos).map((videoSrc, index) => (
-            <MediaVideoCard
-              key={`${videoSrc}-${index}`}
-              videoSrc={videoSrc}
-              index={index}
-            />
-          ))}
+      <div className="media-clouds__frame">
+        <div className="media-clouds__viewport">
+          <div className="media-clouds__track">
+            {shouldLoadVideos && videos.concat(videos).map((videoSrc, index) => (
+              <MediaVideoCard
+                key={`${videoSrc}-${index}`}
+                videoSrc={videoSrc}
+                index={index}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
