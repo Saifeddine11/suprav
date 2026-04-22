@@ -47,6 +47,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      .static-seo-fallback { display: none !important; }
+    </style>
 
     <!-- ===== JSON-LD LOCALBUSINESS ===== -->
     <script type="application/ld+json">
@@ -144,7 +147,7 @@
         </p>
 
         <nav aria-label="Navigation principale sans JavaScript">
-          <a href="/works">Réalisations</a>
+          <a href="/#works">Réalisations</a>
           <a href="/#services">Services</a>
           <a href="/#about">L'agence</a>
           <a href="/#faq">FAQ</a>
@@ -293,6 +296,9 @@
       </main>
     </div>
     <noscript>
+      <style>
+        .static-seo-fallback { display: block !important; }
+      </style>
       <p>Supra v. est une agence de communication 360 à Marrakech spécialisée en branding, sites web, contenus, applications et automatisation IA.</p>
     </noscript>
     <script type="module" src="/src/main.jsx"></script>

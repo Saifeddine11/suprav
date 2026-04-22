@@ -79,7 +79,7 @@ function FlipCard({
                         muted
                         loop
                         playsInline
-                        autoPlay
+                        autoPlay={index < 6}
                         preload={index < 6 ? "metadata" : "none"}
                         aria-label={`Réalisation vidéo Supra v ${index + 1}`}
                     />
@@ -176,10 +176,6 @@ export default function IntroAnimation() {
 
         const handleWheel = (e: WheelEvent) => {
             const newScroll = Math.min(Math.max(scrollRef.current + e.deltaY, 0), maxScroll);
-            if (newScroll !== scrollRef.current) {
-                // Prevent default only while the hero animation is still consuming scroll.
-                e.preventDefault();
-            }
             scrollRef.current = newScroll;
             virtualScroll.set(newScroll);
         };
@@ -195,17 +191,14 @@ export default function IntroAnimation() {
             touchStartY = touchY;
 
             const newScroll = Math.min(Math.max(scrollRef.current + deltaY, 0), maxScroll);
-            if (newScroll !== scrollRef.current) {
-                e.preventDefault();
-            }
             scrollRef.current = newScroll;
             virtualScroll.set(newScroll);
         };
 
-        // Attach listeners to container instead of window for portability
-        container.addEventListener("wheel", handleWheel, { passive: false });
-        container.addEventListener("touchstart", handleTouchStart, { passive: false });
-        container.addEventListener("touchmove", handleTouchMove, { passive: false });
+        // Let the page keep its native scroll while the hero reacts visually.
+        container.addEventListener("wheel", handleWheel, { passive: true });
+        container.addEventListener("touchstart", handleTouchStart, { passive: true });
+        container.addEventListener("touchmove", handleTouchMove, { passive: true });
 
         return () => {
             container.removeEventListener("wheel", handleWheel);

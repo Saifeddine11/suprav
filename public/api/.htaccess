@@ -1,0 +1,11 @@
+Options -Indexes
+
+<FilesMatch "^contact-config(\.example)?\.php$">
+  Require all denied
+</FilesMatch>
+
+RedirectMatch 404 ^/api/\.contact-recaps(/.*)?$
+
+<FilesMatch "\.json$">
+  Require all denied
+</FilesMatch>

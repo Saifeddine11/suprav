@@ -303,11 +303,17 @@
   line-height: 1.08;
   letter-spacing: 0;
   color: #111111;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
 }
 
 .collaborators-copy__line {
   display: block;
   white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
 }
 
 .collaborators-copy h2 em {
@@ -555,14 +561,14 @@
 
   .collaborators-copy h2 {
     max-width: 100%;
-    font-size: clamp(24px, 6.2vw, 30px);
+    font-size: clamp(22px, 5.9vw, 28px);
     line-height: 1.12;
     text-align: center;
   }
 
   .collaborators-copy__line {
     max-width: 100%;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .collab-call-pill {
@@ -893,7 +899,7 @@
   aspect-ratio: 9 / 19;
   object-fit: cover;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-  background: #ffffff;
+  background: #111111;
 }
 
 .video-card__video {
@@ -926,7 +932,6 @@
 .scroll-morph-hero {
   touch-action: pan-y;
   user-select: none;
-  overscroll-behavior: contain;
 }
 
 .scroll-morph-hero__intro {
@@ -2155,7 +2160,7 @@
   }
 
   .media-clouds__frame {
-    min-height: 380px;
+    min-height: 420px;
   }
 
   .media-clouds__viewport {
@@ -2164,11 +2169,11 @@
 
   .media-clouds__track {
     gap: 16px;
-    min-width: calc(180px * 12 + 16px * 11);
+    min-width: calc(210px * 12 + 16px * 11);
   }
 
   .media-clouds__item {
-    flex: 0 0 180px;
+    flex: 0 0 210px;
   }
 
   .story-card {
@@ -3365,7 +3370,8 @@
 
 .cta-field textarea {
   min-height: 150px;
-  resize: vertical;
+  resize: none;
+  overflow: hidden;
   padding: 20px;
   line-height: 1.55;
 }
@@ -3949,7 +3955,7 @@
    CONTACT FORM — Framer-style responsive panel
    ================================================================ */
 .cta-final {
-  padding: clamp(62px, 7vw, 108px) clamp(16px, 2vw, 32px);
+  padding: clamp(18px, 3vw, 36px) clamp(12px, 2vw, 24px);
   background: #f3f2ef;
   color: #f7f4eb;
 }
@@ -3972,10 +3978,10 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(280px, 1fr) minmax(390px, 520px);
-  gap: clamp(38px, 7vw, 130px);
-  align-items: center;
-  min-height: min(660px, calc(100dvh - 96px));
-  padding: clamp(42px, 5vw, 86px) clamp(34px, 7vw, 150px);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: start;
+  min-height: 0;
+  padding: clamp(22px, 3vw, 40px) clamp(22px, 4vw, 72px);
   border-radius: 30px;
   overflow: hidden;
   isolation: isolate;
@@ -4012,13 +4018,13 @@
 
 .cta-contact-copy {
   display: grid;
-  gap: clamp(42px, 8vw, 190px);
+  gap: clamp(20px, 3vw, 56px);
   text-align: left;
 }
 
 .cta-contact-copy__head {
   display: grid;
-  gap: 22px;
+  gap: 14px;
 }
 
 .cta-form__pill {
@@ -4095,19 +4101,26 @@
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 800;
+  overflow: hidden;
 }
 
 .cta-social-proof__avatars span:first-child {
   margin-left: 0;
-  background: #243636;
+  background: #ffffff;
 }
 
 .cta-social-proof__avatars span:nth-child(2) {
-  background: #2f8f7a;
+  background: #ffffff;
 }
 
 .cta-social-proof__avatars span:nth-child(3) {
-  background: #c05742;
+  background: #ffffff;
+}
+
+.cta-social-proof__avatars img {
+  width: 74%;
+  height: 74%;
+  object-fit: contain;
 }
 
 .cta-social-proof p {
@@ -4127,8 +4140,8 @@
   margin: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 28px;
-  padding: clamp(32px, 3.8vw, 68px);
+  gap: 14px;
+  padding: clamp(18px, 2vw, 30px);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 28px;
   background: rgba(11, 21, 21, 0.6);
@@ -4151,7 +4164,7 @@
 .cta-field--wide {
   display: grid;
   grid-column: auto;
-  gap: 12px;
+  gap: 8px;
   text-align: left;
 }
 
@@ -4159,7 +4172,7 @@
   padding-left: 0;
   color: rgba(247, 244, 235, 0.88);
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.2vw, 22px);
+  font-size: clamp(14px, 1vw, 18px);
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
@@ -4173,7 +4186,7 @@
   background: rgba(255, 255, 255, 0.07);
   color: #f7f4eb;
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.15vw, 21px);
+  font-size: clamp(14px, 1vw, 18px);
   font-weight: 500;
   outline: none;
   box-shadow: none;
@@ -4184,15 +4197,16 @@
 }
 
 .cta-field input {
-  height: clamp(58px, 4.2vw, 76px);
-  padding: 0 clamp(22px, 2vw, 34px);
+  height: clamp(42px, 3vw, 52px);
+  padding: 0 clamp(18px, 1.5vw, 26px);
 }
 
 .cta-field textarea {
-  min-height: clamp(150px, 12vw, 230px);
-  padding: clamp(22px, 2vw, 34px);
-  border-radius: 28px;
-  resize: vertical;
+  min-height: clamp(86px, 6vw, 118px);
+  padding: clamp(12px, 1.2vw, 18px);
+  border-radius: 20px;
+  resize: none;
+  overflow: hidden;
   line-height: 1.55;
 }
 
@@ -4245,23 +4259,23 @@
   align-items: center;
   justify-content: flex-start;
   flex-direction: row;
-  gap: 18px;
-  padding-top: 4px;
+  gap: 12px;
+  padding-top: 0;
 }
 
 .cta-form__submit {
   min-width: 0;
-  min-height: 58px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  padding: 0 18px 0 28px;
+  padding: 0 14px 0 24px;
   border-radius: 999px;
   background: #fbf59a;
   color: #070707;
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.1vw, 20px);
+  font-size: clamp(14px, 1vw, 18px);
   font-weight: 800;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
   transition:
@@ -4281,8 +4295,8 @@
 }
 
 .cta-form__submit-icon {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4307,7 +4321,7 @@
 }
 
 .cta-form__status {
-  grid-column: auto;
+  grid-column: 1 / -1;
   margin: 0;
   padding: 12px 16px;
   border-radius: 8px;
@@ -4324,11 +4338,72 @@
   color: #ffb4a8;
 }
 
+.cta-form__recap {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid rgba(251, 245, 154, 0.2);
+  border-radius: 8px;
+  background: rgba(251, 245, 154, 0.1);
+  color: #fffaf0;
+}
+
+.cta-form__recap-label {
+  color: #fbf59a;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.cta-form__recap-message,
+.cta-form__recap small {
+  margin: 0;
+  color: rgba(255, 250, 240, 0.82);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.cta-form__recap dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.cta-form__recap dl div {
+  display: grid;
+  gap: 4px;
+}
+
+.cta-form__recap dt {
+  color: rgba(255, 250, 240, 0.56);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.cta-form__recap dd {
+  margin: 0;
+  color: #fffaf0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
 .cta-booking {
   width: min(100%, 520px);
   justify-self: end;
-  gap: 20px;
-  padding: 28px;
+  gap: 12px;
+  padding: 18px;
   border-radius: 8px;
 }
 
@@ -4336,8 +4411,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 20px;
+  gap: 14px;
+  padding-bottom: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -4357,7 +4432,7 @@
 .cta-booking h3 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: 0;
@@ -4405,7 +4480,7 @@
 
 .cta-calendar__weekday,
 .cta-calendar__blank {
-  min-height: 34px;
+  min-height: 26px;
 }
 
 .cta-calendar__weekday {
@@ -4417,13 +4492,13 @@
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.2em;
-  padding-bottom: 18px;
+  padding-bottom: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cta-calendar__day {
   aspect-ratio: 1;
-  min-height: 50px;
+  min-height: 42px;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -4497,7 +4572,7 @@
 }
 
 .cta-booking__schedule {
-  margin-top: 58px;
+  margin-top: 28px;
 }
 
 .cta-booking__schedule strong {
@@ -4541,7 +4616,7 @@
 
 .cta-booking__time-slot {
   width: 100%;
-  min-height: 48px;
+  min-height: 42px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4550,7 +4625,7 @@
   background: transparent;
   color: rgba(247, 244, 235, 0.84);
   font-family: var(--font-body);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   transition:
     border-color 0.28s var(--ease-out),
@@ -4586,7 +4661,7 @@
 }
 
 .cta-booking__emergency {
-  min-height: 52px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4624,7 +4699,7 @@
 }
 
 .cta-form__selected-date {
-  padding: 16px 18px;
+  padding: 12px 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.07);
 }
@@ -4635,7 +4710,7 @@
 
 @media (max-width: 900px) {
   .cta-final {
-    padding: 32px 0;
+    padding: 18px 0;
   }
 
   .cta-final__inner {
@@ -4645,14 +4720,14 @@
 
   .cta-final__panel {
     grid-template-columns: 1fr;
-    gap: 34px;
+    gap: 18px;
     min-height: 0;
-    padding: 28px 18px 24px;
+    padding: 16px 14px;
     border-radius: 24px;
   }
 
   .cta-contact-copy {
-    gap: 34px;
+    gap: 16px;
   }
 
   .cta-contact-copy__head {
@@ -4692,20 +4767,20 @@
   }
 
   .cta-form {
-    gap: 18px;
-    padding: 24px 22px 26px;
+    gap: 11px;
+    padding: 14px;
     border-radius: 22px;
   }
 
   .cta-booking {
     width: 100%;
-    gap: 20px;
-    padding: 24px 18px;
+    gap: 14px;
+    padding: 18px 16px;
   }
 
   .cta-booking__top {
     gap: 12px;
-    padding: 0 0 18px;
+    padding: 0 0 12px;
   }
 
   .cta-booking h3 {
@@ -4745,7 +4820,7 @@
   }
 
   .cta-booking__schedule {
-    margin-top: 18px;
+    margin-top: 10px;
   }
 
   .cta-form__selected-date button {
@@ -4784,8 +4859,10 @@
   }
 
   .cta-field textarea {
-    min-height: 112px;
-    padding: 14px 18px;
+    min-height: 92px;
+    resize: none;
+    overflow: hidden;
+    padding: 12px 16px;
     border-radius: 16px;
   }
 
@@ -4797,7 +4874,7 @@
   .cta-form__bottom {
     align-items: flex-start;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .cta-turnstile {

@@ -71,12 +71,14 @@ jobs:
           SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
           SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
         run: |
           set -euo pipefail
 
           ATTEMPTS=3
+          REMOTE_PATH="${SFTP_REMOTE_PATH:-public_html}"
 
-          echo "Deploying the contents of dist/ to the current SFTP directory on ${SFTP_HOST}:${SFTP_PORT}"
+          echo "Deploying the contents of dist/ to ${REMOTE_PATH} on ${SFTP_HOST}:${SFTP_PORT}"
           echo "Remote config file api/contact-config.php will be preserved."
 
           for attempt in $(seq 1 "$ATTEMPTS"); do
@@ -91,6 +93,7 @@ jobs:
               echo "set net:reconnect-interval-base 5"
               echo "set net:reconnect-interval-max 30"
               echo "lcd dist"
+              echo "cd \"${REMOTE_PATH}\""
 
               find dist -type d -mindepth 1 | sort | while IFS= read -r directory; do
                 remote_directory="${directory#dist/}"
@@ -130,5 +133,5 @@ jobs:
             fi
           done
 
-          echo "::error::SFTP deployment failed after ${ATTEMPTS} attempts. Check SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD and Hostinger SFTP access."
+          echo "::error::SFTP deployment failed after ${ATTEMPTS} attempts. Check SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD, SFTP_REMOTE_PATH and Hostinger SFTP access."
           exit 1

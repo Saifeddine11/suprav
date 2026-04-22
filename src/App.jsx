@@ -14,6 +14,10 @@ import vid4 from '../media/videos/vid4.mp4'
 import vid5 from '../media/videos/vid5.mp4'
 import vid6 from '../media/videos/vid6.mp4'
 import logoImage from '../media/logo.webp'
+import palmeraiePoster from '../media/site-screens/palmeraie-stays.webp'
+import ourikaPoster from '../media/site-screens/ourika-living.webp'
+import studioPoster from '../media/site-screens/studio-medina.webp'
+import maisonPoster from '../media/site-screens/maison-noura.webp'
 import partner1 from '../media/partners/1.webp'
 import partner2 from '../media/partners/2.webp'
 import partner3 from '../media/partners/3.webp'
@@ -41,8 +45,11 @@ const easeInOutCubic = (value) => (
     : 1 - Math.pow(-2 * value + 2, 3) / 2
 )
 const CONTACT_API_ENDPOINT = '/api/contact.php'
+const IS_LOCAL_FORM_PREVIEW = import.meta.env.DEV
+const CONTACT_RECAP_STORAGE_KEY = 'suprav-contact-recap'
+const CONTACT_RECAP_TTL_MS = 48 * 60 * 60 * 1000
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
-const MIN_FORM_TIME_MS = 4000
+const MIN_FORM_TIME_MS = 0
 const INITIAL_CONTACT_VALUES = {
   name: '',
   email: '',
@@ -68,7 +75,7 @@ const ERROR_MESSAGES = {
   turnstile: 'Merci de confirmer le formulaire avant l’envoi.',
 }
 const EMAIL_PATTERN = /^[^\s@<>()[\]\\,;:"']+@[^\s@<>()[\]\\,;:"']+\.[^\s@<>()[\]\\,;:"']{2,}$/i
-const NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+){1,5}$/
+const NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+){0,5}$/
 const URL_PATTERN = /(?:https?:\/\/|www\.|[a-z0-9-]+\.(?:com|net|org|io|co|ma|fr|info|biz|ru|cn)\b)/i
 const SPAM_PATTERN = /\b(?:casino|crypto|bitcoin|forex|loan|viagra|porn|seo backlinks?|whatsapp marketing|telegram)\b/i
 
@@ -85,6 +92,130 @@ const cleanTextInput = (value) => String(value ?? '')
 const normalizeForCompare = (value) => cleanTextInput(value).toLowerCase()
 const phoneDigits = (value) => String(value ?? '').replace(/\D/g, '')
 
+const sanitizeRecap = (recap) => {
+  if (!recap || typeof recap !== 'object') return null
+
+  const expiresAtTime = new Date(recap.expiresAt || 0).getTime()
+  if (!Number.isFinite(expiresAtTime) || expiresAtTime <= Date.now()) return null
+
+  return {
+    name: cleanTextInput(recap.name),
+    date: cleanTextInput(recap.date),
+    time: cleanTextInput(recap.time),
+    message: cleanTextInput(recap.message),
+    sentAt: cleanTextInput(recap.sentAt),
+    expiresAt: cleanTextInput(recap.expiresAt),
+  }
+}
+
+const buildContactRecap = ({ name, date, time, message }) => {
+  const now = new Date()
+  return {
+    name: cleanTextInput(name),
+    date: cleanTextInput(date),
+    time: cleanTextInput(time),
+    message: cleanTextInput(message),
+    sentAt: now.toISOString(),
+    expiresAt: new Date(now.getTime() + CONTACT_RECAP_TTL_MS).toISOString(),
+  }
+}
+
+const readLocalContactRecap = () => {
+  if (typeof window === 'undefined') return null
+
+  try {
+    const stored = window.localStorage.getItem(CONTACT_RECAP_STORAGE_KEY)
+    const recap = sanitizeRecap(stored ? JSON.parse(stored) : null)
+    if (!recap) window.localStorage.removeItem(CONTACT_RECAP_STORAGE_KEY)
+    return recap
+  } catch {
+    window.localStorage.removeItem(CONTACT_RECAP_STORAGE_KEY)
+    return null
+  }
+}
+
+const writeLocalContactRecap = (recap) => {
+  if (typeof window === 'undefined') return
+
+  const sanitized = sanitizeRecap(recap)
+  if (!sanitized) return
+  window.localStorage.setItem(CONTACT_RECAP_STORAGE_KEY, JSON.stringify(sanitized))
+}
+
+function LazyAutoVideo({
+  src,
+  poster,
+  className,
+  ariaLabel,
+  preload = 'none',
+  rootMargin = '700px 0px',
+  threshold = 0.18,
+  eager = false,
+}) {
+  const videoRef = useRef(null)
+  const [shouldLoad, setShouldLoad] = useState(false)
+  const shouldUseSource = eager || shouldLoad
+
+  useEffect(() => {
+    if (eager) return undefined
+
+    const video = videoRef.current
+    if (!video) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          video.pause()
+          return
+        }
+
+        setShouldLoad(true)
+        window.requestAnimationFrame(() => {
+          video.play().catch(() => {})
+        })
+      },
+      { rootMargin, threshold }
+    )
+
+    observer.observe(video)
+
+    return () => observer.disconnect()
+  }, [eager, rootMargin, threshold])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || !shouldUseSource) return undefined
+
+    const playVideo = () => {
+      if (video.paused) video.play().catch(() => {})
+    }
+
+    video.addEventListener('loadeddata', playVideo)
+    video.addEventListener('canplay', playVideo)
+    playVideo()
+
+    return () => {
+      video.removeEventListener('loadeddata', playVideo)
+      video.removeEventListener('canplay', playVideo)
+    }
+  }, [shouldUseSource])
+
+  return (
+    <video
+      ref={videoRef}
+      className={className}
+      src={shouldUseSource ? src : undefined}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      autoPlay={shouldUseSource}
+      preload={shouldUseSource ? preload : 'none'}
+      aria-label={ariaLabel}
+    />
+  )
+}
+
 const isLikelyPhone = (value) => {
   const raw = cleanTextInput(value)
   const digits = phoneDigits(raw)
@@ -97,8 +228,6 @@ const isLikelyPhone = (value) => {
 
 const validateContactForm = (values, options = {}) => {
   const requireTurnstile = options.requireTurnstile ?? true
-  const now = options.now ?? Date.now()
-  const startedAt = Number(options.startedAt ?? now)
   const turnstileToken = String(options.turnstileToken ?? '')
   const normalized = {
     name: cleanTextInput(values.name),
@@ -115,7 +244,7 @@ const validateContactForm = (values, options = {}) => {
 
   if (!normalized.name) errors.name = ERROR_MESSAGES.requiredName
   else if (
-    normalized.name.length < 5
+    normalized.name.length < 2
     || normalized.name.length > 80
     || !NAME_PATTERN.test(normalized.name)
     || EMAIL_PATTERN.test(normalized.name)
@@ -138,12 +267,10 @@ const validateContactForm = (values, options = {}) => {
     || /(.)\1{9,}/i.test(normalized.message)
   ) errors.message = ERROR_MESSAGES.invalidMessage
 
-  if (normalized.website) errors.website = ERROR_MESSAGES.honeypot
   if (comparableEmail && comparableName.includes(comparableEmail)) errors.name = ERROR_MESSAGES.nameContainsEmail
   if (digits.length >= 6 && phoneDigits(normalized.name).includes(digits)) errors.name = ERROR_MESSAGES.nameContainsPhone
   if (digits.length >= 6 && phoneDigits(normalized.email).includes(digits)) errors.email = ERROR_MESSAGES.emailContainsPhone
   if (comparableEmail && comparablePhone.includes(comparableEmail)) errors.phone = ERROR_MESSAGES.phoneContainsEmail
-  if (now - startedAt < MIN_FORM_TIME_MS) errors.form = ERROR_MESSAGES.tooFast
   if (requireTurnstile && !turnstileToken) errors.turnstile = ERROR_MESSAGES.turnstile
 
   return {
@@ -547,21 +674,25 @@ const WEBSITE_PROJECTS = [
     name: 'Palmeraie Stays',
     type: 'Plateforme de location courte durée',
     video: vid6,
+    poster: palmeraiePoster,
   },
   {
     name: 'Ourika Living',
     type: 'Landing page immobilière',
     video: vid4,
+    poster: ourikaPoster,
   },
   {
     name: 'Studio Medina',
     type: 'Site vitrine créatif',
     video: vid3,
+    poster: studioPoster,
   },
   {
     name: 'Maison Noura',
     type: 'Site e-commerce retail',
     video: vid5,
+    poster: maisonPoster,
   },
 ]
 
@@ -828,13 +959,14 @@ function CollaboratorsSection() {
         >
           <BlurredStaggerHeading
             lines={[
-              { parts: [{ text: 'On accompagne peu de marques,' }] },
+              { parts: [{ text: 'On accompagne peu' }] },
+              { parts: [{ text: 'de marques,' }] },
               { parts: [{ text: 'mais on les accompagne ' }, { text: 'loin.', em: true, zoom: true }] },
             ]}
           />
           <motion.a variants={fadeUpChild} href="#contact" className="collab-call-pill magnetic-btn">
             <span className="collab-call-pill__avatar">
-              <img src={partner1} alt="" />
+              <img src="/favicon.svg" alt="" />
             </span>
             <span>
               <strong>Réserver un appel gratuit</strong>
@@ -1126,16 +1258,51 @@ function FaqSection() {
   )
 }
 
+function ContactRecapCard({ recap, isLocalPreview }) {
+  if (!recap) return null
+
+  return (
+    <motion.div
+      className="cta-form__recap"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+    >
+      <span className="cta-form__recap-label">Votre demande a été envoyée</span>
+      <p className="cta-form__recap-message">
+        Votre demande est bien reçue. On vous contacte immédiatement pour confirmer votre rendez-vous.
+      </p>
+      <dl>
+        <div>
+          <dt>Nom</dt>
+          <dd>{recap.name}</dd>
+        </div>
+        <div>
+          <dt>Rendez-vous</dt>
+          <dd>{recap.date} · {recap.time}</dd>
+        </div>
+      </dl>
+      {isLocalPreview && (
+        <small>Test local uniquement. Aucun email n’est envoyé depuis localhost.</small>
+      )}
+    </motion.div>
+  )
+}
+
 function CtaSection() {
   const [formStatus, setFormStatus] = useState('idle')
   const [contactValues, setContactValues] = useState(INITIAL_CONTACT_VALUES)
   const [contactErrors, setContactErrors] = useState({})
+  const [contactRecap, setContactRecap] = useState(() => (
+    IS_LOCAL_FORM_PREVIEW ? readLocalContactRecap() : null
+  ))
   const [touchedFields, setTouchedFields] = useState({})
   const [formStartedAt, setFormStartedAt] = useState(() => Date.now())
   const [turnstileToken, setTurnstileToken] = useState('')
   const [turnstileReady, setTurnstileReady] = useState(false)
   const turnstileRef = useRef(null)
   const turnstileWidgetRef = useRef(null)
+  const messageTextareaRef = useRef(null)
   const [today, setToday] = useState(() => startOfLocalDay(new Date()))
   const initialBookingDate = useMemo(() => findFirstAvailableBookingDate(today), [today])
   const [bookingStep, setBookingStep] = useState('date')
@@ -1168,6 +1335,30 @@ function CtaSection() {
   )
   const calendarOffset = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay()
   const weekdays = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM']
+
+  useEffect(() => {
+    if (IS_LOCAL_FORM_PREVIEW) return undefined
+
+    let cancelled = false
+
+    fetch(CONTACT_API_ENDPOINT, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (cancelled) return
+        const recap = sanitizeRecap(payload?.recap)
+        if (recap) {
+          setContactRecap(recap)
+        }
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -1228,6 +1419,14 @@ function CtaSection() {
       'error-callback': () => setTurnstileToken(''),
     })
   }, [bookingStep, turnstileReady])
+
+  useEffect(() => {
+    const textarea = messageTextareaRef.current
+    if (!textarea || bookingStep !== 'details') return
+
+    textarea.style.height = 'auto'
+    textarea.style.height = `${textarea.scrollHeight}px`
+  }, [bookingStep, contactValues.message])
 
   const resetTurnstile = () => {
     setTurnstileToken('')
@@ -1295,7 +1494,7 @@ function CtaSection() {
     }
 
     const validation = validateContactForm(contactValues, {
-      requireTurnstile: Boolean(TURNSTILE_SITE_KEY),
+      requireTurnstile: Boolean(TURNSTILE_SITE_KEY && turnstileWidgetRef.current !== null),
       startedAt: formStartedAt,
       turnstileToken,
     })
@@ -1308,6 +1507,26 @@ function CtaSection() {
 
     setFormStatus('sending')
     try {
+      const pendingRecap = buildContactRecap({
+        name: validation.sanitized.name,
+        date: formatDateValue(selectedDate),
+        time: effectiveSelectedTime,
+        message: validation.sanitized.message,
+      })
+
+      if (IS_LOCAL_FORM_PREVIEW) {
+        await new Promise((resolve) => window.setTimeout(resolve, 300))
+        setContactRecap(pendingRecap)
+        writeLocalContactRecap(pendingRecap)
+        setContactValues(INITIAL_CONTACT_VALUES)
+        setTouchedFields({})
+        setContactErrors({})
+        setFormStartedAt(Date.now())
+        setFormStatus('sent')
+        resetTurnstile()
+        return
+      }
+
       const response = await fetch(CONTACT_API_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -1322,13 +1541,14 @@ function CtaSection() {
           turnstileToken,
         }),
       })
-      const payload = await response.json().catch(() => ({}))
+      const isJsonResponse = response.headers.get('content-type')?.includes('application/json')
+      const payload = isJsonResponse ? await response.json().catch(() => ({})) : {}
 
       if (!response.ok || !payload.ok) {
         if (payload.errors && typeof payload.errors === 'object') {
           setContactErrors(payload.errors)
         } else {
-          setContactErrors({ form: payload.message || 'Certaines informations semblent incorrectes, merci de vérifier vos champs.' })
+          setContactErrors({ form: payload.message || 'Le serveur du formulaire ne répond pas correctement. Merci de vérifier le fichier api/contact.php.' })
         }
         setTouchedFields({ name: true, email: true, phone: true, message: true, turnstile: true })
         setFormStatus('blocked')
@@ -1336,6 +1556,8 @@ function CtaSection() {
         return
       }
 
+      const recap = sanitizeRecap(payload.recap) || pendingRecap
+      setContactRecap(recap)
       setContactValues(INITIAL_CONTACT_VALUES)
       setTouchedFields({})
       setContactErrors({})
@@ -1349,12 +1571,7 @@ function CtaSection() {
     }
   }
 
-  const currentValidation = validateContactForm(contactValues, {
-    requireTurnstile: Boolean(TURNSTILE_SITE_KEY),
-    startedAt: formStartedAt - MIN_FORM_TIME_MS,
-    turnstileToken,
-  })
-  const isSubmitDisabled = formStatus === 'sending' || !currentValidation.isValid
+  const isSubmitDisabled = formStatus === 'sending'
 
   return (
     <section className="cta-final" id="contact">
@@ -1383,9 +1600,9 @@ function CtaSection() {
 
               <motion.div className="cta-social-proof" variants={fadeUpChild} aria-label="Note clients 4.9 sur 5">
                 <div className="cta-social-proof__avatars" aria-hidden="true">
-                  <span>S</span>
-                  <span>V</span>
-                  <span>3</span>
+                  <span><img src={partner3} alt="" /></span>
+                  <span><img src={partner5} alt="" /></span>
+                  <span><img src={partner12} alt="" /></span>
                   <span>+</span>
                 </div>
                 <p><strong>4.9 / 5</strong> clients accompagnés</p>
@@ -1393,7 +1610,18 @@ function CtaSection() {
             </motion.div>
 
             <AnimatePresence mode="wait">
-              {bookingStep === 'date' ? (
+              {contactRecap ? (
+                <motion.div
+                  key="recap-step"
+                  className="cta-form cta-form--recap-only"
+                  initial={{ opacity: 0, x: 24, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, x: -24, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.45, ease: EASING }}
+                >
+                  <ContactRecapCard recap={contactRecap} isLocalPreview={IS_LOCAL_FORM_PREVIEW} />
+                </motion.div>
+              ) : bookingStep === 'date' ? (
                 <motion.div
                   key="date-step"
                   className="cta-form cta-booking"
@@ -1519,7 +1747,7 @@ function CtaSection() {
                       type="text"
                       placeholder="Jane Smith"
                       autoComplete="name"
-                      minLength="5"
+                      minLength="2"
                       maxLength="80"
                       required
                       value={contactValues.name}
@@ -1579,6 +1807,7 @@ function CtaSection() {
                   <motion.label className="cta-field cta-field--wide" variants={fadeUpChild}>
                     <span>Message</span>
                     <textarea
+                      ref={messageTextareaRef}
                       name="message"
                       placeholder="Décrivez votre projet en quelques phrases"
                       rows="5"
@@ -1620,18 +1849,19 @@ function CtaSection() {
                         </svg>
                       </span>
                     </motion.button>
-                    <a href="https://wa.me/33744208673" className="cta-form__whatsapp">WhatsApp direct</a>
                   </motion.div>
 
                   <AnimatePresence>
-                    {formStatus === 'sent' && (
+                    {formStatus === 'sent' && !contactRecap && (
                       <motion.p
                         className="cta-form__status cta-form__status--success"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                       >
-                        Message envoyé. Nous revenons vers vous rapidement.
+                        {IS_LOCAL_FORM_PREVIEW
+                          ? 'Test local validé. Aucun email n’est envoyé depuis localhost.'
+                          : 'Message envoyé. Nous revenons vers vous rapidement.'}
                       </motion.p>
                     )}
                     {contactErrors.form && (
@@ -1671,7 +1901,7 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Navigation</h4>
-            <a href="/works">Réalisations</a>
+            <a href="/#works">Réalisations</a>
             <a href="/#services">Services</a>
             <a href="/#methode">Méthode</a>
             <a href="/#segments">Pour qui</a>
@@ -1732,7 +1962,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
           </a>
           <ul className="nav__links">
             <li>
-              <a href="/works" className="nav__link">
+              <a href="/#works" className="nav__link">
                 Réalisations
               </a>
             </li>
@@ -1777,7 +2007,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
       >
         <ul className="nav__mobile-links">
           <li>
-            <a href="/works" onClick={() => setNavOpen(false)}>
+            <a href="/#works" onClick={() => setNavOpen(false)}>
               Réalisations
             </a>
           </li>
@@ -1807,26 +2037,18 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
 }
 
 function MediaVideoCard({ videoSrc, index }) {
-  const videoRef = useRef(null)
+  const [isMobileVideo, setIsMobileVideo] = useState(() => (
+    typeof window === 'undefined' ? false : window.matchMedia('(max-width: 768px)').matches
+  ))
 
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return undefined
+    const mediaQuery = window.matchMedia('(max-width: 768px)')
+    const updateMobileVideo = () => setIsMobileVideo(mediaQuery.matches)
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {})
-        } else {
-          video.pause()
-        }
-      },
-      { threshold: 0.35 }
-    )
+    updateMobileVideo()
+    mediaQuery.addEventListener('change', updateMobileVideo)
 
-    observer.observe(video)
-
-    return () => observer.disconnect()
+    return () => mediaQuery.removeEventListener('change', updateMobileVideo)
   }, [])
 
   return (
@@ -1839,15 +2061,14 @@ function MediaVideoCard({ videoSrc, index }) {
       }}
       transition={HOVER_TRANSITION}
     >
-      <video
-        ref={videoRef}
+      <LazyAutoVideo
         className="video-card"
         src={videoSrc}
-        muted
-        loop
-        preload={index < 4 ? 'metadata' : 'none'}
-        playsInline
-        aria-label="Réalisation vidéo agence de communication Marrakech"
+        preload="metadata"
+        rootMargin="1400px 0px"
+        threshold={0.01}
+        eager={isMobileVideo && index < 3}
+        ariaLabel="Réalisation vidéo agence de communication Marrakech"
       />
     </motion.article>
   )
@@ -2038,13 +2259,14 @@ function WebsiteProjectsSection() {
           {WEBSITE_PROJECTS.map((project) => (
             <article className="website-project-card" key={project.name}>
               <a href="/#contact" className="website-project-card__media" aria-label={`Voir le projet ${project.name}`}>
-                <video
+                <LazyAutoVideo
                   src={project.video}
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
+                  poster={project.poster}
+                  className="website-project-card__video"
                   preload="metadata"
+                  rootMargin="560px 0px"
+                  threshold={0.2}
+                  ariaLabel={`Aperçu vidéo du projet ${project.name}`}
                 />
                 <span className="website-project-card__brand">Supra v.</span>
               </a>
@@ -2374,7 +2596,7 @@ function App() {
           </p>
 
           <div className="hero__cta">
-            <a href="/works" className="btn btn--primary">
+            <a href="/#works" className="btn btn--primary">
               Voir nos réalisations
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
