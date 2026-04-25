@@ -1548,7 +1548,7 @@ function CtaSection() {
         if (payload.errors && typeof payload.errors === 'object') {
           setContactErrors(payload.errors)
         } else {
-          setContactErrors({ form: payload.message || 'Le serveur du formulaire ne répond pas correctement. Merci de vérifier le fichier api/contact.php.' })
+          setContactErrors({ form: payload.message || 'Le serveur du formulaire ne répond pas correctement. Merci de vérifier api/contact.' })
         }
         setTouchedFields({ name: true, email: true, phone: true, message: true, turnstile: true })
         setFormStatus('blocked')
@@ -1901,7 +1901,7 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Navigation</h4>
-            <a href="/#works">Réalisations</a>
+            <a href="/works">Réalisations</a>
             <a href="/#services">Services</a>
             <a href="/#methode">Méthode</a>
             <a href="/#segments">Pour qui</a>
@@ -1962,7 +1962,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
           </a>
           <ul className="nav__links">
             <li>
-              <a href="/#works" className="nav__link">
+              <a href="/works" className="nav__link">
                 Réalisations
               </a>
             </li>
@@ -2007,7 +2007,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
       >
         <ul className="nav__mobile-links">
           <li>
-            <a href="/#works" onClick={() => setNavOpen(false)}>
+            <a href="/works" onClick={() => setNavOpen(false)}>
               Réalisations
             </a>
           </li>
@@ -2596,7 +2596,7 @@ function App() {
           </p>
 
           <div className="hero__cta">
-            <a href="/#works" className="btn btn--primary">
+            <a href="/works" className="btn btn--primary">
               Voir nos réalisations
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
