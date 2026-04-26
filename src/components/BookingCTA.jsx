@@ -175,7 +175,7 @@ export default function BookingCTA() {
 
               <motion.div className="cta-contact-copy__details" variants={fadeUp}>
                 <a href="tel:+33744208673">+33 7 44 20 86 73</a>
-                <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
+                <a href="/contact">contact@suprav3.com</a>
               </motion.div>
 
               <motion.div className="cta-social-proof" variants={fadeUp} aria-label="Note clients 4.9 sur 5">

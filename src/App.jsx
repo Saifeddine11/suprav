@@ -969,7 +969,7 @@ function CollaboratorsSection() {
                   style={{ left: `${left}%`, top: `${top}%` }}
                 >
                   <span className="collaborator-avatar">
-                    <img src={person.image} alt="" loading="lazy" />
+                    <img src={person.image} alt={`${person.name} — partenaire Supra v.`} loading="lazy" />
                   </span>
                 </div>
               )
@@ -977,7 +977,7 @@ function CollaboratorsSection() {
           </motion.div>
           {isDesktopWheel && (
             <span className="collaborators-below-logo">
-              <img src={BELOW_WHEEL_COLLABORATOR.image} alt="" loading="lazy" />
+              <img src={BELOW_WHEEL_COLLABORATOR.image} alt={`${BELOW_WHEEL_COLLABORATOR.name} — partenaire Supra v.`} loading="lazy" />
             </span>
           )}
         </div>
@@ -1630,7 +1630,7 @@ function CtaSection() {
 
               <motion.div className="cta-contact-copy__details" variants={fadeUpChild}>
                 <a href="tel:+33744208673">+33 7 44 20 86 73</a>
-                <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
+                <a href="/contact">contact@suprav3.com</a>
               </motion.div>
 
               <motion.div className="cta-social-proof" variants={fadeUpChild} aria-label="Note clients 4.9 sur 5">
@@ -1953,9 +1953,9 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Contact</h4>
-            <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
-            <a href="https://wa.me/33744208673">WhatsApp</a>
-            <p>Marrakech, Maroc</p>
+            <a href="/contact">contact@suprav3.com</a>
+            <a href="https://wa.me/33744208673">+33 7 44 20 86 73</a>
+            <address style={{fontStyle:'normal'}}>Guéliz, Marrakech 40000, Maroc</address>
           </div>
         </div>
 
@@ -2475,7 +2475,7 @@ function StorySection() {
 }
 
 const DEFAULT_SEO = {
-  title: 'Supra v. | Agence communication Marrakech',
+  title: 'Supra v. — Agence Communication Marrakech | Branding & Web',
   description: 'Agence de communication à Marrakech : branding, sites web, contenus, marketing digital et automatisation IA pour faire grandir votre marque.',
   canonical: 'https://suprav3.com/',
 }

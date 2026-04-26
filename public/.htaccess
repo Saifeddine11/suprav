@@ -1,15 +1,24 @@
 Options -Indexes
+DirectoryIndex index.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
+
+  # www → non-www + http → https
   RewriteCond %{HTTPS} !=on [OR]
   RewriteCond %{HTTP_HOST} ^www\.suprav3\.com$ [NC]
   RewriteRule ^ https://suprav3.com%{REQUEST_URI} [R=301,L]
 
+  # API
   RewriteRule ^api/contact/?$ /api/contact.php [L,QSA]
-  RewriteRule ^works/?$ /index.html [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Fichiers et dossiers réels → servir directement
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Toutes les routes SPA → index.html (200)
   RewriteRule ^ /index.html [L]
 </IfModule>
 
