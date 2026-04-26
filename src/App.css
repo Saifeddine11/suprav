@@ -2521,7 +2521,38 @@
   font-weight: 600;
 }
 
-/* ── Footer de card avec lien devis ── */
+.svc-card__bottom {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.svc-card__bottom .svc-card__kw {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.svc-card__devis {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: opacity 0.2s ease;
+}
+
+.svc-card__devis:hover {
+  opacity: 0.75;
+}
+
 /* Screenshot statique dans la grille portfolio */
 .website-project-card__screenshot {
   width: 100%;

@@ -1036,7 +1036,10 @@ function ServiceScrollCard({ service }) {
         </div>
         <h3 className="svc-card__title">{service.title}</h3>
         <p className="svc-card__desc">{service.desc}</p>
-        <div className="svc-card__kw">{service.kw}</div>
+        <div className="svc-card__bottom">
+          <div className="svc-card__kw">{service.kw}</div>
+          <a href="/devis-gratuit" className="svc-card__devis">Obtenir un devis →</a>
+        </div>
       </motion.article>
     </motion.div>
   )
