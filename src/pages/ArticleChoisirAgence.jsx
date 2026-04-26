@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 
 const schema = {
@@ -61,6 +62,53 @@ export default function ArticleChoisirAgence() {
           title: "4. Vérifiez la disponibilité et la communication",
           desc: "La réactivité d'une agence avant de signer est souvent révélatrice de sa réactivité une fois le contrat signé. Testez : envoyez un email ou un message WhatsApp et mesurez le délai de réponse. Demandez qui sera votre interlocuteur principal et combien de clients il gère simultanément. Évitez les agences qui n'ont pas de chef de projet attitré par compte."
         }
+      ]}
+      richContent={[
+        {
+          heading: "Le marché des agences de communication à Marrakech en 2026 : panorama",
+          body: [
+            "Marrakech compte aujourd'hui plusieurs dizaines d'agences de communication, auxquelles s'ajoutent des centaines de freelances actifs sur les réseaux sociaux et les plateformes de mise en relation. Cette abondance de l'offre est une bonne nouvelle pour les entreprises — la concurrence tire les prix vers des niveaux raisonnables — mais elle rend aussi le choix plus complexe.",
+            "On distingue grossièrement trois catégories d'acteurs. Les grandes agences généralistes (10 à 30 personnes) offrent une capacité de production importante mais peuvent manquer d'agilité et de personnalisation pour les PME. Les petites agences spécialisées (2 à 8 personnes) comme Supra v. offrent une expertise pointue sur un nombre limité de disciplines avec un contact client direct et une réactivité supérieure. Les freelances peuvent être excellents dans leur domaine de spécialité, mais ils ne peuvent pas coordonner une stratégie 360° ni garantir la continuité de service en cas d'indisponibilité.",
+            "Votre choix doit d'abord dépendre de vos besoins réels. Si vous n'avez besoin que d'un logo, un freelance designer peut suffire. Si vous avez besoin d'une stratégie globale (site web + SEO + réseaux sociaux + campagnes), une agence pluridisciplinaire est préférable.",
+          ],
+        },
+        {
+          heading: "Les 3 questions qui révèlent tout en 15 minutes",
+          sub: [
+            {
+              heading: "« Pouvez-vous m'expliquer pourquoi mon site actuel n'est pas bien référencé ? »",
+              body: "Cette question teste l'expertise technique réelle de l'agence. Une bonne agence ouvre votre site, l'analyse rapidement et identifie des problèmes concrets : vitesse de chargement, balises manquantes, maillage interne déficient, liens cassés. Une agence qui répond par des généralités (« votre site n'est pas assez optimisé ») sans plonger dans les données réelles n'a probablement pas l'expertise SEO technique qu'elle prétend avoir.",
+            },
+            {
+              heading: "« Quels résultats précis avez-vous obtenus pour un client dans mon secteur ? »",
+              body: "Demandez des chiffres spécifiques, pas des généralités. « Nous avons augmenté le trafic de 65 % en 8 mois pour ce restaurant via une stratégie de contenu SEO ciblée sur les requêtes de touristes français » — voilà une réponse concrète. « Nous avons beaucoup amélioré la visibilité de nos clients » — voilà une réponse vide. Une agence qui a vraiment obtenu des résultats peut les chiffrer et les documenter.",
+            },
+            {
+              heading: "« Qui exactement travaillera sur mon compte ? »",
+              body: "Beaucoup d'agences à Marrakech vendent en présentant leurs meilleurs éléments, puis sous-traitent le travail à des profils moins expérimentés ou à des freelances offshore. Demandez à rencontrer la personne qui gérera concrètement votre compte et vérifiez son niveau d'expérience réel. Le chef de projet que vous rencontrez en rendez-vous de vente devrait être celui qui répond à vos messages et gère votre projet.",
+            },
+          ],
+        },
+        {
+          heading: "La checklist complète avant de signer avec une agence de communication",
+          body: "Avant de signer un contrat avec une agence de communication à Marrakech, vérifiez systématiquement les points suivants :",
+          bullets: [
+            "Le contrat détaille précisément les livrables attendus, les délais et les conditions de validation.",
+            "Le nombre de rounds de retouches inclus est clairement défini (minimum 2 est raisonnable).",
+            "Les conditions de résiliation sont équitables : vous ne devez pas être piégé pour 12 mois sans clause de sortie.",
+            "La propriété des fichiers sources vous est garantie à la livraison (logo vectoriel, code source du site).",
+            "Les coûts récurrents (hébergement, outils, licences) sont clairement distingués des honoraires d'agence.",
+            "Une réunion de suivi mensuelle ou un rapport de performance est inclus dans le contrat.",
+            "Vous avez parlé à au moins un client existant de l'agence pour valider leur satisfaction.",
+          ],
+        },
+        {
+          heading: "Ce que coûte vraiment un mauvais choix d'agence",
+          body: [
+            "Choisir la mauvaise agence de communication n'est pas seulement une question d'argent perdu — c'est aussi du temps perdu, une opportunité manquée et parfois des dommages durables à corriger. Un site web mal développé peut prendre 6 à 12 mois à corriger sur le plan SEO. Une identité visuelle amateur impose un rebranding coûteux. Une mauvaise gestion des réseaux sociaux peut ternir votre réputation auprès d'une audience qu'il faudra des mois à reconquérir.",
+            <>Le coût total d&apos;un mauvais choix d&apos;agence dépasse souvent largement l&apos;économie initiale réalisée. Un site web à 2 000 MAD qui ne génère aucun trafic vous coûtera en réalité plus cher qu&apos;un site à 8 000 MAD qui génère 50 leads par mois. C&apos;est pourquoi nous recommandons de considérer une <Link to="/agence-communication-marrakech">agence de communication à Marrakech</Link> comme un investissement mesurable, pas une dépense à minimiser.</>,
+          ],
+        },
       ]}
       faq={[
         {

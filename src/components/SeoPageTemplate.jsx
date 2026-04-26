@@ -50,6 +50,7 @@ export default function SeoPageTemplate({
   faq = [],
   stats,            // optionnel : [{ value: '50+', label: 'Projets livrés' }]
   sectionNum = '—', // numéro de section pour les labels
+  richContent = [], // [{ heading, body, bullets?, sub? }]
 }) {
   const [openFaq, setOpenFaq] = useState(-1)
 
@@ -183,6 +184,47 @@ export default function SeoPageTemplate({
                     </div>
                     <h2 className="seo-svc-card__title">{s.title}</h2>
                     <p className="seo-svc-card__desc">{s.desc}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </section>
+        )}
+
+        {/* ══════════════════════════
+            RICH CONTENT — long-form SEO
+        ══════════════════════════ */}
+        {richContent.length > 0 && (
+          <section className="seo-rich">
+            <div className="container seo-rich__container">
+              <motion.div
+                className="seo-rich__body"
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewport}
+                variants={stagger}
+              >
+                {richContent.map((block, i) => (
+                  <motion.div key={i} className="seo-rich__block" variants={fadeUp}>
+                    <h2 className="seo-rich__h2">{block.heading}</h2>
+                    {Array.isArray(block.body)
+                      ? block.body.map((p, j) => <p key={j} className="seo-rich__p">{p}</p>)
+                      : <p className="seo-rich__p">{block.body}</p>
+                    }
+                    {block.bullets && block.bullets.length > 0 && (
+                      <ul className="seo-rich__list">
+                        {block.bullets.map((b, k) => <li key={k}>{b}</li>)}
+                      </ul>
+                    )}
+                    {block.sub && block.sub.map((s, m) => (
+                      <div key={m} className="seo-rich__sub">
+                        <h3 className="seo-rich__h3">{s.heading}</h3>
+                        {Array.isArray(s.body)
+                          ? s.body.map((p, n) => <p key={n} className="seo-rich__p">{p}</p>)
+                          : <p className="seo-rich__p">{s.body}</p>
+                        }
+                      </div>
+                    ))}
                   </motion.div>
                 ))}
               </motion.div>

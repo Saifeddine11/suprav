@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 
 const schema = {
@@ -61,6 +62,52 @@ export default function ArticlePrixSiteWeb() {
           title: "Ce qui fait varier le prix d'un site web",
           desc: "Les principaux facteurs qui influencent le prix d'un site web à Marrakech sont : le nombre de pages et de fonctionnalités, le niveau de personnalisation du design, la rédaction des contenus (incluse ou non), l'optimisation SEO, les intégrations tierces (CRM, paiement, chat) et le délai de livraison souhaité. Méfiez-vous des devis trop bas qui cachent souvent des limitations importantes."
         }
+      ]}
+      richContent={[
+        {
+          heading: "Comment se compose réellement le prix d'un site web à Marrakech ?",
+          body: [
+            "Quand une agence ou un freelance vous remet un devis pour la création de votre site web, le chiffre final est la somme de plusieurs postes de coûts distincts que la plupart des prestataires n'ont pas l'habitude de détailler spontanément. Comprendre ces composantes vous permet de comparer des devis de manière objective et de ne pas vous laisser séduire par un prix bas qui cache des lacunes importantes.",
+            "Le premier poste est la conception UX/UI : c'est le temps passé à penser l'architecture du site, les maquettes des pages clés et l'expérience utilisateur avant d'écrire une seule ligne de code. Ce travail représente généralement 20 à 30 % du budget total. Un site livré sans phase de conception sérieuse risque d'être beau visuellement mais inefficace commercialement.",
+            "Le deuxième poste est le développement : le temps de codage proprement dit. La différence de prix entre un site WordPress sur template (rapide à développer) et un site codé sur-mesure (React, Next.js ou JAMstack) est significative — mais cette différence se justifie par des performances, une sécurité et une évolutivité sans commune mesure. Un site sur-mesure peut fonctionner parfaitement pendant 5 à 7 ans ; un site WordPress sur thème devra souvent être refondu après 2 à 3 ans.",
+          ],
+        },
+        {
+          heading: "WordPress vs développement sur-mesure : ce que ça change vraiment",
+          sub: [
+            {
+              heading: "WordPress avec thème premium",
+              body: "Un site WordPress construit sur un thème comme Divi, Elementor ou WP Bakery peut être livré en quelques jours pour un budget réduit. C'est la solution choisie par la majorité des prestataires bon marché à Marrakech. Les inconvénients concrets : un temps de chargement souvent supérieur à 3 secondes (ce qui pénalise votre SEO et fait fuir vos visiteurs), une sécurité problématique avec des plugins qui ne sont pas toujours mis à jour, et un design générique partagé par des milliers d'autres sites dans le monde.",
+            },
+            {
+              heading: "Développement sur-mesure (React, Next.js, JAMstack)",
+              body: "Un site développé sur-mesure est plus coûteux à produire mais génère un meilleur retour sur investissement sur la durée. Les avantages sont concrets : temps de chargement sous la seconde, score Lighthouse supérieur à 90 (un atout SEO majeur), design unique qui renforce votre identité de marque, et code propre que n'importe quel développeur peut reprendre facilement. C'est l'approche recommandée pour toute entreprise qui prend son développement digital au sérieux.",
+            },
+            {
+              heading: "Shopify ou WooCommerce pour le e-commerce",
+              body: "Pour les boutiques en ligne, Shopify et WooCommerce restent les solutions les plus courantes à Marrakech. Shopify est plus facile à gérer au quotidien et adapté aux marchands qui veulent se concentrer sur la vente plutôt que sur la technique. WooCommerce offre plus de flexibilité mais demande plus de maintenance. Pour un catalogue de plus de 500 produits avec des besoins spécifiques (configurateur, options avancées), un développement entièrement sur-mesure devient souvent plus rentable.",
+            },
+          ],
+        },
+        {
+          heading: "Les postes de coûts souvent oubliés dans un budget web",
+          body: "Beaucoup d'entreprises se retrouvent avec un budget dépassé parce que leur devis initial ne couvrait pas tous les besoins réels. Voici les postes fréquemment sous-estimés :",
+          bullets: [
+            "La rédaction des textes : un site bien rédigé prend du temps. Si vous ne fournissez pas vos contenus, comptez 500 à 1 500 MAD par page optimisée SEO.",
+            "La photographie professionnelle : les photos de stock sont détectables et impactent négativement la perception de votre marque. Un shooting professionnel à Marrakech représente un investissement mais transforme la qualité perçue de votre site.",
+            "L'optimisation SEO initiale : les balises, les données structurées, la soumission à Search Console — cela doit être fait correctement au lancement, pas en option.",
+            "Les intégrations tierces : CRM, système de réservation, paiement en ligne, chat. Chaque intégration a un coût de développement et parfois des frais d'abonnement mensuels.",
+            "La formation : apprendre à gérer votre site, ajouter du contenu et interpréter vos statistiques prend du temps. Prévoyez une session de formation d'1 à 2 heures.",
+            "La maintenance annuelle : un site non maintenu devient une faille de sécurité et vieillira mal. Budget à prévoir : de 500 à 2 000 MAD/mois selon la complexité.",
+          ],
+        },
+        {
+          heading: "Comment lire et comparer les devis de création de site web à Marrakech",
+          body: [
+            "Face à plusieurs devis de prestataires différents, la tentation est de choisir le moins cher. C'est souvent une erreur. Le vrai travail est de comprendre ce que chaque devis inclut réellement. Un devis de 3 000 MAD qui n'inclut pas le contenu, le SEO et le suivi post-lancement vous coûtera finalement plus cher qu'un devis à 8 000 MAD qui couvre l'ensemble.",
+            <>Posez systématiquement ces questions à chaque prestataire : combien de pages sont incluses ? Qui rédige le contenu ? L&apos;optimisation SEO on-page est-elle comprise ? Quel est le délai de livraison et que se passe-t-il en cas de retard ? Combien de retouches sont incluses ? Qui héberge le site et combien ça coûte après la livraison ? Les réponses à ces questions révèlent immédiatement la sérieux du prestataire. Notre page <Link to="/creation-site-web-marrakech">création de site web à Marrakech</Link> détaille notre approche et nos engagements.</>,
+          ],
+        },
       ]}
       faq={[
         {

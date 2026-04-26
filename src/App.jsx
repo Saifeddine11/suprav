@@ -18,6 +18,10 @@ import palmeraiePoster from '../media/site-screens/palmeraie-stays.webp'
 import ourikaPoster from '../media/site-screens/ourika-living.webp'
 import studioPoster from '../media/site-screens/studio-medina.webp'
 import maisonPoster from '../media/site-screens/maison-noura.webp'
+import verdePoster from '../media/site-screens/verde-paris.jpg'
+import merrachiPoster from '../media/site-screens/merrachi.jpg'
+import hachkarPoster from '../media/site-screens/hachkar.jpg'
+import emaraPoster from '../media/site-screens/emara-estates.jpg'
 import partner1 from '../media/partners/1.webp'
 import partner2 from '../media/partners/2.webp'
 import partner3 from '../media/partners/3.webp'
@@ -694,6 +698,34 @@ const WEBSITE_PROJECTS = [
     video: vid5,
     poster: maisonPoster,
   },
+  {
+    name: 'Verde Paris',
+    type: 'Site vitrine restaurant — Paris',
+    video: null,
+    poster: verdePoster,
+    url: 'https://verde-paris.fr/',
+  },
+  {
+    name: 'Merrachi',
+    type: 'Site e-commerce artisanat marocain',
+    video: null,
+    poster: merrachiPoster,
+    url: 'https://merrachi.com/',
+  },
+  {
+    name: 'Hachkar',
+    type: 'Site vitrine & e-commerce',
+    video: null,
+    poster: hachkarPoster,
+    url: 'https://hachkar.com/',
+  },
+  {
+    name: 'Emara Estates',
+    type: 'Site immobilier premium',
+    video: null,
+    poster: emaraPoster,
+    url: 'https://emaraestates.com/',
+  },
 ]
 
 const SEGMENTS = [
@@ -722,7 +754,7 @@ const SEGMENTS = [
 const FAQ = [
   {
     q: "Combien coûte la création d'un site web à Marrakech ?",
-    a: "Nos sites vitrines démarrent autour de 15 000 MAD, les e-commerce à partir de 35 000 MAD, et les projets sur-mesure (SaaS, applications) sont chiffrés après cadrage. Nous remettons un devis détaillé sous 48 heures.",
+    a: "Le coût dépend de la portée du projet : site vitrine, e-commerce ou application sur-mesure. Nous remettons un devis détaillé et gratuit sous 48 heures après un appel de cadrage. Demandez votre devis gratuit pour obtenir une estimation précise.",
   },
   {
     q: "Quel est le délai pour un projet de communication 360° ?",
@@ -1046,7 +1078,7 @@ function ServicesSection() {
 
           <div className="services-scroll-stack">
             {SERVICES.map((s) => (
-              <ServiceScrollCard service={s} key={s.num} />
+              <ServiceScrollCard key={s.num} service={s} />
             ))}
           </div>
         </div>
@@ -2256,33 +2288,53 @@ function WebsiteProjectsSection() {
         </div>
 
         <div className="website-projects-grid">
-          {WEBSITE_PROJECTS.map((project) => (
-            <article className="website-project-card" key={project.name}>
-              <a href="/#contact" className="website-project-card__media" aria-label={`Voir le projet ${project.name}`}>
-                <LazyAutoVideo
-                  src={project.video}
-                  poster={project.poster}
-                  className="website-project-card__video"
-                  preload="metadata"
-                  rootMargin="560px 0px"
-                  threshold={0.2}
-                  ariaLabel={`Aperçu vidéo du projet ${project.name}`}
-                />
-                <span className="website-project-card__brand">Supra v.</span>
-              </a>
-
-              <div className="website-project-card__bottom">
-                <div>
-                  <h3>{project.name}</h3>
-                  <p>{project.type}</p>
-                </div>
-                <a href="/#contact">
-                  Voir le projet
-                  <span aria-hidden="true">↗</span>
+          {WEBSITE_PROJECTS.map((project) => {
+            const linkHref = project.url || '/#contact'
+            const linkTarget = project.url ? '_blank' : undefined
+            const linkRel = project.url ? 'noreferrer noopener' : undefined
+            return (
+              <article className="website-project-card" key={project.name}>
+                <a
+                  href={linkHref}
+                  target={linkTarget}
+                  rel={linkRel}
+                  className="website-project-card__media"
+                  aria-label={`Voir le projet ${project.name}`}
+                >
+                  {project.video ? (
+                    <LazyAutoVideo
+                      src={project.video}
+                      poster={project.poster}
+                      className="website-project-card__video"
+                      preload="metadata"
+                      rootMargin="560px 0px"
+                      threshold={0.2}
+                      ariaLabel={`Aperçu vidéo du projet ${project.name}`}
+                    />
+                  ) : (
+                    <img
+                      src={project.poster}
+                      alt={`Capture d'écran du site ${project.name}`}
+                      className="website-project-card__video website-project-card__screenshot"
+                      loading="lazy"
+                    />
+                  )}
+                  <span className="website-project-card__brand">Supra v.</span>
                 </a>
-              </div>
-            </article>
-          ))}
+
+                <div className="website-project-card__bottom">
+                  <div>
+                    <h3>{project.name}</h3>
+                    <p>{project.type}</p>
+                  </div>
+                  <a href={linkHref} target={linkTarget} rel={linkRel}>
+                    Voir le projet
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>

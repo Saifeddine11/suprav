@@ -102,21 +102,9 @@ function FlipCard({
 }
 
 // --- Main Hero Component ---
-const TOTAL_IMAGES = 20;
+const TOTAL_IMAGES = 8;
 // Supra v. local video assets
 const IMAGES = [
-    vid1,
-    vid2,
-    vid3,
-    vid4,
-    vid5,
-    vid6,
-    vid1,
-    vid2,
-    vid3,
-    vid4,
-    vid5,
-    vid6,
     vid1,
     vid2,
     vid3,
