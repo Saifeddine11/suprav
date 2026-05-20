@@ -13,7 +13,9 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
 
     steps:
       - name: Checkout code
@@ -28,14 +30,29 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup Chrome for Puppeteer
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v1
+      - name: Install Chromium (apt)
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser || sudo apt-get install -y chromium
+          CHROME="$(command -v chromium-browser || command -v chromium || command -v google-chrome-stable)"
+          test -n "$CHROME"
+          echo "PUPPETEER_EXECUTABLE_PATH=$CHROME" >> "$GITHUB_ENV"
+          "$CHROME" --version
 
-      - name: Build project
-        run: npm run build
-        env:
-          PUPPETEER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+      - name: Build SPA
+        run: npm run build:spa
+
+      - name: Prerender routes
+        run: npm run prerender
+
+      - name: Verify prerender output
+        run: |
+          set -euo pipefail
+          test -f dist/agence-communication-marrakech/index.html
+          grep -q 'agence-communication-marrakech' dist/agence-communication-marrakech/index.html
+          ! grep -q '15 000 MAD' dist/agence-communication-marrakech/index.html
+          grep -q 'Agence digitale Marrakech' dist/agence-communication-marrakech/index.html
 
       - name: Verify build output
         run: |
