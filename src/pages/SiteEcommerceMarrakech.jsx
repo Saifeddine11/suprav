@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Création de site e-commerce à Marrakech",
-  "description": "Supra v. développe des boutiques en ligne performantes pour les commerçants et entrepreneurs de Marrakech souhaitant vendre sur internet.",
+  "description": "Supra v3 développe des boutiques en ligne performantes pour les commerçants et entrepreneurs de Marrakech souhaitant vendre sur internet.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function SiteEcommerceMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Création Site E-commerce Marrakech — Boutique en ligne | Supra v.",
-        description: "Lancez votre boutique en ligne à Marrakech avec Supra v. Paiement CMI, catalogue produits, SEO e-commerce. Devis gratuit sous 24h.",
+        title: "Création Site E-commerce Marrakech — Boutique en ligne | Supra v3",
+        description: "Lancez votre boutique en ligne à Marrakech avec Supra v3 Paiement CMI, catalogue produits, SEO e-commerce. Devis gratuit sous 24h.",
         path: "/site-ecommerce-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function SiteEcommerceMarrakech() {
       ]}
       title="Création de site e-commerce à Marrakech"
       subtitle="Vendez vos produits 24h/24 avec une boutique en ligne optimisée"
-      intro="Le site e-commerce Marrakech est devenu un passage obligé pour les entreprises souhaitant développer leurs ventes en ligne au Maroc et à l'international. Supra v. conçoit des boutiques en ligne robustes, sécurisées et optimisées pour la conversion, avec intégration des moyens de paiement locaux (CMI, CIH Pay) et des solutions de livraison adaptées au marché marocain. Chaque détail est pensé pour maximiser votre chiffre d'affaires en ligne."
+      intro="Le site e-commerce Marrakech est devenu un passage obligé pour les entreprises souhaitant développer leurs ventes en ligne au Maroc et à l'international. Supra v3 conçoit des boutiques en ligne robustes, sécurisées et optimisées pour la conversion, avec intégration des moyens de paiement locaux (CMI, CIH Pay) et des solutions de livraison adaptées au marché marocain. Chaque détail est pensé pour maximiser votre chiffre d'affaires en ligne."
       services={[
         {
           title: "Boutique WooCommerce ou Shopify sur-mesure",
@@ -58,7 +58,7 @@ export default function SiteEcommerceMarrakech() {
       faq={[
         {
           q: "Quel budget prévoir pour un site e-commerce à Marrakech ?",
-          a: "Un site e-commerce professionnel à Marrakech chez Supra v. démarre à partir de 8 000 MAD pour une boutique avec 20 produits, et peut aller jusqu'à 30 000 MAD pour un projet avec catalogue étendu, multi-devises et intégrations avancées. Contactez-nous pour un devis personnalisé."
+          a: "Le budget dépend du catalogue, des paiements, de la logistique et des intégrations. Chaque boutique est cadrée avant proposition : demandez un diagnostic pour une estimation personnalisée."
         },
         {
           q: "Puis-je gérer ma boutique moi-même après livraison ?",

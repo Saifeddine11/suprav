@@ -4,11 +4,11 @@ import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 const schema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "Supra v. — Marketing digital à Marrakech",
+  "name": "Supra v3 — Marketing digital à Marrakech",
   "description": "Agence de marketing digital à Marrakech : SEO, publicité digitale, réseaux sociaux et email marketing pour accélérer la croissance de votre entreprise.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -22,7 +22,7 @@ export default function MarketingDigitalMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Marketing Digital Marrakech — Stratégie 360° | Supra v.",
+        title: "Marketing Digital Marrakech — Stratégie 360° | Supra v3",
         description: "Agence de marketing digital à Marrakech : SEO, Meta Ads, réseaux sociaux, email marketing. Stratégie digitale complète pour accélérer votre croissance au Maroc.",
         path: "/marketing-digital-marrakech",
         schema
@@ -34,7 +34,7 @@ export default function MarketingDigitalMarrakech() {
       ]}
       title="Marketing digital à Marrakech — Stratégie 360°"
       subtitle="Attirez, convertissez et fidélisez vos clients grâce au digital"
-      intro="Le marketing digital à Marrakech englobe l'ensemble des actions menées sur les canaux numériques pour faire croître votre activité : référencement naturel, publicité digitale, réseaux sociaux, email marketing et automatisation. Supra v. conçoit et exécute des stratégies marketing complètes pour les entreprises de Marrakech qui souhaitent accélérer leur croissance de manière structurée et mesurable. Nous commençons par un audit de votre situation actuelle pour identifier les leviers prioritaires avant de dépenser un seul dirham en publicité."
+      intro="Le marketing digital à Marrakech englobe l'ensemble des actions menées sur les canaux numériques pour faire croître votre activité : référencement naturel, publicité digitale, réseaux sociaux, email marketing et automatisation. Supra v3 conçoit et exécute des stratégies marketing complètes pour les entreprises de Marrakech qui souhaitent accélérer leur croissance de manière structurée et mesurable. Nous commençons par un audit de votre situation actuelle pour identifier les leviers prioritaires avant de lancer la moindre campagne payante."
       stats={[
         { value: '×3', label: 'Trafic qualifié moyen an 1' },
         { value: '360°', label: 'Canaux coordonnés' },
@@ -98,7 +98,7 @@ export default function MarketingDigitalMarrakech() {
         {
           heading: "Comment nous mesurons le retour sur investissement",
           body: [
-            "La mesurabilité est l'avantage fondamental du marketing digital par rapport à la communication traditionnelle. Chez Supra v., nous configurons dès le premier jour un écosystème de mesure complet pour chaque client : Google Analytics 4 pour le comportement des visiteurs, Google Search Console pour les performances SEO, Meta Business Manager pour les campagnes sociales, et un pixel de conversion correctement paramétré pour tracker chaque vente, chaque lead, chaque appel.",
+            "La mesurabilité est l'avantage fondamental du marketing digital par rapport à la communication traditionnelle. Chez Supra v3, nous configurons dès le premier jour un écosystème de mesure complet pour chaque client : Google Analytics 4 pour le comportement des visiteurs, Google Search Console pour les performances SEO, Meta Business Manager pour les campagnes sociales, et un pixel de conversion correctement paramétré pour tracker chaque vente, chaque lead, chaque appel.",
             "Tous ces flux de données sont consolidés dans un dashboard unifié que vous pouvez consulter à tout moment. Chaque mois, nous vous remettons un rapport d'analyse complet avec les chiffres clés, leur évolution, ce qui a bien fonctionné, ce qui doit être amélioré et les priorités pour le mois suivant. Nous ne vous vendons pas des services — nous gérons ensemble un investissement qui doit être rentable.",
           ],
         },
@@ -117,7 +117,7 @@ export default function MarketingDigitalMarrakech() {
         },
         {
           q: "Quel budget faut-il prévoir pour la publicité digitale à Marrakech ?",
-          a: "Un budget publicitaire minimal de 3 000 MAD/mois (budget média) est nécessaire pour obtenir des données suffisantes pour optimiser vos campagnes Meta Ads. En dessous, les résultats sont trop limités pour être exploitables. Ce montant s'entend hors honoraires d'agence pour la création et la gestion. Demandez votre devis pour une estimation personnalisée.",
+          a: "Il faut un budget média adapté à votre secteur pour que Meta Ads apprenne correctement — le montant se définit au cadrage, hors honoraires création et gestion. Demandez un diagnostic pour une recommandation personnalisée."
         },
         {
           q: "Faut-il être présent sur tous les réseaux sociaux ?",
@@ -125,7 +125,7 @@ export default function MarketingDigitalMarrakech() {
         },
         {
           q: "Travaillez-vous avec des marques françaises qui souhaitent vendre au Maroc ?",
-          a: "Oui. Supra v. accompagne des marques françaises et européennes dans leur développement au Maroc. Notre connaissance du marché marocain, des réglementations locales et des habitudes de consommation est un avantage décisif pour adapter les stratégies marketing au contexte marocain.",
+          a: "Oui. Supra v3 accompagne des marques françaises et européennes dans leur développement au Maroc. Notre connaissance du marché marocain, des réglementations locales et des habitudes de consommation est un avantage décisif pour adapter les stratégies marketing au contexte marocain.",
         },
         {
           q: "Comment savoir si mes campagnes Meta Ads sont vraiment rentables ?",

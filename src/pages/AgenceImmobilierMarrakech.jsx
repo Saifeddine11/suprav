@@ -3,11 +3,11 @@ import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 const schema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "Agence communication immobilier Marrakech — Supra v.",
-  "description": "Supra v. est l'agence de communication spécialisée dans le secteur immobilier à Marrakech : site web, visites virtuelles, publicité digitale et branding pour promoteurs et agences.",
+  "name": "Agence communication immobilier Marrakech — Supra v3",
+  "description": "Supra v3 est l'agence de communication spécialisée dans le secteur immobilier à Marrakech : site web, visites virtuelles, publicité digitale et branding pour promoteurs et agences.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function AgenceImmobilierMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Agence Communication Immobilier Marrakech — Visibilité & Leads | Supra v.",
-        description: "Supra v., agence de communication spécialisée immobilier à Marrakech : site web promoteur, visites virtuelles 3D, Meta Ads et SEO pour vendre plus vite.",
+        title: "Agence Communication Immobilier Marrakech — Visibilité & Leads | Supra v3",
+        description: "Supra v3, agence de communication spécialisée immobilier à Marrakech : site web promoteur, visites virtuelles 3D, Meta Ads et SEO pour vendre plus vite.",
         path: "/agence-communication-immobilier-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function AgenceImmobilierMarrakech() {
       ]}
       title="Communication immobilier à Marrakech"
       subtitle="Vendez vos biens plus vite avec une stratégie digitale immobilière sur-mesure"
-      intro="L'agence communication immobilier Marrakech Supra v. accompagne les promoteurs immobiliers, agences et gestionnaires de biens dans leur stratégie digitale pour générer des leads qualifiés et accélérer les ventes et locations à Marrakech. Le marché immobilier marocain est de plus en plus digital : vos acheteurs potentiels, qu'ils soient locaux ou MRE, commencent leur recherche en ligne, consultent des visites virtuelles et comparent les offres avant même de contacter une agence. Nous créons des outils digitaux immobiliers qui captivent ces prospects dès leur première recherche et les convertissent en contacts qualifiés."
+      intro="L'agence communication immobilier Marrakech Supra v3 accompagne les promoteurs immobiliers, agences et gestionnaires de biens dans leur stratégie digitale pour générer des leads qualifiés et accélérer les ventes et locations à Marrakech. Le marché immobilier marocain est de plus en plus digital : vos acheteurs potentiels, qu'ils soient locaux ou MRE, commencent leur recherche en ligne, consultent des visites virtuelles et comparent les offres avant même de contacter une agence. Nous créons des outils digitaux immobiliers qui captivent ces prospects dès leur première recherche et les convertissent en contacts qualifiés."
       services={[
         {
           title: "Sites web & portails immobiliers sur-mesure",

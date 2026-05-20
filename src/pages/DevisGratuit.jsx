@@ -1,13 +1,13 @@
 import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 
 const seo = {
-  title: 'Devis Gratuit — Agence de communication Supra v. Marrakech',
+  title: 'Devis Gratuit — Agence de communication Supra v3 Marrakech',
   description: 'Obtenez un devis gratuit sous 48h pour votre projet de communication à Marrakech : branding, site web, contenus, IA. Sans engagement.',
   path: '/devis-gratuit',
   schema: {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Devis Gratuit Supra v.',
+    name: 'Devis Gratuit Supra v3',
     url: 'https://suprav3.com/devis-gratuit',
     description: 'Demande de devis gratuit pour agence de communication à Marrakech.',
   },

@@ -1,13 +1,13 @@
 import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 
 const seo = {
-  title: 'Portfolio — Réalisations Supra v. Marrakech | Branding, sites web & IA',
-  description: 'Découvrez les réalisations de Supra v. : identités de marque, films de marque, sites web et agents IA pour des entreprises à Marrakech et au Maroc.',
+  title: 'Portfolio — Réalisations Supra v3 Marrakech | Branding, sites web & IA',
+  description: 'Découvrez les réalisations de Supra v3 : identités de marque, films de marque, sites web et agents IA pour des entreprises à Marrakech et au Maroc.',
   path: '/portfolio',
   schema: {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'Portfolio Supra v.',
+    name: 'Portfolio Supra v3',
     url: 'https://suprav3.com/portfolio',
     description: 'Réalisations de branding, sites web, contenus et automatisation IA à Marrakech.',
   },

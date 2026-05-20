@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Community management à Marrakech",
-  "description": "Supra v. gère vos réseaux sociaux à Marrakech : stratégie éditoriale, création de contenu, animation de communauté et reporting mensuel.",
+  "description": "Supra v3 gère vos réseaux sociaux à Marrakech : stratégie éditoriale, création de contenu, animation de communauté et reporting mensuel.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function CommunityManagementMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Community Management Marrakech — Réseaux Sociaux | Supra v.",
-        description: "Confiez vos réseaux sociaux à Supra v. à Marrakech : Instagram, Facebook, LinkedIn, TikTok. Stratégie, contenu et animation de communauté. Devis gratuit.",
+        title: "Community Management Marrakech — Réseaux Sociaux | Supra v3",
+        description: "Confiez vos réseaux sociaux à Supra v3 à Marrakech : Instagram, Facebook, LinkedIn, TikTok. Stratégie, contenu et animation de communauté. Devis gratuit.",
         path: "/community-management-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function CommunityManagementMarrakech() {
       ]}
       title="Community management à Marrakech"
       subtitle="Des réseaux sociaux actifs et engagés qui renforcent votre notoriété locale"
-      intro="Le community management Marrakech consiste à créer, animer et modérer votre présence sur les réseaux sociaux pour construire une communauté engagée autour de votre marque. Supra v. prend en charge la gestion complète de vos pages Instagram, Facebook, LinkedIn et TikTok à Marrakech — de la stratégie éditoriale à la publication quotidienne, en passant par les réponses aux commentaires et messages privés. Notre équipe crée des contenus en français, arabe et anglais adaptés aux spécificités du marché marocain et aux tendances de chaque plateforme."
+      intro="Le community management Marrakech consiste à créer, animer et modérer votre présence sur les réseaux sociaux pour construire une communauté engagée autour de votre marque. Supra v3 prend en charge la gestion complète de vos pages Instagram, Facebook, LinkedIn et TikTok à Marrakech — de la stratégie éditoriale à la publication quotidienne, en passant par les réponses aux commentaires et messages privés. Notre équipe crée des contenus en français, arabe et anglais adaptés aux spécificités du marché marocain et aux tendances de chaque plateforme."
       services={[
         {
           title: "Stratégie éditoriale & calendrier de contenu",
@@ -58,7 +58,7 @@ export default function CommunityManagementMarrakech() {
       faq={[
         {
           q: "Combien coûte le community management à Marrakech ?",
-          a: "Nos forfaits community management démarrent à 3 000 MAD/mois pour 2 publications par semaine sur 2 réseaux sociaux. Un forfait intensif (5 posts/semaine, stories quotidiennes, 3 réseaux) est disponible à partir de 6 500 MAD/mois. Création publicitaire et campagnes payantes en supplément."
+          a: "Le périmètre dépend du nombre de réseaux, de publications, de stories et du niveau de création inclus. Nous définissons un rythme éditorial réaliste après diagnostic — campagnes payantes en option."
         },
         {
           q: "Créez-vous le contenu visuel ou avons-nous besoin d'un photographe ?",

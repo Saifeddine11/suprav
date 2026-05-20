@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Refonte de site web à Marrakech",
-  "description": "Supra v. réalise la refonte complète de votre site web à Marrakech pour améliorer votre design, votre performance et votre référencement SEO.",
+  "description": "Supra v3 réalise la refonte complète de votre site web à Marrakech pour améliorer votre design, votre performance et votre référencement SEO.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function RefonteSiteWeb() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Refonte Site Web Marrakech — Modernisation & Performance | Supra v.",
-        description: "Votre site web est dépassé ? Supra v. à Marrakech le refond de A à Z : nouveau design, SEO optimisé, vitesse améliorée. Audit gratuit disponible.",
+        title: "Refonte Site Web Marrakech — Modernisation & Performance | Supra v3",
+        description: "Votre site web est dépassé ? Supra v3 à Marrakech le refond de A à Z : nouveau design, SEO optimisé, vitesse améliorée. Audit gratuit disponible.",
         path: "/refonte-site-web",
         schema
       }}
@@ -36,7 +36,7 @@ export default function RefonteSiteWeb() {
       ]}
       title="Refonte de site web à Marrakech"
       subtitle="Donnez une nouvelle vie à votre présence en ligne avec une refonte complète"
-      intro="La refonte site web Marrakech est une étape cruciale pour les entreprises dont le site date de plus de 3 ans, affiche un taux de rebond élevé ou ne génère plus de leads. Chez Supra v., nous auditons votre site existant avant toute chose pour identifier les points bloquants — design vieillissant, lenteur, mauvaise expérience mobile ou SEO défaillant — puis nous planifions une refonte stratégique qui conserve votre historique SEO tout en modernisant votre image à Marrakech. Le résultat : un site qui performe mieux à chaque niveau."
+      intro="La refonte site web Marrakech est une étape cruciale pour les entreprises dont le site date de plus de 3 ans, affiche un taux de rebond élevé ou ne génère plus de leads. Chez Supra v3, nous auditons votre site existant avant toute chose pour identifier les points bloquants — design vieillissant, lenteur, mauvaise expérience mobile ou SEO défaillant — puis nous planifions une refonte stratégique qui conserve votre historique SEO tout en modernisant votre image à Marrakech. Le résultat : un site qui performe mieux à chaque niveau."
       services={[
         {
           title: "Audit complet du site existant",
@@ -66,7 +66,7 @@ export default function RefonteSiteWeb() {
         },
         {
           q: "Combien coûte une refonte de site web à Marrakech ?",
-          a: "Le coût d'une refonte dépend de la taille du site et des fonctionnalités à refaire. En général, comptez entre 6 000 et 20 000 MAD. Nous proposons un audit préalable gratuit pour évaluer la portée du projet et vous fournir un devis précis."
+          a: "Le budget dépend de l'audit SEO, du volume de pages, du nouveau design et des migrations techniques. Nous commençons par un audit pour cadrer la refonte puis remettons une proposition détaillée."
         }
       ]}
     />

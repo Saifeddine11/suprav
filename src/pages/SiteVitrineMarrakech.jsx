@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Création de site vitrine à Marrakech",
-  "description": "Supra v. conçoit des sites vitrines professionnels et performants pour les entreprises de Marrakech et du Maroc.",
+  "description": "Supra v3 conçoit des sites vitrines professionnels et performants pour les entreprises de Marrakech et du Maroc.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,7 +24,7 @@ export default function SiteVitrineMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Création Site Vitrine Marrakech — Sur-mesure & SEO | Supra v.",
+        title: "Création Site Vitrine Marrakech — Sur-mesure & SEO | Supra v3",
         description: "Agence spécialisée en création de site vitrine à Marrakech. Design moderne, optimisation SEO et livraison rapide. Devis gratuit en 24h.",
         path: "/site-vitrine-marrakech",
         schema
@@ -36,7 +36,7 @@ export default function SiteVitrineMarrakech() {
       ]}
       title="Création de site vitrine à Marrakech"
       subtitle="Un site professionnel qui reflète votre image et attire vos clients"
-      intro="Votre site vitrine Marrakech est la première impression que donnez à vos prospects en ligne : il doit être impeccable. Chez Supra v., nous créons des sites vitrines sur-mesure qui allient design soigné, rapidité de chargement et optimisation SEO pour vous positionner en tête des recherches locales à Marrakech. Chaque projet est pensé pour convertir vos visiteurs en clients réels."
+      intro="Votre site vitrine Marrakech est la première impression que donnez à vos prospects en ligne : il doit être impeccable. Chez Supra v3, nous créons des sites vitrines sur-mesure qui allient design soigné, rapidité de chargement et optimisation SEO pour vous positionner en tête des recherches locales à Marrakech. Chaque projet est pensé pour convertir vos visiteurs en clients réels."
       services={[
         {
           title: "Design sur-mesure & identité visuelle",
@@ -58,7 +58,7 @@ export default function SiteVitrineMarrakech() {
       faq={[
         {
           q: "Combien coûte un site vitrine à Marrakech ?",
-          a: "Le prix d'un site vitrine à Marrakech chez Supra v. dépend du nombre de pages et des fonctionnalités souhaitées. Comptez entre 4 000 et 12 000 MAD pour un site vitrine professionnel complet avec SEO de base. Nous proposons un devis gratuit et détaillé sous 24h."
+          a: "Le budget dépend du nombre de pages, du niveau de design, du contenu et du SEO inclus. Nous remettons une estimation personnalisée après cadrage — sans grille tarifaire publique sur le site."
         },
         {
           q: "Combien de temps faut-il pour créer un site vitrine ?",

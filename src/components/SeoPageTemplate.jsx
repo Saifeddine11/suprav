@@ -1,9 +1,17 @@
 import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import PageSEO from './PageSEO.jsx'
 import Breadcrumb from './Breadcrumb.jsx'
 import BookingCTA from './BookingCTA.jsx'
+
 import { ANIMATE_VARIANTS, VIEWPORT_SETTINGS, EASING } from '../animationConstants.js'
+
+const DEFAULT_WHATSAPP =
+  'https://wa.me/33744208673?text=' +
+  encodeURIComponent(
+    'Bonjour Supra v3, je souhaite discuter d\'un projet pour mon entreprise.\nType de projet :\nBudget estimé :\nDélai souhaité :'
+  )
 
 /* ─────────────────────────────────────────
    Reprend exactement le système d'animation de la page d'accueil
@@ -51,12 +59,19 @@ export default function SeoPageTemplate({
   stats,            // optionnel : [{ value: '50+', label: 'Projets livrés' }]
   sectionNum = '—', // numéro de section pour les labels
   richContent = [], // [{ heading, body, bullets?, sub? }]
+  servicesHeadline = null, // React node ; défaut = titre générique Marrakech
+  primaryCta = { href: '/devis-gratuit', label: 'Demander un diagnostic →' },
+  secondaryCta = { href: DEFAULT_WHATSAPP, label: 'WhatsApp', external: true },
+  internalLinks = [], // [{ label, path, desc? }]
+  children = null,
+  showBookingCta = true,
 }) {
   const [openFaq, setOpenFaq] = useState(-1)
+  const { pathname } = useLocation()
 
   return (
     <>
-      <PageSEO {...seo} />
+      <PageSEO {...seo} path={pathname} />
 
       <article className="seo-page">
 
@@ -81,7 +96,7 @@ export default function SeoPageTemplate({
 
               {/* Eyebrow */}
               <motion.p className="label seo-hero__eyebrow" variants={fadeUp}>
-                {subtitle || 'Supra v. — Marrakech'}
+                {subtitle || 'Supra v3 — Marrakech'}
               </motion.p>
 
               {/* H1 */}
@@ -97,19 +112,19 @@ export default function SeoPageTemplate({
               {/* CTAs */}
               <motion.div className="seo-hero__actions" variants={fadeUp}>
                 <motion.a
-                  href="/devis-gratuit"
+                  href={primaryCta.href}
                   className="btn btn--primary"
                   whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                 >
-                  Obtenir un devis gratuit →
+                  {primaryCta.label}
                 </motion.a>
                 <motion.a
-                  href="https://wa.me/33744208673"
+                  href={secondaryCta.href}
                   className="btn btn--secondary"
-                  target="_blank"
-                  rel="noreferrer noopener"
+                  target={secondaryCta.external !== false ? '_blank' : undefined}
+                  rel={secondaryCta.external !== false ? 'noreferrer noopener' : undefined}
                   whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
@@ -155,7 +170,12 @@ export default function SeoPageTemplate({
                   {sectionNum} — Nos prestations
                 </motion.p>
                 <motion.h2 className="seo-section-head__title" variants={fadeUp}>
-                  Ce que nous réalisons<br />pour vous à <span className="text-accent">Marrakech.</span>
+                  {servicesHeadline ?? (
+                    <>
+                      Ce que nous réalisons<br />
+                      pour vous à <span className="text-accent">Marrakech.</span>
+                    </>
+                  )}
                 </motion.h2>
               </motion.div>
 
@@ -228,6 +248,44 @@ export default function SeoPageTemplate({
                   </motion.div>
                 ))}
               </motion.div>
+            </div>
+          </section>
+        )}
+
+        {children}
+
+        {internalLinks.length > 0 && (
+          <section className="seo-related">
+            <div className="container">
+              <motion.div
+                className="seo-section-head"
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewport}
+                variants={stagger}
+              >
+                <motion.p className="label" variants={fadeUp}>— Aller plus loin</motion.p>
+                <motion.h2 className="seo-section-head__title" variants={fadeUp}>
+                  Pages utiles <span className="text-accent">pour la suite.</span>
+                </motion.h2>
+              </motion.div>
+              <motion.ul
+                className="seo-related__list"
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewport}
+                variants={stagger}
+              >
+                {internalLinks.map((link, i) => (
+                  <motion.li key={link.path} variants={fadeUp}>
+                    <Link to={link.path} className="seo-related__card">
+                      <span className="seo-related__label">{link.label}</span>
+                      {link.desc && <span className="seo-related__desc">{link.desc}</span>}
+                      <span className="seo-related__arrow" aria-hidden="true">→</span>
+                    </Link>
+                  </motion.li>
+                ))}
+              </motion.ul>
             </div>
           </section>
         )}
@@ -315,7 +373,7 @@ export default function SeoPageTemplate({
         {/* ══════════════════════════
             CTA FINAL — panel sombre avec calendrier
         ══════════════════════════ */}
-        <BookingCTA />
+        {showBookingCta && <BookingCTA />}
 
       </article>
     </>

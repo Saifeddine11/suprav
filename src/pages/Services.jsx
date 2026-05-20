@@ -6,7 +6,7 @@ const schema = {
   name: 'Services de communication, web, SEO et IA à Marrakech',
   provider: {
     '@type': 'Organization',
-    name: 'Supra v.',
+    name: 'Supra v3',
     url: 'https://suprav3.com',
   },
   areaServed: {
@@ -21,9 +21,9 @@ export default function Services() {
   return (
     <SeoPageTemplate
       seo={{
-        title: 'Services Communication, Web, SEO & IA Marrakech | Supra v.',
+        title: 'Services Communication, Web, SEO & IA Marrakech | Supra v3',
         description:
-          'Découvrez les services Supra v. à Marrakech : branding, création de sites web, SEO, publicité digitale, community management, contenus et automatisation IA.',
+          'Découvrez les services Supra v3 à Marrakech : branding, création de sites web, SEO, publicité digitale, community management, contenus et automatisation IA.',
         path: '/services',
         schema,
       }}
@@ -33,7 +33,7 @@ export default function Services() {
       ]}
       title="Services de communication, web, SEO et IA à Marrakech"
       subtitle="Une équipe unique pour construire votre marque, votre site et votre acquisition digitale"
-      intro="Supra v. accompagne les entreprises de Marrakech de la stratégie à l'exécution : identité de marque, création de site web, contenus, publicité digitale, référencement naturel, community management et automatisation IA. Chaque service peut être activé seul, mais notre force est de connecter les disciplines pour créer un système cohérent qui attire, convainc et convertit."
+      intro="Supra v3 accompagne les entreprises de Marrakech de la stratégie à l'exécution : identité de marque, création de site web, contenus, publicité digitale, référencement naturel, community management et automatisation IA. Chaque service peut être activé seul, mais notre force est de connecter les disciplines pour créer un système cohérent qui attire, convainc et convertit."
       services={[
         {
           title: 'Branding & identité visuelle',

@@ -4,16 +4,16 @@ import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 const schema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "SEO local à Marrakech : guide complet 2026",
+  "headline": "SEO local à Marrakech : guide pour rendre votre entreprise visible sur Google",
   "description": "Maîtrisez le SEO local à Marrakech en 2026 : Google Business Profile, citations locales, avis clients et optimisation on-page pour dominer les recherches de proximité.",
   "datePublished": "2026-04-25",
   "author": {
     "@type": "Organization",
-    "name": "Supra v."
+    "name": "Supra v3"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com"
   },
   "url": "https://suprav3.com/blog/seo-local-guide-marrakech",
@@ -32,19 +32,32 @@ export default function ArticleSeoLocal() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "SEO Local Marrakech : Guide Complet 2026 | Supra v.",
-        description: "Guide complet SEO local Marrakech 2026 : optimisez Google Business Profile, collectez des avis, créez des citations locales et dominez le Pack Local Google.",
-        path: "/blog/seo-local-guide-marrakech",
-        schema
+        title: 'SEO local Marrakech | Guide pour rendre votre entreprise visible sur Google',
+        description:
+          'Découvrez comment améliorer votre SEO local à Marrakech : Google Business Profile, avis clients, pages locales, mots-clés, citations et contenu.',
+        path: '/blog/seo-local-guide-marrakech',
+        schema,
+        type: 'article',
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
         { label: "Blog", path: "/blog" },
         { label: "SEO Local Marrakech Guide Complet" }
       ]}
-      title="SEO local à Marrakech : guide complet 2026"
-      subtitle="Tout ce que vous devez savoir pour dominer les recherches locales sur Google Maps et Google Search"
-      intro="Le SEO local Marrakech guide complet 2026 est la ressource qu'attendaient les commerçants, restaurants, hôtels et prestataires de services de Marrakech pour comprendre et maîtriser leur référencement local. Chaque mois, des dizaines de milliers de recherches avec intention locale sont effectuées sur Google par des habitants et des touristes à Marrakech : « restaurant médina Marrakech », « agence immobilière Guéliz », « dentiste Marrakech urgence ». Les entreprises qui apparaissent dans le Pack Local Google (les 3 fiches qui s'affichent avant les résultats organiques) captent la majorité de ces clics. Ce guide vous explique comment y arriver."
+      title="SEO local à Marrakech : guide pour rendre votre entreprise visible sur Google"
+      subtitle="Article — Visibilité locale"
+      intro="Le SEO local permet d’apparaître quand un client cherche un service à Marrakech sur Google ou Maps. Ce guide couvre Google Business Profile, les avis, les mots-clés locaux, les pages de votre site et les erreurs fréquentes — sans reprendre le contenu de la page d’accueil."
+      primaryCta={{ href: '/devis-gratuit', label: 'Demander un diagnostic SEO local →' }}
+      secondaryCta={{
+        href: 'https://wa.me/33744208673?text=' + encodeURIComponent('Bonjour Supra v3, je souhaite améliorer ma visibilité locale à Marrakech.'),
+        label: 'Améliorer ma visibilité',
+        external: true,
+      }}
+      servicesHeadline={
+        <>
+          Les piliers du <span className="text-accent">SEO local.</span>
+        </>
+      }
       services={[
         {
           title: "Étape 1 : Créer et optimiser votre Google Business Profile",
@@ -102,6 +115,22 @@ export default function ArticleSeoLocal() {
           ],
         },
         {
+          heading: 'Erreurs fréquentes en SEO local',
+          bullets: [
+            'Fiche Google incomplète ou horaires obsolètes',
+            'Aucune réponse aux avis clients',
+            'NAP incohérent entre site, réseaux et annuaires',
+            'Photos de mauvaise qualité ou absentes',
+            'Site sans page locale ni contenu utile',
+          ],
+        },
+        {
+          heading: 'Comment Supra v3 peut vous aider',
+          body: [
+            <>Nous auditons votre fiche Google, votre site et vos citations, puis priorisons les actions à fort impact. Pour les restaurants et commerces, voir aussi notre page <Link to="/agence-communication-restaurant-marrakech">communication restaurant à Marrakech</Link>.</>,
+          ],
+        },
+        {
           heading: "Cas pratique : comment un restaurant de Marrakech a multiplié ses réservations par 3",
           body: [
             "Un restaurant situé dans le quartier Guéliz de Marrakech nous a contactés avec une problématique courante : une excellente cuisine, des avis TripAdvisor satisfaisants, mais une quasi-invisibilité sur Google. La fiche Google Business Profile existait mais était remplie à 30 % — pas de photos, horaires incorrects, aucune réponse aux avis, description absente.",
@@ -122,6 +151,11 @@ export default function ArticleSeoLocal() {
           q: "Le SEO local fonctionne-t-il aussi pour les entreprises sans adresse physique à Marrakech ?",
           a: "Google Business Profile permet aux entreprises itinérantes (plombiers, électriciens, traiteurs) de créer une fiche sans afficher d'adresse publique. Vous indiquez votre zone de service (Marrakech et ses quartiers) et Google vous positionne pour les recherches locales dans cette zone. Cette option est moins puissante qu'une adresse fixe mais reste efficace."
         }
+      ]}
+      internalLinks={[
+        { label: 'Création site web', path: '/creation-site-web-marrakech', desc: 'Pages locales et site rapide.' },
+        { label: 'Marketing digital', path: '/marketing-digital-marrakech', desc: 'Stratégie digitale complète.' },
+        { label: 'Contact', path: '/contact', desc: 'Demander un diagnostic SEO local.' },
       ]}
     />
   )

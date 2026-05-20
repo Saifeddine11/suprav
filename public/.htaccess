@@ -13,12 +13,13 @@ DirectoryIndex index.html
   # API
   RewriteRule ^api/contact/?$ /api/contact.php [L,QSA]
 
+  # HTML pré-rendu (dist/contact/index.html, dist/blog/.../index.html, etc.)
   # Fichiers et dossiers réels → servir directement
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Toutes les routes SPA → index.html (200)
+  # Routes SPA non pré-rendues → index.html (hydratation client)
   RewriteRule ^ /index.html [L]
 </IfModule>
 

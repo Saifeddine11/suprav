@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Création de logo à Marrakech",
-  "description": "Supra v. crée votre logo professionnel à Marrakech : original, mémorable et déclinable sur tous vos supports de communication.",
+  "description": "Supra v3 crée votre logo professionnel à Marrakech : original, mémorable et déclinable sur tous vos supports de communication.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function CreationLogoMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Création Logo Marrakech — Logo Professionnel & Unique | Supra v.",
-        description: "Créez un logo professionnel à Marrakech avec Supra v. 3 propositions créatives, fichiers HD tous formats, guide d'utilisation. À partir de 2 500 MAD.",
+        title: "Création Logo Marrakech — Logo Professionnel & Unique | Supra v3",
+        description: "Créez un logo professionnel à Marrakech avec Supra v3 : propositions créatives, fichiers HD tous formats, guide d'utilisation. Estimation personnalisée après cadrage.",
         path: "/creation-logo-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function CreationLogoMarrakech() {
       ]}
       title="Création de logo à Marrakech"
       subtitle="Un logo professionnel qui incarne votre marque et marque les esprits"
-      intro="La création logo Marrakech est souvent la première mission graphique d'une entreprise, et pourtant l'une des plus stratégiques : votre logo sera sur vos cartes de visite, votre site web, vos véhicules et vos réseaux sociaux pendant des années. Supra v. applique une méthode rigoureuse qui part de la compréhension de votre secteur d'activité, de vos concurrents à Marrakech et de vos clients cibles pour créer un logo original, mémorable et parfaitement adapté à tous vos supports. Nous livrons tous les formats professionnels nécessaires dès la première livraison."
+      intro="La création logo Marrakech est souvent la première mission graphique d'une entreprise, et pourtant l'une des plus stratégiques : votre logo sera sur vos cartes de visite, votre site web, vos véhicules et vos réseaux sociaux pendant des années. Supra v3 applique une méthode rigoureuse qui part de la compréhension de votre secteur d'activité, de vos concurrents à Marrakech et de vos clients cibles pour créer un logo original, mémorable et parfaitement adapté à tous vos supports. Nous livrons tous les formats professionnels nécessaires dès la première livraison."
       services={[
         {
           title: "Brief créatif & moodboard",
@@ -58,7 +58,7 @@ export default function CreationLogoMarrakech() {
       faq={[
         {
           q: "Combien coûte la création d'un logo à Marrakech ?",
-          a: "Nos forfaits de création logo à Marrakech démarrent à 2 500 MAD pour un logo simple avec 2 propositions. Le forfait complet avec brand book et supports de base est à partir de 5 500 MAD. Nous proposons également des offres packagées logo + site web pour les nouvelles entreprises."
+          a: "Le périmètre dépend du nombre de propositions, du brand book et des supports inclus. Nous pouvons packager logo + site pour une nouvelle entreprise — proposition après diagnostic, sans grille affichée en ligne."
         },
         {
           q: "Serai-je propriétaire des droits sur mon logo ?",

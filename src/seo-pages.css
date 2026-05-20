@@ -1,5 +1,5 @@
 /* ============================================================
-   SEO PAGES — Design calqué sur la page d'accueil Supra v.
+   SEO PAGES — Design calqué sur la page d'accueil Supra v3
    N'importe pas App.css : redéfinit les patterns nécessaires
    en utilisant les CSS variables de index.css.
    ============================================================ */
@@ -874,9 +874,140 @@
 }
 
 /* ──────────────────────────────────────
+   RELATED LINKS + CONTACT BLOCKS
+────────────────────────────────────── */
+.seo-related {
+  padding: clamp(64px, 8vw, 96px) 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.06);
+}
+
+.seo-related__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.seo-related__card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 28px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.seo-related__card:hover {
+  border-color: rgba(17, 17, 17, 0.2);
+  transform: translateY(-2px);
+}
+
+.seo-related__label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.seo-related__desc {
+  font-size: 0.9rem;
+  color: rgba(17, 17, 17, 0.55);
+  line-height: 1.5;
+}
+
+.seo-related__arrow {
+  margin-top: auto;
+  font-size: 1.1rem;
+  color: var(--accent, #e8491c);
+}
+
+.seo-contact-block {
+  padding: clamp(48px, 6vw, 72px) 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.06);
+}
+
+.seo-contact-block__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 56px);
+  align-items: start;
+}
+
+.seo-contact-block__channels {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.seo-contact-block__channel {
+  padding: 20px 24px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 14px;
+}
+
+.seo-contact-block__channel strong {
+  display: block;
+  font-family: var(--font-display);
+  margin-bottom: 6px;
+}
+
+.seo-contact-block__channel a {
+  color: var(--accent, #e8491c);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.seo-contact-block__types {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.seo-contact-block__types li {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.04);
+}
+
+.seo-contact-block__form-panel {
+  padding: 28px 32px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 16px;
+  background: rgba(17, 17, 17, 0.02);
+}
+
+.seo-contact-block__form-panel p {
+  margin: 0 0 20px;
+  line-height: 1.6;
+  color: rgba(17, 17, 17, 0.65);
+}
+
+.seo-contact-block__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ──────────────────────────────────────
    RESPONSIVE
 ────────────────────────────────────── */
 @media (max-width: 768px) {
+  .seo-contact-block__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seo-related__list {
+    grid-template-columns: 1fr;
+  }
+
   .seo-layout__content {
     padding-top: 64px;
   }

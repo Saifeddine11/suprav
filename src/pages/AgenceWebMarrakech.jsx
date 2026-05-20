@@ -3,11 +3,11 @@ import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 const schema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "Supra v. — Agence Web Marrakech",
-  "description": "Supra v. est une agence web à Marrakech spécialisée en création de sites web, développement d'applications et stratégie digitale pour les entreprises marocaines.",
+  "name": "Supra v3 — Agence Web Marrakech",
+  "description": "Supra v3 est une agence web à Marrakech spécialisée en création de sites web, développement d'applications et stratégie digitale pour les entreprises marocaines.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -28,8 +28,8 @@ export default function AgenceWebMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Agence Web Marrakech — Création Sites & Applications | Supra v.",
-        description: "Supra v., agence web à Marrakech : création de sites web, applications mobiles, SEO et marketing digital. Experts du digital pour les entreprises marocaines.",
+        title: "Agence Web Marrakech — Création Sites & Applications | Supra v3",
+        description: "Supra v3, agence web à Marrakech : création de sites web, applications mobiles, SEO et marketing digital. Experts du digital pour les entreprises marocaines.",
         path: "/agence-web-marrakech",
         schema
       }}
@@ -37,9 +37,9 @@ export default function AgenceWebMarrakech() {
         { label: "Accueil", path: "/" },
         { label: "Agence Web Marrakech" }
       ]}
-      title="Agence web à Marrakech — Supra v."
+      title="Agence web à Marrakech — Supra v3"
       subtitle="Votre partenaire digital pour créer, développer et dominer le web"
-      intro="Supra v. est une agence web Marrakech 360° qui accompagne les TPE, PME et startups marocaines dans leur transformation digitale. De la création de site web sur-mesure au développement d'applications mobiles, en passant par le référencement SEO et les campagnes publicitaires, notre équipe maîtrise l'ensemble des leviers du marketing digital pour propulser votre visibilité à Marrakech et au-delà. Nous combinons créativité, expertise technique et connaissance du marché local pour des résultats concrets et mesurables."
+      intro="Supra v3 est une agence web Marrakech 360° qui accompagne les TPE, PME et startups marocaines dans leur transformation digitale. De la création de site web sur-mesure au développement d'applications mobiles, en passant par le référencement SEO et les campagnes publicitaires, notre équipe maîtrise l'ensemble des leviers du marketing digital pour propulser votre visibilité à Marrakech et au-delà. Nous combinons créativité, expertise technique et connaissance du marché local pour des résultats concrets et mesurables."
       services={[
         {
           title: "Création de sites web professionnels",
@@ -61,7 +61,7 @@ export default function AgenceWebMarrakech() {
       faq={[
         {
           q: "Pourquoi choisir une agence web à Marrakech plutôt qu'une agence internationale ?",
-          a: "Une agence web locale comme Supra v. connaît les spécificités du marché marocain : comportements des consommateurs, périodes clés (Ramadan, saison touristique), moyens de paiement locaux et référencement sur Google.ma. Nous parlons votre langue et sommes disponibles en présentiel pour vos réunions."
+          a: "Une agence web locale comme Supra v3 connaît les spécificités du marché marocain : comportements des consommateurs, périodes clés (Ramadan, saison touristique), moyens de paiement locaux et référencement sur Google.ma. Nous parlons votre langue et sommes disponibles en présentiel pour vos réunions."
         },
         {
           q: "Quels types d'entreprises accompagnez-vous à Marrakech ?",

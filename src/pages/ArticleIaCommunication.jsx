@@ -10,11 +10,11 @@ const schema = {
   datePublished: '2026-04-25',
   author: {
     '@type': 'Organization',
-    name: 'Supra v.',
+    name: 'Supra v3',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'Supra v.',
+    name: 'Supra v3',
     url: 'https://suprav3.com',
   },
   url: 'https://suprav3.com/blog/ia-communication-entreprise',
@@ -33,7 +33,7 @@ export default function ArticleIaCommunication() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "IA & Communication d'Entreprise à Marrakech | Supra v.",
+        title: "IA & Communication d'Entreprise à Marrakech | Supra v3",
         description:
           "Guide pratique : automatisation IA, chatbots, contenus et workflows pour les entreprises de Marrakech qui veulent gagner du temps sans perdre leur ton de marque.",
         path: '/blog/ia-communication-entreprise',

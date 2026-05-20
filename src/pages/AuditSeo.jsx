@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Audit SEO à Marrakech",
-  "description": "Supra v. réalise des audits SEO complets pour les sites web des entreprises de Marrakech : technique, on-page, contenu et backlinks.",
+  "description": "Supra v3 réalise des audits SEO complets pour les sites web des entreprises de Marrakech : technique, on-page, contenu et backlinks.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function AuditSeo() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Audit SEO Marrakech — Diagnostic Complet de votre Site | Supra v.",
-        description: "Audit SEO professionnel à Marrakech par Supra v. : 100+ points de contrôle, rapport détaillé et plan d'action prioritaire. Identifiez pourquoi Google ne vous trouve pas.",
+        title: "Audit SEO Marrakech — Diagnostic Complet de votre Site | Supra v3",
+        description: "Audit SEO professionnel à Marrakech par Supra v3 : 100+ points de contrôle, rapport détaillé et plan d'action prioritaire. Identifiez pourquoi Google ne vous trouve pas.",
         path: "/audit-seo",
         schema
       }}
@@ -36,7 +36,7 @@ export default function AuditSeo() {
       ]}
       title="Audit SEO à Marrakech — Diagnostic complet de votre site"
       subtitle="Identifiez tous les freins qui empêchent Google de vous positionner en première page"
-      intro="Un audit SEO Marrakech est la première étape indispensable avant tout travail de référencement naturel : sans un diagnostic précis, vous risquez d'investir du temps et de l'argent dans des optimisations qui ne résolvent pas les vrais problèmes de votre site. Supra v. réalise des audits SEO approfondis couvrant plus de 100 points de contrôle — technique, on-page, contenu et profil de liens — et vous livre un rapport actionnable avec des recommandations classées par priorité et impact. Chaque audit est réalisé manuellement par nos experts SEO et non pas par un outil automatisé générique."
+      intro="Un audit SEO Marrakech est la première étape indispensable avant tout travail de référencement naturel : sans un diagnostic précis, vous risquez d'investir du temps et de l'argent dans des optimisations qui ne résolvent pas les vrais problèmes de votre site. Supra v3 réalise des audits SEO approfondis couvrant plus de 100 points de contrôle — technique, on-page, contenu et profil de liens — et vous livre un rapport actionnable avec des recommandations classées par priorité et impact. Chaque audit est réalisé manuellement par nos experts SEO et non pas par un outil automatisé générique."
       services={[
         {
           title: "Audit technique & indexation",
@@ -58,7 +58,7 @@ export default function AuditSeo() {
       faq={[
         {
           q: "Combien coûte un audit SEO à Marrakech ?",
-          a: "Un audit SEO complet chez Supra v. est proposé entre 2 000 et 5 000 MAD selon la taille du site (nombre de pages, complexité technique). Pour les sites de moins de 20 pages, nous proposons un audit simplifié à 1 200 MAD incluant les points les plus critiques."
+          a: "L'étendue de l'audit dépend de la taille et de la complexité de votre site. Après un court cadrage, nous remettons une proposition avec périmètre, livrables et planning — sans grille tarifaire affichée en ligne."
         },
         {
           q: "Réalisez-vous aussi les corrections après l'audit ?",

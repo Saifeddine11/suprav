@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Publicité digitale Meta Ads à Marrakech",
-  "description": "Supra v. gère vos campagnes de publicité digitale à Marrakech : Meta Ads (Facebook & Instagram), Google Ads et TikTok Ads pour générer des leads qualifiés.",
+  "description": "Supra v3 gère vos campagnes de publicité digitale à Marrakech : Meta Ads (Facebook & Instagram), Google Ads et TikTok Ads pour générer des leads qualifiés.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,7 +24,7 @@ export default function PubliciteMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Publicité Digitale Marrakech — Meta Ads & Google Ads | Supra v.",
+        title: "Publicité Digitale Marrakech — Meta Ads & Google Ads | Supra v3",
         description: "Agence Meta Ads et Google Ads à Marrakech. Campagnes publicitaires ciblées, créa publicitaire et optimisation ROI. Audit gratuit de vos campagnes actuelles.",
         path: "/publicite-marrakech",
         schema
@@ -36,7 +36,7 @@ export default function PubliciteMarrakech() {
       ]}
       title="Publicité digitale à Marrakech — Meta Ads & Google Ads"
       subtitle="Des campagnes publicitaires qui génèrent des leads et des ventes mesurables"
-      intro="La publicité digitale Marrakech Meta Ads est l'un des leviers les plus puissants pour acquérir de nouveaux clients rapidement et à moindre coût par rapport à la publicité traditionnelle. Supra v. gère des campagnes Meta Ads (Facebook et Instagram), Google Ads et TikTok Ads pour des entreprises de tous secteurs à Marrakech, avec un focus constant sur le retour sur investissement mesurable. Notre équipe certifiée Meta et Google crée les visuels, rédige les accroches, configure le ciblage et optimise les enchères pour maximiser chaque dirham investi dans votre publicité."
+      intro="La publicité digitale Marrakech Meta Ads est l'un des leviers les plus puissants pour acquérir de nouveaux clients rapidement et à moindre coût par rapport à la publicité traditionnelle. Supra v3 gère des campagnes Meta Ads (Facebook et Instagram), Google Ads et TikTok Ads pour des entreprises de tous secteurs à Marrakech, avec un focus constant sur le retour sur investissement mesurable. Notre équipe certifiée Meta et Google crée les visuels, rédige les accroches, configure le ciblage et optimise les enchères pour maximiser chaque dirham investi dans votre publicité."
       services={[
         {
           title: "Campagnes Meta Ads (Facebook & Instagram)",
@@ -58,7 +58,7 @@ export default function PubliciteMarrakech() {
       faq={[
         {
           q: "Quel budget publicitaire recommandez-vous pour Marrakech ?",
-          a: "Pour démarrer efficacement, nous recommandons un budget publicitaire minimum de 3 000 MAD/mois, auquel s'ajoutent nos honoraires de gestion. En dessous, les algorithmes Meta et Google n'ont pas assez de données pour optimiser correctement. Nous adaptons nos recommandations selon votre secteur et vos objectifs."
+          a: "Il faut un budget média suffisant pour que les plateformes apprennent — le montant exact dépend de votre secteur, zone et objectif. Nous le définissons au cadrage avec vos honoraires de gestion et création."
         },
         {
           q: "En combien de temps verrai-je des résultats avec mes campagnes ?",

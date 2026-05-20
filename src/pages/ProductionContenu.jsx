@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Production vidéo et contenu à Marrakech",
-  "description": "Supra v. produit vos contenus vidéo, photos et visuels digitaux à Marrakech pour alimenter votre communication sur tous les canaux.",
+  "description": "Supra v3 produit vos contenus vidéo, photos et visuels digitaux à Marrakech pour alimenter votre communication sur tous les canaux.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,7 +24,7 @@ export default function ProductionContenu() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Production Vidéo Marrakech — Photos & Contenus Digitaux | Supra v.",
+        title: "Production Vidéo Marrakech — Photos & Contenus Digitaux | Supra v3",
         description: "Production vidéo professionnelle à Marrakech : films d'entreprise, reels Instagram, shooting photo produit et motion design. Devis gratuit.",
         path: "/production-contenu",
         schema
@@ -36,7 +36,7 @@ export default function ProductionContenu() {
       ]}
       title="Production vidéo et contenu à Marrakech"
       subtitle="Des contenus visuels qui captivent votre audience et renforcent votre image"
-      intro="La production vidéo Marrakech est devenue incontournable à l'ère des réseaux sociaux : une vidéo génère en moyenne 12 fois plus d'engagement qu'un post photo et multiplie le temps passé sur votre site web. Supra v. dispose d'une équipe de réalisation complète à Marrakech — réalisateur, caméraman, drone, monteur et motion designer — pour produire des contenus vidéo et photo à la hauteur de votre ambition, qu'il s'agisse d'un film institutionnel, de reels Instagram ou d'une campagne publicitaire. Chaque contenu est pensé pour votre stratégie de communication et votre plateforme cible."
+      intro="La production vidéo Marrakech est devenue incontournable à l'ère des réseaux sociaux : une vidéo génère en moyenne 12 fois plus d'engagement qu'un post photo et multiplie le temps passé sur votre site web. Supra v3 dispose d'une équipe de réalisation complète à Marrakech — réalisateur, caméraman, drone, monteur et motion designer — pour produire des contenus vidéo et photo à la hauteur de votre ambition, qu'il s'agisse d'un film institutionnel, de reels Instagram ou d'une campagne publicitaire. Chaque contenu est pensé pour votre stratégie de communication et votre plateforme cible."
       services={[
         {
           title: "Films institutionnels & corporate",
@@ -58,7 +58,7 @@ export default function ProductionContenu() {
       faq={[
         {
           q: "Combien coûte une vidéo d'entreprise à Marrakech ?",
-          a: "Un film institutionnel de 2-3 minutes avec une journée de tournage et post-production complète démarre à 8 000 MAD chez Supra v. Les forfaits mensuels de contenu réseaux sociaux (4 reels/mois) sont disponibles à partir de 3 500 MAD/mois tout inclus."
+          a: "Le budget dépend de la durée du film, du nombre de jours de tournage et du niveau de post-production. Pour les réseaux, nous calibrons un rythme mensuel (reels, stories, photos) après diagnostic — proposition personnalisée sans grille publique."
         },
         {
           q: "Vous déplacez-vous en dehors de Marrakech pour les tournages ?",

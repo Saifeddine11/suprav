@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "SEO local à Marrakech — Google Business",
-  "description": "Supra v. optimise votre présence locale sur Google à Marrakech : fiche Google Business Profile, SEO local et avis clients pour attirer plus de clients de proximité.",
+  "description": "Supra v3 optimise votre présence locale sur Google à Marrakech : fiche Google Business Profile, SEO local et avis clients pour attirer plus de clients de proximité.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function SeoLocalMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "SEO Local Marrakech — Google Business Profile Optimisé | Supra v.",
-        description: "Dominez les recherches locales à Marrakech avec Supra v. : optimisation Google Business Profile, SEO local et stratégie d'avis clients. Apparaissez dans le Pack Local Google.",
+        title: "SEO Local Marrakech — Google Business Profile Optimisé | Supra v3",
+        description: "Dominez les recherches locales à Marrakech avec Supra v3 : optimisation Google Business Profile, SEO local et stratégie d'avis clients. Apparaissez dans le Pack Local Google.",
         path: "/seo-local-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function SeoLocalMarrakech() {
       ]}
       title="SEO local à Marrakech — Dominez Google Maps"
       subtitle="Attirez les clients qui cherchent votre activité près de chez eux à Marrakech"
-      intro="Le SEO local Marrakech Google Business est la stratégie digitale la plus efficace pour les commerces, restaurants, hôtels et prestataires de services qui dépendent d'une clientèle de proximité. Lorsqu'un touriste cherche « restaurant Marrakech médina » ou qu'un habitant tape « plombier Guéliz », le Pack Local de Google (les 3 fiches Maps en haut des résultats) capte plus de 40 % des clics. Supra v. optimise votre fiche Google Business Profile et votre SEO local pour vous positionner dans ce Pack Local convoité à Marrakech, là où vos concurrents n'ont pas encore investi."
+      intro="Le SEO local Marrakech Google Business est la stratégie digitale la plus efficace pour les commerces, restaurants, hôtels et prestataires de services qui dépendent d'une clientèle de proximité. Lorsqu'un touriste cherche « restaurant Marrakech médina » ou qu'un habitant tape « plombier Guéliz », le Pack Local de Google (les 3 fiches Maps en haut des résultats) capte plus de 40 % des clics. Supra v3 optimise votre fiche Google Business Profile et votre SEO local pour vous positionner dans ce Pack Local convoité à Marrakech, là où vos concurrents n'ont pas encore investi."
       services={[
         {
           title: "Optimisation Google Business Profile",

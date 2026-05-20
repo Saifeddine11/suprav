@@ -5,10 +5,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Référencement SEO à Marrakech",
-  "description": "Supra v. améliore votre positionnement sur Google à Marrakech grâce au référencement naturel : audit, optimisation on-page, contenu et netlinking.",
+  "description": "Supra v3 améliore votre positionnement sur Google à Marrakech grâce au référencement naturel : audit, optimisation on-page, contenu et netlinking.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -22,7 +22,7 @@ export default function ReferencementSeoMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Référencement SEO Marrakech — 1ère Page Google | Supra v.",
+        title: "Référencement SEO Marrakech — 1ère Page Google | Supra v3",
         description: "Agence SEO à Marrakech : audit technique, optimisation on-page, création de contenu et netlinking pour positionner votre site en 1ère page Google. Résultats durables.",
         path: "/referencement-seo-marrakech",
         schema
@@ -34,7 +34,7 @@ export default function ReferencementSeoMarrakech() {
       ]}
       title="Référencement SEO à Marrakech"
       subtitle="Soyez trouvé sur Google avant vos concurrents — durablement"
-      intro="Le référencement naturel SEO est la stratégie digitale la plus rentable sur le moyen terme : chaque euro investi continue à générer du trafic qualifié pendant des mois, voire des années après l'optimisation. Supra v. applique une méthodologie SEO complète et éprouvée pour positionner votre site en première page de Google sur les mots-clés que tapent vos clients potentiels à Marrakech et au Maroc. Nous ne promettons pas de miracles — nous livrons des audits rigoureux, des optimisations précises et un reporting transparent."
+      intro="Le référencement naturel SEO est la stratégie digitale la plus rentable sur le moyen terme : chaque effort bien cadré continue à générer du trafic qualifié pendant des mois, voire des années après l'optimisation. Supra v3 applique une méthodologie SEO complète et éprouvée pour positionner votre site en première page de Google sur les mots-clés que tapent vos clients potentiels à Marrakech et au Maroc. Nous ne promettons pas de miracles — nous livrons des audits rigoureux, des optimisations précises et un reporting transparent."
       stats={[
         { value: '1ère', label: 'Page Google en 3–6 mois' },
         { value: '100+', label: 'Points audités' },
@@ -108,7 +108,7 @@ export default function ReferencementSeoMarrakech() {
           heading: "Pourquoi le SEO est un investissement, pas une dépense",
           body: [
             "La publicité payante (Meta Ads, Google Ads) génère du trafic tant que vous payez. Dès que vous arrêtez, le trafic s'arrête. Le SEO fonctionne différemment : un article bien positionné sur Google peut continuer à générer des visites pendant des années, longtemps après que votre investissement initial en contenu a été amorti.",
-            "Pour illustrer avec des chiffres réels : une entreprise de Marrakech qui génère 1 000 visites mensuelles depuis Google Ads pour un coût de 3 000 MAD/mois peut, grâce à une stratégie SEO bien exécutée, générer le même volume de trafic après 12 mois pour un coût mensuel considérablement réduit. Le coût par visite diminue chaque mois à mesure que les positionnements s'améliorent.",
+            "À moyen terme, le SEO peut réduire la dépendance au budget publicitaire : le trafic organique s'accumule alors que les campagnes s'arrêtent dès que le média s'arrête. Nous mesurons l'évolution visites, leads et coût d'acquisition pour ajuster la stratégie.",
             <>C&apos;est pour cette raison que nous recommandons toujours une approche combinée : <Link to="/marketing-digital-marrakech">Meta Ads et la publicité digitale</Link> pour les résultats immédiats, SEO pour construire un actif digital durable. Les deux leviers se renforcent mutuellement.</>,
           ],
         },

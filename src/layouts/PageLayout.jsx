@@ -25,11 +25,11 @@ export default function PageLayout({ children }) {
         <header className={`site-nav ${scrolled ? 'site-nav--scrolled' : ''}`}>
           <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
             <nav className="nav" aria-label="Navigation principale">
-              <a href="/" className="nav__logo" aria-label="Supra v. - Accueil">
-                <img src={logoImage} alt="Supra v." />
+              <a href="/" className="nav__logo" aria-label="Supra v3 - Accueil">
+                <img src={logoImage} alt="Supra v3" />
               </a>
               <ul className="nav__links">
-                <li><a href="/works" className="nav__link">Réalisations</a></li>
+                <li><a href="/#works" className="nav__link">Réalisations</a></li>
                 <li><a href="/#services" className="nav__link">Services</a></li>
                 <li><a href="/#about" className="nav__link">L'agence</a></li>
                 <li><a href="/#faq" className="nav__link">FAQ</a></li>
@@ -57,7 +57,7 @@ export default function PageLayout({ children }) {
             aria-hidden={!navOpen}
           >
             <ul className="nav__mobile-links">
-              <li><a href="/works" onClick={() => setNavOpen(false)}>Réalisations</a></li>
+              <li><a href="/#works" onClick={() => setNavOpen(false)}>Réalisations</a></li>
               <li><a href="/#services" onClick={() => setNavOpen(false)}>Services</a></li>
               <li><a href="/#about" onClick={() => setNavOpen(false)}>L'agence</a></li>
               <li><a href="/#faq" onClick={() => setNavOpen(false)}>FAQ</a></li>
@@ -79,8 +79,8 @@ export default function PageLayout({ children }) {
           <div className="container">
             <div className="site-footer__grid">
               <div className="site-footer__brand">
-                <a href="/" className="site-footer__logo" aria-label="Supra v. - Accueil">
-                  <img src={logoImage} alt="Supra v." />
+                <a href="/" className="site-footer__logo" aria-label="Supra v3 - Accueil">
+                  <img src={logoImage} alt="Supra v3" />
                 </a>
                 <p className="site-footer__tagline">
                   Agence de communication 360° à Marrakech. Branding, sites web, applications et agents IA. Une équipe, de la stratégie au code.
@@ -88,7 +88,7 @@ export default function PageLayout({ children }) {
               </div>
               <div className="site-footer__col">
                 <h4 className="site-footer__col-title">Navigation</h4>
-                <a href="/works">Réalisations</a>
+                <a href="/#works">Réalisations</a>
                 <a href="/#services">Services</a>
                 <a href="/#about">L'agence</a>
                 <a href="/#faq">FAQ</a>
@@ -108,7 +108,7 @@ export default function PageLayout({ children }) {
               </div>
             </div>
             <div className="site-footer__bottom">
-              <span>© 2026 Supra v. — Agence de communication 360</span>
+              <span>© 2026 Supra v3 — Agence de communication 360</span>
               <span>Conçu &amp; codé en interne</span>
             </div>
           </div>

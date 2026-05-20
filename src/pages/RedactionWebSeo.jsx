@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Rédaction web SEO à Marrakech",
-  "description": "Supra v. rédige des contenus web optimisés SEO en français pour les entreprises de Marrakech : articles de blog, pages de services, fiches produits et landing pages.",
+  "description": "Supra v3 rédige des contenus web optimisés SEO en français pour les entreprises de Marrakech : articles de blog, pages de services, fiches produits et landing pages.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function RedactionWebSeo() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Rédaction Web SEO Marrakech — Contenu qui Classe & Convertit | Supra v.",
-        description: "Rédaction web SEO professionnelle à Marrakech par Supra v. : articles de blog, pages services et landing pages optimisés pour Google. Contenu en français expert.",
+        title: "Rédaction Web SEO Marrakech — Contenu qui Classe & Convertit | Supra v3",
+        description: "Rédaction web SEO professionnelle à Marrakech par Supra v3 : articles de blog, pages services et landing pages optimisés pour Google. Contenu en français expert.",
         path: "/redaction-web-seo",
         schema
       }}
@@ -36,7 +36,7 @@ export default function RedactionWebSeo() {
       ]}
       title="Rédaction web SEO à Marrakech"
       subtitle="Du contenu qui positionne sur Google et convainc vos lecteurs d'agir"
-      intro="La rédaction web SEO Marrakech est le pilier d'une stratégie de référencement naturel efficace : Google favorise les sites qui publient régulièrement du contenu de qualité, pertinent et bien structuré. Supra v. dispose d'une équipe de rédacteurs web francophones spécialisés dans le SEO, capables de produire des articles de blog, pages de services, fiches produits et landing pages qui répondent précisément aux questions que se posent vos clients potentiels à Marrakech. Chaque texte est optimisé pour les moteurs de recherche tout en restant fluide, engageant et convaincant pour vos lecteurs humains."
+      intro="La rédaction web SEO Marrakech est le pilier d'une stratégie de référencement naturel efficace : Google favorise les sites qui publient régulièrement du contenu de qualité, pertinent et bien structuré. Supra v3 dispose d'une équipe de rédacteurs web francophones spécialisés dans le SEO, capables de produire des articles de blog, pages de services, fiches produits et landing pages qui répondent précisément aux questions que se posent vos clients potentiels à Marrakech. Chaque texte est optimisé pour les moteurs de recherche tout en restant fluide, engageant et convaincant pour vos lecteurs humains."
       services={[
         {
           title: "Articles de blog SEO",
@@ -58,7 +58,7 @@ export default function RedactionWebSeo() {
       faq={[
         {
           q: "Combien coûte un article de blog SEO à Marrakech ?",
-          a: "Un article de blog optimisé SEO de 1 000 à 1 500 mots est facturé entre 600 et 1 200 MAD selon le niveau de recherche requis. Des forfaits mensuels (4, 8 ou 12 articles) offrent une réduction de 15 à 20 % sur le tarif unitaire. Le contenu est livré avec les balises SEO prêtes à intégrer."
+          a: "Le coût dépend de la longueur, de la recherche mots-clés et du nombre d'articles mensuels. Nous proposons des forfaits éditoriaux après diagnostic — contenus livrés avec balises SEO prêtes à intégrer."
         },
         {
           q: "En combien de langues rédigez-vous vos contenus ?",

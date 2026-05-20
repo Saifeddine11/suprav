@@ -3,11 +3,11 @@ import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 const schema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "Agence communication hôtel Marrakech — Supra v.",
-  "description": "Supra v. est spécialisée en communication digitale pour les hôtels et riads à Marrakech : site web, booking direct, SEO hôtelier, réseaux sociaux et photographie.",
+  "name": "Agence communication hôtel Marrakech — Supra v3",
+  "description": "Supra v3 est spécialisée en communication digitale pour les hôtels et riads à Marrakech : site web, booking direct, SEO hôtelier, réseaux sociaux et photographie.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function AgenceHotelMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Agence Communication Hôtel Marrakech — Plus de Réservations Directes | Supra v.",
-        description: "Supra v., agence spécialisée en communication hôtelière à Marrakech : site de réservation directe, Instagram, SEO et campagnes pour réduire les commissions OTA.",
+        title: "Agence Communication Hôtel Marrakech — Plus de Réservations Directes | Supra v3",
+        description: "Supra v3, agence spécialisée en communication hôtelière à Marrakech : site de réservation directe, Instagram, SEO et campagnes pour réduire les commissions OTA.",
         path: "/agence-communication-hotel-marrakech",
         schema
       }}
@@ -34,9 +34,9 @@ export default function AgenceHotelMarrakech() {
         { label: "Services", path: "/services" },
         { label: "Communication Hôtel Marrakech" }
       ]}
-      title="Communication hôtelière à Marrakech — Supra v."
+      title="Communication hôtelière à Marrakech — Supra v3"
       subtitle="Réduisez vos commissions OTA et boostez vos réservations directes"
-      intro="L'agence communication hôtel Marrakech Supra v. accompagne les hôtels, riads et maisons d'hôtes de Marrakech dans leur stratégie digitale pour attirer plus de voyageurs, augmenter leur taux d'occupation et réduire leur dépendance aux plateformes de réservation (Booking.com, Airbnb, Expedia) qui prélèvent entre 15 et 25 % de commission. Notre expertise du secteur hôtelier marocain nous permet de créer des outils digitaux qui valorisent l'expérience unique de votre établissement et convertissent les voyageurs en réservations directes, bien plus rentables pour votre activité à Marrakech."
+      intro="L'agence communication hôtel Marrakech Supra v3 accompagne les hôtels, riads et maisons d'hôtes de Marrakech dans leur stratégie digitale pour attirer plus de voyageurs, augmenter leur taux d'occupation et réduire leur dépendance aux plateformes de réservation (Booking.com, Airbnb, Expedia) qui prélèvent entre 15 et 25 % de commission. Notre expertise du secteur hôtelier marocain nous permet de créer des outils digitaux qui valorisent l'expérience unique de votre établissement et convertissent les voyageurs en réservations directes, bien plus rentables pour votre activité à Marrakech."
       services={[
         {
           title: "Site web hôtelier avec moteur de réservation",

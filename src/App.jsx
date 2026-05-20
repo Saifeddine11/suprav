@@ -606,7 +606,7 @@ const WORK_PROJECTS = [
     category: 'Campagne Meta Ads immobilière',
     client: "Promoteur résidentiel — Route de l'Ourika",
     mission: 'Création des visuels publicitaires, ciblage géolocalisé Marrakech + diaspora MRE, landing page de captation, suivi des leads.',
-    result: '217 leads qualifiés en 45 jours de campagne. Coût par lead : 38 MAD. Trois lots vendus directement via les leads Facebook, soit un retour publicitaire estimé à ×42.',
+    result: '217 leads qualifiés en 45 jours de campagne. Trois lots vendus directement via les leads Meta, avec un retour publicitaire mesuré et suivi en continu.',
     tag: 'Meta Ads · Immobilier · Acquisition',
     video: vid4,
   },
@@ -637,8 +637,8 @@ const WEBSITE_TABS = [
     title: 'Un site clair qui transforme les visiteurs en demandes.',
     text: "Pour les marques, cabinets, restaurants, riads et programmes immobiliers qui veulent une présence premium, rapide et crédible. On structure le message, on design l'interface et on code une page qui guide vers l'appel, le formulaire ou WhatsApp.",
     tags: ['UX/UI Design', 'SEO local', 'Responsive'],
-    price: 'à partir de 15 000 MAD',
     timeline: '3 - 5 semaines',
+    scope: 'Estimation personnalisée après cadrage',
     video: vid3,
   },
   {
@@ -647,8 +647,8 @@ const WEBSITE_TABS = [
     title: 'Une page de campagne pensée pour capter des leads.',
     text: "Pour Meta Ads, lancement immobilier, offre saisonnière ou campagne événementielle. Une seule promesse, un parcours court, un tracking propre et une prise de contact sans friction.",
     tags: ['Meta Ads', 'Lead capture', 'Tracking'],
-    price: 'à partir de 8 000 MAD',
     timeline: '7 - 12 jours',
+    scope: 'Estimation personnalisée après cadrage',
     video: vid4,
   },
   {
@@ -657,8 +657,8 @@ const WEBSITE_TABS = [
     title: 'Une boutique en ligne qui garde la marque au centre.',
     text: "Catalogue, fiches produit, paiement, livraison, gestion des commandes et storytelling visuel. On conçoit l'expérience pour vendre sans dégrader la perception de votre marque.",
     tags: ['Shop', 'Paiement', 'Catalogue'],
-    price: 'à partir de 35 000 MAD',
     timeline: '5 - 8 semaines',
+    scope: 'Estimation personnalisée après cadrage',
     video: vid5,
   },
   {
@@ -667,7 +667,7 @@ const WEBSITE_TABS = [
     title: 'Un outil métier pour remplacer les fichiers dispersés.',
     text: "Dashboards, espaces clients, réservation, automatisation, CRM léger ou plateforme interne. On transforme votre processus en interface fiable, lisible et prête à évoluer.",
     tags: ['Dashboard', 'Automatisation', 'IA'],
-    price: 'sur devis',
+    scope: 'Diagnostic puis proposition sur mesure',
     timeline: '6 - 12 semaines',
     video: vid6,
   },
@@ -969,7 +969,7 @@ function CollaboratorsSection() {
                   style={{ left: `${left}%`, top: `${top}%` }}
                 >
                   <span className="collaborator-avatar">
-                    <img src={person.image} alt={`${person.name} — partenaire Supra v.`} loading="lazy" />
+                    <img src={person.image} alt={`${person.name} — partenaire Supra v3`} loading="lazy" />
                   </span>
                 </div>
               )
@@ -977,7 +977,7 @@ function CollaboratorsSection() {
           </motion.div>
           {isDesktopWheel && (
             <span className="collaborators-below-logo">
-              <img src={BELOW_WHEEL_COLLABORATOR.image} alt={`${BELOW_WHEEL_COLLABORATOR.name} — partenaire Supra v.`} loading="lazy" />
+              <img src={BELOW_WHEEL_COLLABORATOR.image} alt={`${BELOW_WHEEL_COLLABORATOR.name} — partenaire Supra v3`} loading="lazy" />
             </span>
           )}
         </div>
@@ -1075,7 +1075,7 @@ function ServicesSection() {
               Nos services de communication, création web et <span className="text-accent">intelligence artificielle</span>.
             </motion.h2>
             <motion.p variants={fadeUpChild} className="section-head__lead">
-              De la stratégie de marque au produit digital finalisé. Supra v. couvre toute la chaîne, sans sous-traiter, depuis Marrakech.
+              De la stratégie de marque au produit digital finalisé. Supra v3 couvre toute la chaîne, sans sous-traiter, depuis Marrakech.
             </motion.p>
           </motion.div>
 
@@ -1926,8 +1926,8 @@ function SiteFooter() {
       <div className="container">
         <div className="site-footer__grid">
           <div className="site-footer__brand">
-            <a href="/" className="site-footer__logo" aria-label="Supra v. - Accueil">
-              <img src={logoImage} alt="Supra v." />
+            <a href="/" className="site-footer__logo" aria-label="Supra v3 - Accueil">
+              <img src={logoImage} alt="Supra v3" />
             </a>
             <p className="site-footer__tagline">
               Agence de communication 360° à Marrakech. Branding, sites web, applications et agents IA. Une équipe, de la stratégie au code.
@@ -1936,7 +1936,7 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Navigation</h4>
-            <a href="/works">Réalisations</a>
+            <a href="/#works">Réalisations</a>
             <a href="/#services">Services</a>
             <a href="/#methode">Méthode</a>
             <a href="/#segments">Pour qui</a>
@@ -1960,7 +1960,7 @@ function SiteFooter() {
         </div>
 
         <div className="site-footer__bottom">
-          <span>© 2026 Supra v. — Agence de communication 360</span>
+          <span>© 2026 Supra v3 — Agence de communication 360</span>
           <span>Conçu &amp; codé en interne</span>
         </div>
       </div>
@@ -1992,12 +1992,12 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
     <header className={`site-nav ${className} ${scrolled ? 'site-nav--scrolled' : ''}`}>
       <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
         <nav className="nav" aria-label="Navigation principale">
-          <a href="/" className="nav__logo" aria-label="Supra v. - Accueil">
-            <img src={logoImage} alt="Supra v." />
+          <a href="/" className="nav__logo" aria-label="Supra v3 - Accueil">
+            <img src={logoImage} alt="Supra v3" />
           </a>
           <ul className="nav__links">
             <li>
-              <a href="/works" className="nav__link">
+              <a href="/#works" className="nav__link">
                 Réalisations
               </a>
             </li>
@@ -2042,7 +2042,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
       >
         <ul className="nav__mobile-links">
           <li>
-            <a href="/works" onClick={() => setNavOpen(false)}>
+            <a href="/#works" onClick={() => setNavOpen(false)}>
               Réalisations
             </a>
           </li>
@@ -2275,7 +2275,7 @@ function WebsiteProjectsSection() {
           <span className="website-projects-section__pill-avatar">
             <img src={partner1} alt="" />
           </span>
-          <strong>Supra v.</strong>
+          <strong>Supra v3</strong>
           <small aria-hidden="true">
             <span />
             <span />
@@ -2322,7 +2322,7 @@ function WebsiteProjectsSection() {
                       loading="lazy"
                     />
                   )}
-                  <span className="website-project-card__brand">Supra v.</span>
+                  <span className="website-project-card__brand">Supra v3</span>
                 </a>
 
                 <div className="website-project-card__bottom">
@@ -2475,14 +2475,15 @@ function StorySection() {
 }
 
 const DEFAULT_SEO = {
-  title: 'Supra v. — Agence Communication Marrakech | Branding & Web',
-  description: 'Agence de communication à Marrakech : branding, sites web, contenus, marketing digital et automatisation IA pour faire grandir votre marque.',
+  title: 'Agence de communication 360 à Marrakech | Supra v3',
+  description:
+    'Supra v3 accompagne les marques à Marrakech avec branding, sites web, contenu, marketing digital, production vidéo et systèmes d’automatisation.',
   canonical: 'https://suprav3.com/',
 }
 
 const WORKS_SEO = {
-  title: 'Réalisations Supra v. | Projets de communication à Marrakech',
-  description: 'Découvrez les réalisations de Supra v., agence de communication à Marrakech : identités de marque, sites web, campagnes Meta Ads, applications et automatisation IA.',
+  title: 'Réalisations Supra v3 | Projets de communication à Marrakech',
+  description: 'Découvrez les réalisations de Supra v3, agence de communication à Marrakech : identités de marque, sites web, campagnes Meta Ads, applications et automatisation IA.',
   canonical: 'https://suprav3.com/works',
 }
 
@@ -2647,18 +2648,18 @@ function App() {
           </h1>
 
           <p className="text-body hero__subtitle">
-            Branding, contenus premium, sites web, applications et agents IA. Une seule équipe à Marrakech pour penser votre image, l'écrire, la filmer, la diffuser et la faire tourner en ligne.
+            Supra v3 aide les marques ambitieuses à Marrakech à construire une image forte, un site performant et une communication qui génère des demandes concrètes — branding, contenus, web, marketing digital et automatisation IA.
           </p>
 
           <div className="hero__cta">
-            <a href="/works" className="btn btn--primary">
-              Voir nos réalisations
+            <a href="/creation-site-web-marrakech" className="btn btn--primary">
+              Découvrir nos services
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
-            <HoverButtonLink href="#contact" className="btn btn--secondary hero-hover-button">
-              Parler de votre projet
+            <HoverButtonLink href="/devis-gratuit" className="btn btn--secondary hero-hover-button">
+              Demander un diagnostic
             </HoverButtonLink>
           </div>
         </section>

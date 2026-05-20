@@ -53,6 +53,7 @@ import ArticleIaCommunication from './pages/ArticleIaCommunication.jsx'
 // ── Autres ───────────────────────────────────────────────────
 import Services from './pages/Services.jsx'
 import MentionsLegales from './pages/MentionsLegales.jsx'
+import NotFound from './pages/NotFound.jsx'
 
 const wrap = (Component) => (
   <PageLayout>
@@ -92,6 +93,8 @@ export default function AppRoutes() {
       <Route path="/production-contenu"                 element={wrap(ProductionContenu)} />
       <Route path="/publicite-marrakech"                element={wrap(PubliciteMarrakech)} />
       <Route path="/community-management-marrakech"     element={wrap(CommunityManagementMarrakech)} />
+      <Route path="/gestion-reseaux-sociaux-marrakech"  element={wrap(CommunityManagementMarrakech)} />
+      <Route path="/agence-video-marrakech"             element={wrap(ProductionContenu)} />
 
       {/* ── Cluster SEO + IA ── */}
       <Route path="/referencement-seo-marrakech"  element={wrap(ReferencementSeoMarrakech)} />
@@ -100,6 +103,7 @@ export default function AppRoutes() {
       <Route path="/redaction-web-seo"            element={wrap(RedactionWebSeo)} />
       <Route path="/marketing-digital-marrakech"  element={wrap(MarketingDigitalMarrakech)} />
       <Route path="/automatisation-ia"            element={wrap(AutomatisationIa)} />
+      <Route path="/automatisation-ia-marrakech" element={wrap(AutomatisationIa)} />
       <Route path="/chatbot-ia-marrakech"         element={wrap(ChatbotIaMarrakech)} />
 
       {/* ── Cluster Sectoriel ── */}
@@ -118,6 +122,9 @@ export default function AppRoutes() {
       {/* ── Autres ── */}
       <Route path="/services"         element={wrap(Services)} />
       <Route path="/mentions-legales" element={wrap(MentionsLegales)} />
+
+      {/* ── 404 ── */}
+      <Route path="*" element={wrap(NotFound)} />
     </Routes>
   )
 }

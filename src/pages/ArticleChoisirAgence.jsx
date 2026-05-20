@@ -9,11 +9,11 @@ const schema = {
   "datePublished": "2026-04-25",
   "author": {
     "@type": "Organization",
-    "name": "Supra v."
+    "name": "Supra v3"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com"
   },
   "url": "https://suprav3.com/blog/comment-choisir-agence-communication",
@@ -32,7 +32,7 @@ export default function ArticleChoisirAgence() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Comment choisir son agence de communication à Marrakech ? | Supra v.",
+        title: "Comment choisir son agence de communication à Marrakech ? | Supra v3",
         description: "7 critères pour bien choisir votre agence de communication à Marrakech. Portfolio, références, transparence des prix, expertise SEO : ce qu'il faut vérifier avant de signer.",
         path: "/blog/comment-choisir-agence-communication",
         schema
@@ -68,7 +68,7 @@ export default function ArticleChoisirAgence() {
           heading: "Le marché des agences de communication à Marrakech en 2026 : panorama",
           body: [
             "Marrakech compte aujourd'hui plusieurs dizaines d'agences de communication, auxquelles s'ajoutent des centaines de freelances actifs sur les réseaux sociaux et les plateformes de mise en relation. Cette abondance de l'offre est une bonne nouvelle pour les entreprises — la concurrence tire les prix vers des niveaux raisonnables — mais elle rend aussi le choix plus complexe.",
-            "On distingue grossièrement trois catégories d'acteurs. Les grandes agences généralistes (10 à 30 personnes) offrent une capacité de production importante mais peuvent manquer d'agilité et de personnalisation pour les PME. Les petites agences spécialisées (2 à 8 personnes) comme Supra v. offrent une expertise pointue sur un nombre limité de disciplines avec un contact client direct et une réactivité supérieure. Les freelances peuvent être excellents dans leur domaine de spécialité, mais ils ne peuvent pas coordonner une stratégie 360° ni garantir la continuité de service en cas d'indisponibilité.",
+            "On distingue grossièrement trois catégories d'acteurs. Les grandes agences généralistes (10 à 30 personnes) offrent une capacité de production importante mais peuvent manquer d'agilité et de personnalisation pour les PME. Les petites agences spécialisées (2 à 8 personnes) comme Supra v3 offrent une expertise pointue sur un nombre limité de disciplines avec un contact client direct et une réactivité supérieure. Les freelances peuvent être excellents dans leur domaine de spécialité, mais ils ne peuvent pas coordonner une stratégie 360° ni garantir la continuité de service en cas d'indisponibilité.",
             "Votre choix doit d'abord dépendre de vos besoins réels. Si vous n'avez besoin que d'un logo, un freelance designer peut suffire. Si vous avez besoin d'une stratégie globale (site web + SEO + réseaux sociaux + campagnes), une agence pluridisciplinaire est préférable.",
           ],
         },
@@ -106,14 +106,14 @@ export default function ArticleChoisirAgence() {
           heading: "Ce que coûte vraiment un mauvais choix d'agence",
           body: [
             "Choisir la mauvaise agence de communication n'est pas seulement une question d'argent perdu — c'est aussi du temps perdu, une opportunité manquée et parfois des dommages durables à corriger. Un site web mal développé peut prendre 6 à 12 mois à corriger sur le plan SEO. Une identité visuelle amateur impose un rebranding coûteux. Une mauvaise gestion des réseaux sociaux peut ternir votre réputation auprès d'une audience qu'il faudra des mois à reconquérir.",
-            <>Le coût total d&apos;un mauvais choix d&apos;agence dépasse souvent largement l&apos;économie initiale réalisée. Un site web à 2 000 MAD qui ne génère aucun trafic vous coûtera en réalité plus cher qu&apos;un site à 8 000 MAD qui génère 50 leads par mois. C&apos;est pourquoi nous recommandons de considérer une <Link to="/agence-communication-marrakech">agence de communication à Marrakech</Link> comme un investissement mesurable, pas une dépense à minimiser.</>,
+            <>Le coût total d&apos;un mauvais choix d&apos;agence dépasse souvent l&apos;économie initiale : un site peu cher mais invisible coûte plus qu&apos;un projet bien cadré qui génère des demandes. Nous recommandons de considérer une <Link to="/agence-communication-marrakech">agence de communication à Marrakech</Link> comme un investissement mesurable, pas une dépense à minimiser.</>,
           ],
         },
       ]}
       faq={[
         {
           q: "Quelle est la différence entre une agence de communication et un freelance à Marrakech ?",
-          a: "Un freelance est généralement spécialisé dans un domaine (design, développement ou SEO) et propose des tarifs plus bas, mais il ne peut pas couvrir l'ensemble des besoins d'une stratégie 360°. Une agence comme Supra v. dispose d'une équipe pluridisciplinaire qui gère simultanément votre site web, votre SEO, vos réseaux sociaux et vos campagnes publicitaires avec une cohérence globale. Pour des besoins ponctuels et spécialisés, un freelance peut suffire ; pour une stratégie globale, une agence est préférable."
+          a: "Un freelance est généralement spécialisé dans un domaine (design, développement ou SEO) et propose des tarifs plus bas, mais il ne peut pas couvrir l'ensemble des besoins d'une stratégie 360°. Une agence comme Supra v3 dispose d'une équipe pluridisciplinaire qui gère simultanément votre site web, votre SEO, vos réseaux sociaux et vos campagnes publicitaires avec une cohérence globale. Pour des besoins ponctuels et spécialisés, un freelance peut suffire ; pour une stratégie globale, une agence est préférable."
         },
         {
           q: "Faut-il choisir une agence locale à Marrakech ou peut-on travailler à distance ?",

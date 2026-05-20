@@ -5,10 +5,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Branding et identité visuelle à Marrakech",
-  "description": "Supra v. crée votre identité de marque complète à Marrakech : logo, charte graphique, brand book et supports de communication.",
+  "description": "Supra v3 crée votre identité de marque complète à Marrakech : logo, charte graphique, brand book et supports de communication.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -22,8 +22,8 @@ export default function BrandingMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Branding Marrakech — Identité de Marque Sur-mesure | Supra v.",
-        description: "Créez une identité de marque forte à Marrakech avec Supra v. : logo, charte graphique, brand strategy et supports print/digital. Devis gratuit.",
+        title: "Branding Marrakech — Identité de Marque Sur-mesure | Supra v3",
+        description: "Créez une identité de marque forte à Marrakech avec Supra v3 : logo, charte graphique, brand strategy et supports print/digital. Devis gratuit.",
         path: "/branding-marrakech",
         schema
       }}
@@ -34,7 +34,7 @@ export default function BrandingMarrakech() {
       ]}
       title="Branding à Marrakech — Construisez une marque mémorable"
       subtitle="Identité visuelle cohérente qui inspire confiance et fidélise vos clients"
-      intro="Le branding n'est pas un logo. C'est l'ensemble des éléments visuels, verbaux et émotionnels qui font que vos clients reconnaissent et préfèrent votre marque à celle de vos concurrents. Supra v. construit des identités de marque complètes et cohérentes pour les entreprises de Marrakech — des startups naissantes aux enseignes établies souhaitant se repositionner. Notre approche combine stratégie, design et une connaissance fine des codes culturels du marché marocain."
+      intro="Le branding n'est pas un logo. C'est l'ensemble des éléments visuels, verbaux et émotionnels qui font que vos clients reconnaissent et préfèrent votre marque à celle de vos concurrents. Supra v3 construit des identités de marque complètes et cohérentes pour les entreprises de Marrakech — des startups naissantes aux enseignes établies souhaitant se repositionner. Notre approche combine stratégie, design et une connaissance fine des codes culturels du marché marocain."
       stats={[
         { value: '3', label: 'Directions créatives proposées' },
         { value: '2–4', label: 'Semaines de délai moyen' },

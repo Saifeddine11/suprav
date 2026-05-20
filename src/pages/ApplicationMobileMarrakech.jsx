@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Développement d'application mobile à Marrakech",
-  "description": "Supra v. développe des applications mobiles iOS et Android sur-mesure pour les entreprises de Marrakech et du Maroc.",
+  "description": "Supra v3 développe des applications mobiles iOS et Android sur-mesure pour les entreprises de Marrakech et du Maroc.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function ApplicationMobileMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Application Mobile Marrakech — iOS & Android Sur-mesure | Supra v.",
-        description: "Développement d'application mobile à Marrakech : iOS, Android et React Native. Supra v. conçoit votre app de A à Z. Devis gratuit en 24h.",
+        title: "Application Mobile Marrakech — iOS & Android Sur-mesure | Supra v3",
+        description: "Développement d'application mobile à Marrakech : iOS, Android et React Native. Supra v3 conçoit votre app de A à Z. Devis gratuit en 24h.",
         path: "/application-mobile-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function ApplicationMobileMarrakech() {
       ]}
       title="Développement d'application mobile à Marrakech"
       subtitle="Des applications iOS et Android performantes pour digitaliser votre activité"
-      intro="Le développement d'une application mobile Marrakech est aujourd'hui l'un des investissements les plus rentables pour les entreprises qui souhaitent fidéliser leurs clients et automatiser leurs processus métier. Supra v. accompagne les entrepreneurs et PME de Marrakech dans la conception et le développement d'applications mobiles natives (iOS, Android) ou cross-platform (React Native), de l'idée initiale à la publication sur l'App Store et le Play Store. Nos développeurs maîtrisent les technologies modernes pour livrer des applications robustes, rapides et intuitives."
+      intro="Le développement d'une application mobile Marrakech est aujourd'hui l'un des investissements les plus rentables pour les entreprises qui souhaitent fidéliser leurs clients et automatiser leurs processus métier. Supra v3 accompagne les entrepreneurs et PME de Marrakech dans la conception et le développement d'applications mobiles natives (iOS, Android) ou cross-platform (React Native), de l'idée initiale à la publication sur l'App Store et le Play Store. Nos développeurs maîtrisent les technologies modernes pour livrer des applications robustes, rapides et intuitives."
       services={[
         {
           title: "Applications React Native cross-platform",
@@ -58,7 +58,7 @@ export default function ApplicationMobileMarrakech() {
       faq={[
         {
           q: "Combien coûte le développement d'une application mobile à Marrakech ?",
-          a: "Le coût varie selon la complexité : une application simple (catalogue + formulaire) démarre à 15 000 MAD. Une app avec authentification, paiement in-app et back-office peut dépasser 50 000 MAD. Nous réalisons un chiffrage précis après analyse de vos besoins."
+          a: "Le budget dépend des fonctionnalités (auth, paiement, back-office, notifications). Nous chiffrons après analyse de vos besoins — souvent en MVP puis phases d'évolution."
         },
         {
           q: "Quelle est la durée de développement d'une application mobile ?",

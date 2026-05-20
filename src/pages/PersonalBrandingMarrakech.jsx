@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Personal branding à Marrakech",
-  "description": "Supra v. construit votre marque personnelle à Marrakech : stratégie de personal branding, identité visuelle, LinkedIn et content strategy pour entrepreneurs et experts.",
+  "description": "Supra v3 construit votre marque personnelle à Marrakech : stratégie de personal branding, identité visuelle, LinkedIn et content strategy pour entrepreneurs et experts.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function PersonalBrandingMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Personal Branding Marrakech — Construisez votre Autorité | Supra v.",
-        description: "Développez votre personal branding à Marrakech avec Supra v. : stratégie LinkedIn, site personnel, identité visuelle et content strategy pour entrepreneurs et experts.",
+        title: "Personal Branding Marrakech — Construisez votre Autorité | Supra v3",
+        description: "Développez votre personal branding à Marrakech avec Supra v3 : stratégie LinkedIn, site personnel, identité visuelle et content strategy pour entrepreneurs et experts.",
         path: "/personal-branding-marrakech",
         schema
       }}
@@ -36,7 +36,7 @@ export default function PersonalBrandingMarrakech() {
       ]}
       title="Personal branding à Marrakech"
       subtitle="Devenez la référence de votre secteur grâce à une marque personnelle forte"
-      intro="Le personal branding Marrakech est la stratégie qu'adoptent les entrepreneurs, consultants, coaches et dirigeants qui souhaitent être reconnus comme des experts de référence dans leur domaine — localement à Marrakech et au-delà. Dans un monde où vos prospects vous googlelisent avant de vous rappeler, votre réputation en ligne est votre premier commercial. Supra v. accompagne les personnalités professionnelles de Marrakech dans la construction de leur marque personnelle : de la définition de leur positionnement unique à la production de contenus qui renforcent leur autorité et génèrent des opportunités d'affaires concrètes."
+      intro="Le personal branding Marrakech est la stratégie qu'adoptent les entrepreneurs, consultants, coaches et dirigeants qui souhaitent être reconnus comme des experts de référence dans leur domaine — localement à Marrakech et au-delà. Dans un monde où vos prospects vous googlelisent avant de vous rappeler, votre réputation en ligne est votre premier commercial. Supra v3 accompagne les personnalités professionnelles de Marrakech dans la construction de leur marque personnelle : de la définition de leur positionnement unique à la production de contenus qui renforcent leur autorité et génèrent des opportunités d'affaires concrètes."
       services={[
         {
           title: "Stratégie & positionnement personal brand",
@@ -66,7 +66,7 @@ export default function PersonalBrandingMarrakech() {
         },
         {
           q: "Combien coûte un accompagnement personal branding à Marrakech ?",
-          a: "Notre accompagnement personal branding démarre avec un atelier stratégie (1 500 MAD) qui peut être suivi d'une mission complète (identité visuelle + LinkedIn + site web) à partir de 8 000 MAD. Des forfaits mensuels de production de contenu LinkedIn sont disponibles à partir de 2 500 MAD/mois."
+          a: "Nous commençons souvent par un atelier stratégie, puis une mission complète (identité, LinkedIn, site) selon vos objectifs. Les forfaits de contenu LinkedIn se calibrent au rythme souhaité — proposition après diagnostic."
         }
       ]}
     />

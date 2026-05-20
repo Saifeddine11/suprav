@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Développement SaaS à Marrakech",
-  "description": "Supra v. développe des applications SaaS sur-mesure pour les startups et entreprises de Marrakech souhaitant lancer un produit digital scalable.",
+  "description": "Supra v3 développe des applications SaaS sur-mesure pour les startups et entreprises de Marrakech souhaitant lancer un produit digital scalable.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function ApplicationSaas() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Développement SaaS Marrakech — Application Web Sur-mesure | Supra v.",
-        description: "Lancez votre SaaS à Marrakech avec Supra v. : architecture scalable, authentification multi-tenant, abonnements et tableau de bord. Devis gratuit.",
+        title: "Développement SaaS Marrakech — Application Web Sur-mesure | Supra v3",
+        description: "Lancez votre SaaS à Marrakech avec Supra v3 : architecture scalable, authentification multi-tenant, abonnements et tableau de bord. Devis gratuit.",
         path: "/application-saas",
         schema
       }}
@@ -36,7 +36,7 @@ export default function ApplicationSaas() {
       ]}
       title="Développement d'application SaaS à Marrakech"
       subtitle="Transformez votre idée en produit digital scalable et rentable"
-      intro="Le développement SaaS Marrakech est au cœur de la transformation digitale des entreprises modernes : au lieu d'un logiciel installé localement, votre produit est accessible depuis n'importe où, se met à jour automatiquement et génère des revenus récurrents via des abonnements. Supra v. accompagne les entrepreneurs et porteurs de projets à Marrakech dans la conception et le développement de plateformes SaaS robustes — de l'architecture technique à l'interface utilisateur — pour un lancement rapide et une scalabilité maîtrisée. Nous avons déjà accompagné des startups marocaines de l'idée jusqu'à des milliers d'utilisateurs actifs."
+      intro="Le développement SaaS Marrakech est au cœur de la transformation digitale des entreprises modernes : au lieu d'un logiciel installé localement, votre produit est accessible depuis n'importe où, se met à jour automatiquement et génère des revenus récurrents via des abonnements. Supra v3 accompagne les entrepreneurs et porteurs de projets à Marrakech dans la conception et le développement de plateformes SaaS robustes — de l'architecture technique à l'interface utilisateur — pour un lancement rapide et une scalabilité maîtrisée. Nous avons déjà accompagné des startups marocaines de l'idée jusqu'à des milliers d'utilisateurs actifs."
       services={[
         {
           title: "Architecture cloud & scalabilité",
@@ -62,7 +62,7 @@ export default function ApplicationSaas() {
         },
         {
           q: "Combien coûte le développement d'un SaaS à Marrakech ?",
-          a: "Un MVP SaaS complet (authentification, abonnements, tableau de bord de base) démarre à partir de 25 000 MAD. Un produit plus avancé avec fonctionnalités métier complexes peut nécessiter un budget de 60 000 MAD et plus. Nous étalons souvent le développement en phases pour respecter votre trésorerie."
+          a: "Un MVP est dimensionné selon les fonctionnalités indispensables à valider votre marché. Nous proposons souvent un découpage en phases pour maîtriser le risque — estimation après cadrage technique."
         },
         {
           q: "Pouvez-vous aider à définir les fonctionnalités de mon SaaS ?",

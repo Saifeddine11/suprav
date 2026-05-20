@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Chatbot IA WhatsApp à Marrakech",
-  "description": "Supra v. développe des chatbots IA pour WhatsApp et votre site web à Marrakech : réponses automatiques 24h/24, qualification de leads et prise de rendez-vous.",
+  "description": "Supra v3 développe des chatbots IA pour WhatsApp et votre site web à Marrakech : réponses automatiques 24h/24, qualification de leads et prise de rendez-vous.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,7 +24,7 @@ export default function ChatbotIaMarrakech() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Chatbot IA Marrakech — WhatsApp & Site Web Automatisé | Supra v.",
+        title: "Chatbot IA Marrakech — WhatsApp & Site Web Automatisé | Supra v3",
         description: "Déployez un chatbot IA à Marrakech sur WhatsApp et votre site web. Réponses 24h/24, qualification de leads et réservations automatiques. Devis gratuit.",
         path: "/chatbot-ia-marrakech",
         schema
@@ -36,7 +36,7 @@ export default function ChatbotIaMarrakech() {
       ]}
       title="Chatbot IA à Marrakech — WhatsApp & site web"
       subtitle="Répondez à vos clients 24h/24 et qualifiez vos leads sans effort humain"
-      intro="Le chatbot IA Marrakech WhatsApp est devenu l'outil indispensable des entreprises qui reçoivent de nombreuses demandes de clients et souhaitent ne jamais laisser un message sans réponse, même à 2h du matin. Supra v. développe et déploie des chatbots conversationnels alimentés par l'intelligence artificielle (GPT-4) pour WhatsApp Business, votre site web et Instagram DM à Marrakech. Ces assistants virtuels comprennent le français, l'arabe et l'anglais, répondent aux questions fréquentes, qualifient vos prospects et peuvent même prendre des rendez-vous directement dans votre agenda — le tout sans intervention humaine."
+      intro="Le chatbot IA Marrakech WhatsApp est devenu l'outil indispensable des entreprises qui reçoivent de nombreuses demandes de clients et souhaitent ne jamais laisser un message sans réponse, même à 2h du matin. Supra v3 développe et déploie des chatbots conversationnels alimentés par l'intelligence artificielle (GPT-4) pour WhatsApp Business, votre site web et Instagram DM à Marrakech. Ces assistants virtuels comprennent le français, l'arabe et l'anglais, répondent aux questions fréquentes, qualifient vos prospects et peuvent même prendre des rendez-vous directement dans votre agenda — le tout sans intervention humaine."
       services={[
         {
           title: "Chatbot WhatsApp Business IA",
@@ -62,7 +62,7 @@ export default function ChatbotIaMarrakech() {
         },
         {
           q: "Combien coûte un chatbot IA pour WhatsApp à Marrakech ?",
-          a: "Le développement d'un chatbot WhatsApp Business IA sur-mesure est proposé à partir de 5 000 MAD. Des frais mensuels de maintenance et d'hébergement s'appliquent (entre 500 et 1 500 MAD/mois selon le volume de conversations). L'investissement est généralement amorti en 1 à 3 mois grâce au temps économisé."
+          a: "Le périmètre dépend des canaux (WhatsApp, site), de la base de connaissance et du volume de conversations. Maintenance et hébergement sont précisés dans la proposition après cadrage."
         },
         {
           q: "Le chatbot peut-il remplacer complètement mon service client ?",

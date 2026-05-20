@@ -31,7 +31,7 @@ const ARTICLES = [
     date:     "25 avril 2026",
     readTime: "8 min",
     category: "Création web",
-    excerpt:  "Prix d'un site vitrine, d'une boutique e-commerce ou d'une application web au Maroc : notre guide complet avec les fourchettes de prix réelles.",
+    excerpt:  "Comprendre ce qui influence le budget d'un site vitrine, e-commerce ou application au Maroc — sans grille tarifaire, avec les vrais facteurs à anticiper.",
     featured: true,
   },
   {
@@ -68,11 +68,11 @@ const CATEGORIES = ['Tout', 'Création web', 'SEO', 'Conseils', 'Intelligence ar
 const schema = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  "name": "Blog Supra v. — Marketing Digital & Communication Marrakech",
+  "name": "Blog Supra v3 — Marketing Digital & Communication Marrakech",
   "description": "Conseils, guides et ressources sur le marketing digital, le SEO, la création de site web et la communication d'entreprise à Marrakech.",
   "publisher": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com",
@@ -103,8 +103,8 @@ export default function Blog() {
   return (
     <>
       <PageSEO
-        title="Blog Marketing Digital & Communication Marrakech | Supra v."
-        description="Conseils SEO, création web, réseaux sociaux et IA pour les entreprises de Marrakech. Articles pratiques par l'équipe Supra v., agence de communication 360°."
+        title="Blog Marketing Digital & Communication Marrakech | Supra v3"
+        description="Conseils SEO, création web, réseaux sociaux et IA pour les entreprises de Marrakech. Articles pratiques par l'équipe Supra v3, agence de communication 360°."
         path="/blog"
         schema={schema}
       />
@@ -133,7 +133,7 @@ export default function Blog() {
 
               <motion.h1 className="seo-hero__title blog-hero__title" variants={fadeUp}>
                 Le blog<br />
-                <span className="text-accent">Supra v.</span>
+                <span className="text-accent">Supra v3</span>
               </motion.h1>
 
               <motion.p className="seo-hero__body" variants={fadeUp}>

@@ -4,10 +4,10 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Automatisation IA à Marrakech",
-  "description": "Supra v. aide les entreprises de Marrakech à automatiser leurs processus grâce à l'intelligence artificielle : workflows automatisés, chatbots et intégrations no-code.",
+  "description": "Supra v3 aide les entreprises de Marrakech à automatiser leurs processus grâce à l'intelligence artificielle : workflows automatisés, chatbots et intégrations no-code.",
   "provider": {
     "@type": "Organization",
-    "name": "Supra v.",
+    "name": "Supra v3",
     "url": "https://suprav3.com",
     "telephone": "+33744208673",
     "email": "contact@suprav3.com"
@@ -24,8 +24,8 @@ export default function AutomatisationIa() {
   return (
     <SeoPageTemplate
       seo={{
-        title: "Automatisation IA Marrakech — Workflows & Processus Intelligents | Supra v.",
-        description: "Automatisez vos processus à Marrakech avec l'IA : Make, Zapier, n8n et LLM. Supra v. conçoit vos workflows intelligents pour gagner du temps et réduire vos coûts.",
+        title: "Automatisation IA Marrakech — Workflows & Processus Intelligents | Supra v3",
+        description: "Automatisez vos processus à Marrakech avec l'IA : Make, Zapier, n8n et LLM. Supra v3 conçoit vos workflows intelligents pour gagner du temps et réduire vos coûts.",
         path: "/automatisation-ia",
         schema
       }}
@@ -36,7 +36,7 @@ export default function AutomatisationIa() {
       ]}
       title="Automatisation IA à Marrakech"
       subtitle="Libérez votre équipe des tâches répétitives grâce à l'intelligence artificielle"
-      intro="L'automatisation IA Marrakech est la prochaine frontière de productivité pour les entreprises qui souhaitent faire plus avec moins : moins de temps perdu sur des tâches répétitives, moins d'erreurs humaines et moins de coûts opérationnels. Supra v. accompagne les TPE, PME et startups de Marrakech dans l'identification de leurs processus automatisables et le déploiement de solutions no-code et IA (Make, Zapier, n8n, GPT-4) adaptées à leur taille et leur budget. Du simple workflow de qualification de leads au système de reporting automatique, nous concevons des automatisations qui fonctionnent 24h/24 sans intervention humaine."
+      intro="L'automatisation IA Marrakech est la prochaine frontière de productivité pour les entreprises qui souhaitent faire plus avec moins : moins de temps perdu sur des tâches répétitives, moins d'erreurs humaines et moins de coûts opérationnels. Supra v3 accompagne les TPE, PME et startups de Marrakech dans l'identification de leurs processus automatisables et le déploiement de solutions no-code et IA (Make, Zapier, n8n, GPT-4) adaptées à leur taille et leur budget. Du simple workflow de qualification de leads au système de reporting automatique, nous concevons des automatisations qui fonctionnent 24h/24 sans intervention humaine."
       services={[
         {
           title: "Audit de processus & cartographie",

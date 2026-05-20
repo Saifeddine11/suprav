@@ -2,14 +2,15 @@ import { Link } from 'react-router-dom'
 import SeoPageTemplate from '../components/SeoPageTemplate.jsx'
 
 const seo = {
-  title: 'Création Site Web Marrakech — Supra v. | Sites vitrines, e-commerce & sur-mesure',
-  description: "Création de site web à Marrakech par Supra v. : sites vitrines, e-commerce, applications web. Rapides, référencés Google, mobile-first. Devis gratuit sous 48h.",
+  title: 'Création site web Marrakech | Sites professionnels & SEO-ready | Supra v3',
+  description:
+    'Supra v3 crée des sites web professionnels à Marrakech : sites vitrines, e-commerce, landing pages, design premium, SEO local et performance mobile.',
   path: '/creation-site-web-marrakech',
   schema: {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: 'Création de site web à Marrakech',
-    provider: { '@type': 'LocalBusiness', name: 'Supra v.', url: 'https://suprav3.com' },
+    provider: { '@type': 'LocalBusiness', name: 'Supra v3', url: 'https://suprav3.com' },
     areaServed: { '@type': 'City', name: 'Marrakech' },
     description: "Création de sites web sur-mesure à Marrakech : sites vitrines, e-commerce, plateformes. Design soigné, SEO natif, performance Lighthouse.",
     telephone: '+33744208673',
@@ -26,9 +27,20 @@ export default function CreationSiteWebMarrakech() {
         { label: 'Agence web', path: '/agence-communication-marrakech' },
         { label: 'Création site web Marrakech' },
       ]}
-      title="Création site web à Marrakech"
-      subtitle="Sites vitrines, e-commerce et plateformes sur-mesure"
-      intro="Supra v. crée des sites web à Marrakech conçus pour charger en moins de deux secondes, se positionner naturellement sur Google et convertir les visiteurs en clients. Pas de templates, pas de WordPress alourdi de plugins inutiles. Du code propre, un design sur-mesure et une architecture pensée pour durer plusieurs années sans refonte majeure."
+      title="Création de site web à Marrakech"
+      subtitle="Sites professionnels — performance & conversion"
+      intro="Supra v3 conçoit des sites web à Marrakech pensés pour être rapides, crédibles sur mobile et utiles pour votre business : chaque page guide vers une prise de contact, un appel ou WhatsApp. Pas de copier-coller de homepage — une structure dédiée, un SEO de base intégré et une estimation personnalisée après cadrage."
+      primaryCta={{ href: '/devis-gratuit', label: 'Demander une estimation personnalisée →' }}
+      secondaryCta={{
+        href: 'https://wa.me/33744208673?text=' + encodeURIComponent('Bonjour Supra v3, je souhaite parler de mon site web à Marrakech.'),
+        label: 'Parler de mon site web',
+        external: true,
+      }}
+      servicesHeadline={
+        <>
+          Types de sites <span className="text-accent">que nous créons.</span>
+        </>
+      }
       stats={[
         { value: '< 2s', label: 'Temps de chargement moyen' },
         { value: '95+', label: 'Score Lighthouse moyen' },
@@ -44,8 +56,12 @@ export default function CreationSiteWebMarrakech() {
           desc: "Boutique en ligne complète avec gestion de catalogue, paiement sécurisé (CMI, PayPal, virement), gestion des commandes et tunnel de vente optimisé pour les achats marocains. Intégration des moyens de paiement locaux et livraison.",
         },
         {
-          title: 'Landing page & one-page',
-          desc: "Page unique haute conversion pour un lancement de produit, une campagne publicitaire ou un événement. Structure persuasive, appels à l'action optimisés, compatible avec Meta Ads et Google Ads. Livrable en 1 à 2 semaines.",
+          title: 'Landing page pour campagnes Ads',
+          desc: "Page unique haute conversion pour un lancement, une campagne Meta ou Google Ads. Message unique, formulaire ou WhatsApp, tracking propre. Idéal pour tester une offre rapidement à Marrakech.",
+        },
+        {
+          title: 'Site premium sur mesure',
+          desc: "Direction UI soignée, animations maîtrisées, contenus structurés pour une marque qui veut se démarquer — immobilier, hôtellerie, restauration ou cabinet haut de gamme.",
         },
         {
           title: 'Refonte de site web',
@@ -61,6 +77,41 @@ export default function CreationSiteWebMarrakech() {
         },
       ]}
       richContent={[
+        {
+          heading: 'Pourquoi créer un site professionnel à Marrakech',
+          body: [
+            'À Marrakech, vos prospects comparent plusieurs prestataires en ligne avant de vous appeler. Un site lent, daté ou confus fait perdre des demandes — même avec une bonne réputation offline.',
+            'Un site professionnel clarifie votre offre, rassure et facilite le contact. Chaque projet est étudié selon ses objectifs, son niveau de design, ses fonctionnalités, son contenu et son accompagnement.',
+          ],
+        },
+        {
+          heading: 'Méthode Supra v3',
+          bullets: [
+            'Stratégie et objectifs business',
+            'Arborescence et mots-clés locaux',
+            'Design UI premium et responsive',
+            'Développement performant',
+            'SEO technique de base',
+            'Mise en ligne, analytics et accompagnement',
+          ],
+        },
+        {
+          heading: 'Ce qui peut être inclus selon le projet',
+          bullets: [
+            'Design responsive et optimisation mobile',
+            'SEO de base et pages locales',
+            'Formulaire de contact et CTA WhatsApp',
+            'Analytics et suivi des conversions',
+            'Blog ou contenus SEO',
+            'Intégrations CRM, réservation ou paiement si nécessaire',
+          ],
+        },
+        {
+          heading: 'Budget et estimation',
+          body: [
+            'Le budget dépend du type de site, du nombre de pages, du niveau de personnalisation, du contenu, du SEO et des intégrations. Nous ne publions pas de fourchette tarifaire : pour une estimation fiable, demandez un diagnostic personnalisé.',
+          ],
+        },
         {
           heading: "Qu'est-ce qu'un bon site web en 2026 ?",
           body: [
@@ -90,7 +141,7 @@ export default function CreationSiteWebMarrakech() {
         {
           heading: "Le SEO intégré dès la conception",
           body: [
-            "L'un des avantages les plus importants de faire appel à Supra v. pour la création de votre site web à Marrakech est que le SEO est intégré dès la première ligne de code, pas ajouté après coup comme un plugin.",
+            "L'un des avantages les plus importants de faire appel à Supra v3 pour la création de votre site web à Marrakech est que le SEO est intégré dès la première ligne de code, pas ajouté après coup comme un plugin.",
             "Cela signifie concrètement : une architecture d'URL logique et descriptive, des balises title et meta description optimisées pour chaque page, des données structurées Schema.org pour apparaître dans les résultats enrichis de Google, une sitemap XML soumise à Google Search Console, et un code HTML sémantique que les robots de Google comprennent parfaitement.",
             <>Nous effectuons également une recherche de mots-clés avant la conception pour s&apos;assurer que les pages de votre site ciblent les requêtes que vos clients potentiels à Marrakech tapent réellement dans Google. Cette étape, souvent négligée par les agences web qui se concentrent uniquement sur le design, est ce qui fait la différence entre un joli site invisible et un site qui génère des leads. Pour aller plus loin, découvrez notre <Link to="/referencement-seo-marrakech">offre de référencement SEO à Marrakech</Link>.</>,
           ],
@@ -134,9 +185,15 @@ export default function CreationSiteWebMarrakech() {
           a: "Oui. Nous proposons un hébergement haute performance sur des serveurs SSD avec certificat SSL inclus, sauvegardes quotidiennes et monitoring de la disponibilité. L'hébergement peut être intégré à votre contrat de maintenance mensuel. Vous pouvez également choisir d'héberger votre site chez un prestataire de votre choix — nous vous accompagnons dans la configuration.",
         },
         {
-          q: "Combien coûte la maintenance d'un site web ?",
-          a: "Nos contrats de maintenance couvrent les mises à jour de sécurité, les sauvegardes, le monitoring et les petites corrections de contenu. Le tarif dépend de la complexité du site et du niveau de service souhaité. Demandez votre devis gratuit pour obtenir une estimation précise.",
+          q: 'Comment obtenir une estimation pour mon site ?',
+          a: "Après un court cadrage (objectif, pages, design, contenu, intégrations), nous remettons une proposition adaptée. Le budget dépend du niveau d'exigence et de l'accompagnement souhaité — pas de grille affichée sur le site.",
         },
+      ]}
+      internalLinks={[
+        { label: 'Article budget site web', path: '/blog/combien-coute-site-web-marrakech', desc: 'Comprendre les facteurs de coût.' },
+        { label: 'SEO local Marrakech', path: '/blog/seo-local-guide-marrakech', desc: 'Visibilité Google Maps & Search.' },
+        { label: 'Marketing digital', path: '/marketing-digital-marrakech', desc: 'Acquisition après le lancement.' },
+        { label: 'Contact', path: '/contact', desc: 'Parler de votre projet.' },
       ]}
       sectionNum="02"
     />
