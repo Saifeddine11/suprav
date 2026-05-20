@@ -12,10 +12,8 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    env:
-      PUPPETEER_SKIP_DOWNLOAD: 'true'
+    runs-on: macos-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -30,17 +28,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build SPA
-        run: npm run build:spa
-
-      - name: Setup Chrome for Puppeteer
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Prerender routes
-        run: npm run prerender
-        env:
-          PUPPETEER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+      - name: Build project (Vite + prerender)
+        run: npm run build
 
       - name: Verify prerender output
         run: |
@@ -80,9 +69,7 @@ jobs:
           echo "SFTP port: $SFTP_PORT"
 
       - name: Install lftp
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
+        run: brew install lftp
 
       - name: Deploy via SFTP
         env:
