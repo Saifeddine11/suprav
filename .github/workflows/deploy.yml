@@ -28,8 +28,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project (Vite + prerender)
-        run: npm run build
+      - name: Build SPA
+        run: npm run build:spa
+
+      - name: Prerender routes
+        run: npm run prerender 2>&1 | tee prerender.log
+
+      - name: Show prerender log on failure
+        if: failure()
+        run: tail -80 prerender.log || true
 
       - name: Verify prerender output
         run: |
