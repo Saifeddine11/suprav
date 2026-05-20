@@ -18,6 +18,9 @@ const ROOT = join(__dirname, '..')
 const DIST = join(ROOT, 'dist')
 const PREVIEW_PORT = 4173
 const PREVIEW_URL = `http://127.0.0.1:${PREVIEW_PORT}`
+const IS_CI = process.env.CI === 'true'
+const NAV_TIMEOUT_MS = IS_CI ? 120_000 : 90_000
+const WAIT_TIMEOUT_MS = IS_CI ? 45_000 : 30_000
 
 function waitForPreviewReady(proc, timeoutMs = 60000) {
   return new Promise((resolve, reject) => {
@@ -62,14 +65,14 @@ async function prerenderRoute(page, route) {
   const url = `${PREVIEW_URL}${route === '/' ? '/' : route}`
   const expectedCanonical = canonicalForRoute(route)
 
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 })
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT_MS })
 
   await page.waitForFunction(
     () => {
       const root = document.querySelector('#root')
       return root && root.innerHTML.trim().length > 200
     },
-    { timeout: 30000 },
+    { timeout: WAIT_TIMEOUT_MS },
   )
 
   await page.waitForFunction(
@@ -77,7 +80,7 @@ async function prerenderRoute(page, route) {
       const link = document.querySelector('link[rel="canonical"]')
       return link?.getAttribute('href') === canonical
     },
-    { timeout: 15000 },
+    { timeout: WAIT_TIMEOUT_MS },
     expectedCanonical,
   )
 
@@ -87,7 +90,7 @@ async function prerenderRoute(page, route) {
       const desc = document.querySelector('meta[name="description"]')?.getAttribute('content')
       return title.length > 10 && desc && desc.length > 40
     },
-    { timeout: 15000 },
+    { timeout: WAIT_TIMEOUT_MS },
   )
 
   const hasMainContent = await page.evaluate(() => {
@@ -126,11 +129,19 @@ async function main() {
 
     const page = await browser.newPage()
     await page.setViewport({ width: 1280, height: 800 })
-    page.setDefaultNavigationTimeout(90000)
+    page.setDefaultNavigationTimeout(NAV_TIMEOUT_MS)
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      console.log(`[prerender] Chrome: ${process.env.PUPPETEER_EXECUTABLE_PATH}`)
+    }
 
     for (const route of PRERENDER_ROUTES) {
-      const out = await prerenderRoute(page, route)
-      console.log(`  ✓ ${route} → dist/${out}`)
+      try {
+        const out = await prerenderRoute(page, route)
+        console.log(`  ✓ ${route} → dist/${out}`)
+      } catch (err) {
+        console.error(`  ✗ ${route}:`, err.message)
+        throw err
+      }
     }
 
     console.log('\n[prerender] Done.\n')

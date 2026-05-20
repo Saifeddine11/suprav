@@ -30,21 +30,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Chromium (apt)
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser || sudo apt-get install -y chromium
-          CHROME="$(command -v chromium-browser || command -v chromium || command -v google-chrome-stable)"
-          test -n "$CHROME"
-          echo "PUPPETEER_EXECUTABLE_PATH=$CHROME" >> "$GITHUB_ENV"
-          "$CHROME" --version
-
       - name: Build SPA
         run: npm run build:spa
 
+      - name: Setup Chrome for Puppeteer
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+
       - name: Prerender routes
         run: npm run prerender
+        env:
+          PUPPETEER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Verify prerender output
         run: |
