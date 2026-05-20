@@ -28,8 +28,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Setup Chrome for Puppeteer
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+
       - name: Build project
         run: npm run build
+        env:
+          PUPPETEER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Verify build output
         run: |
