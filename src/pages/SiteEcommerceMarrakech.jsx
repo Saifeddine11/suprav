@@ -31,7 +31,7 @@ export default function SiteEcommerceMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Site E-commerce Marrakech" }
       ]}
       title="Création de site e-commerce à Marrakech"

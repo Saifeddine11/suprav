@@ -31,7 +31,7 @@ export default function ProductionContenu() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Production Contenu" }
       ]}
       title="Production vidéo et contenu à Marrakech"

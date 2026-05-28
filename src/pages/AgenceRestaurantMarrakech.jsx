@@ -30,7 +30,7 @@ export default function AgenceRestaurantMarrakech() {
       }}
       breadcrumb={[
         { label: 'Accueil', path: '/' },
-        { label: 'Secteurs', path: '/services' },
+        { label: 'Secteurs', path: '/agence-communication-marrakech' },
         { label: 'Communication restaurant' },
       ]}
       title="Agence de communication pour restaurants à Marrakech"

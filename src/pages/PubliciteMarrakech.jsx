@@ -31,7 +31,7 @@ export default function PubliciteMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Publicité Marrakech" }
       ]}
       title="Publicité digitale à Marrakech — Meta Ads & Google Ads"

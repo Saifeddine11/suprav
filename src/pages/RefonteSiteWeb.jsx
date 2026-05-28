@@ -31,7 +31,7 @@ export default function RefonteSiteWeb() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Refonte Site Web" }
       ]}
       title="Refonte de site web à Marrakech"

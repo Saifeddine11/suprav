@@ -477,6 +477,7 @@ const serviceCardVariants = {
 const SERVICES = [
   {
     num: '01',
+    learnMorePath: '/branding-marrakech',
     title: 'Stratégie de marque & branding',
     desc: "On définit qui vous êtes vraiment avant de produire quoi que ce soit : positionnement, promesse, langage, identité visuelle. Vous repartez avec un nom (si besoin), un logo, une charte complète et un brand book qui sert de référence à toute votre équipe. C'est l'étape que la plupart des entreprises sautent — et c'est exactement pour ça que leur communication se dilue six mois plus tard. Nous, on commence par là.",
     kw: 'stratégie de marque Marrakech',
@@ -488,6 +489,7 @@ const SERVICES = [
   },
   {
     num: '02',
+    learnMorePath: '/creation-site-web-marrakech',
     title: 'Création de site web',
     desc: "Sites vitrines, one pages, e-commerce, sites corporate. Codés sur-mesure, jamais sur template, pensés pour charger sous deux secondes et être référencés sur Google dès la première ligne de code. Chaque parcours est conçu pour amener le visiteur à faire ce que vous voulez : appeler, remplir, acheter, prendre rendez-vous. La plupart des sites d'agences à Marrakech sont des cartes de visite passives — les nôtres travaillent.",
     kw: 'création site web Marrakech',
@@ -499,6 +501,7 @@ const SERVICES = [
   },
   {
     num: '03',
+    learnMorePath: '/agence-video-marrakech',
     title: 'Production de contenus',
     desc: "Photo, vidéo, films de marque, contenus verticaux pour Instagram, TikTok et Reels, captations d'événements, motion design. On vient avec notre matériel, notre équipe et notre direction artistique. L'objectif : que vous arrêtiez d'utiliser des photos de stock fades qui cassent la perception de votre marque. Le contenu est ce que vos prospects voient en premier — il doit être à hauteur de ce que vous facturez.",
     kw: 'production vidéo Marrakech',
@@ -510,6 +513,7 @@ const SERVICES = [
   },
   {
     num: '04',
+    learnMorePath: '/marketing-digital-marrakech',
     title: 'Publicité digitale & Meta Ads',
     desc: "Création des visuels, ciblage précis, optimisation continue sur Meta, TikTok et Snapchat. La règle qu'on s'impose : un dirham dépensé doit rapporter un dirham mesurable. Pas de pub \"de notoriété\" floue qui consomme votre budget sans qu'on sache où il va. Chaque campagne a un objectif chiffré et un tableau de bord que vous lisez en trente secondes.",
     kw: 'agence publicité Meta Ads Marrakech',
@@ -521,6 +525,7 @@ const SERVICES = [
   },
   {
     num: '05',
+    learnMorePath: '/gestion-reseaux-sociaux-marrakech',
     title: 'Social media management',
     desc: "Ligne éditoriale, calendrier mensuel, création des publications, animation au quotidien. Service récurrent, pas projet ponctuel. L'objectif : que votre Instagram, votre LinkedIn ou votre TikTok parlent exactement la même langue que votre marque, sans rupture de ton. Pour beaucoup de PME marrakchies, c'est ce qui fait basculer la perception de \"petit acteur local\" à \"marque sérieuse à suivre\".",
     kw: 'community management Marrakech',
@@ -532,6 +537,7 @@ const SERVICES = [
   },
   {
     num: '06',
+    learnMorePath: '/application-mobile-marrakech',
     title: 'Applications web & mobile',
     desc: "Apps iOS, Android et PWA. Cadrage, wireframes, design, développement, mise en production sur les stores, maintenance. Notre obsession : du code propre, une architecture pensée pour durer trois ans minimum, et une interface tellement claire que vos utilisateurs n'ont pas besoin de tutoriel. Typiquement déployé pour des restaurants, des hôtels ou des entreprises avec un besoin métier spécifique.",
     kw: 'développement application mobile Marrakech',
@@ -543,6 +549,7 @@ const SERVICES = [
   },
   {
     num: '07',
+    learnMorePath: '/application-saas',
     title: 'SaaS & plateformes sur-mesure',
     desc: "Quand un processus marche bien chez vous mais vit encore dans un Excel partagé, on le transforme en plateforme web propre : dashboards en temps réel, espace client, outil interne qui remplace cinq logiciels mal connectés. Si vous avez un bon processus, on en fait un produit digital qui travaille pour vous 24h/24. Et si vous voulez un jour le commercialiser comme un vrai SaaS, on sait aussi le construire dans cette logique-là.",
     kw: 'développement SaaS Marrakech',
@@ -554,6 +561,7 @@ const SERVICES = [
   },
   {
     num: '08',
+    learnMorePath: '/automatisation-ia-marrakech',
     title: 'Automatisation & agents IA',
     desc: "On connecte vos outils pour que les tâches répétitives se fassent toutes seules, et on construit des agents IA qui répondent à vos prospects, qualifient vos leads ou traitent vos emails 24h/24. Un agent bien fait gère 80 % des demandes basiques sans intervention humaine. Notre règle : l'IA doit servir vos opérations, pas faire de la démonstration. On ne déploie un agent que s'il vous fait gagner cinq heures par semaine — mesurées.",
     kw: 'automatisation IA Marrakech',
@@ -1038,7 +1046,12 @@ function ServiceScrollCard({ service }) {
         <p className="svc-card__desc">{service.desc}</p>
         <div className="svc-card__bottom">
           <div className="svc-card__kw">{service.kw}</div>
-          <a href="/devis-gratuit" className="svc-card__devis">Obtenir un devis →</a>
+          <div className="svc-card__actions">
+            <a href="/devis-gratuit" className="svc-card__devis">Obtenir un devis →</a>
+            {service.learnMorePath && (
+              <a href={service.learnMorePath} className="svc-card__learn">Découvrir le service →</a>
+            )}
+          </div>
         </div>
       </motion.article>
     </motion.div>
@@ -1945,10 +1958,10 @@ function SiteFooter() {
 
           <div className="site-footer__col">
             <h4 className="site-footer__col-title">Services</h4>
-            <a href="/#services">Stratégie de marque</a>
-            <a href="/#services">Création site web Marrakech</a>
-            <a href="/#services">Applications mobiles</a>
-            <a href="/#services">Automatisation IA</a>
+            <a href="/branding-marrakech">Stratégie de marque</a>
+            <a href="/creation-site-web-marrakech">Création site web Marrakech</a>
+            <a href="/application-mobile-marrakech">Applications mobiles</a>
+            <a href="/automatisation-ia-marrakech">Automatisation IA</a>
           </div>
 
           <div className="site-footer__col">
@@ -2018,7 +2031,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
             </li>
           </ul>
           <span className="nav__separator" aria-hidden="true" />
-          <a href="/#contact" className="btn btn--primary nav__cta">
+          <a href="/devis-gratuit" className="btn btn--primary nav__cta">
             Parlons de votre projet →
           </a>
           <button
@@ -2063,7 +2076,7 @@ function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
           </li>
         </ul>
         <span className="nav__mobile-separator" aria-hidden="true" />
-        <a href="/#contact" className="btn btn--primary nav__mobile-cta" onClick={() => setNavOpen(false)}>
+        <a href="/devis-gratuit" className="btn btn--primary nav__mobile-cta" onClick={() => setNavOpen(false)}>
           Parlons de votre projet →
         </a>
       </div>
@@ -2652,7 +2665,7 @@ function App() {
           </p>
 
           <div className="hero__cta">
-            <a href="/creation-site-web-marrakech" className="btn btn--primary">
+            <a href="/#services" className="btn btn--primary">
               Découvrir nos services
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />

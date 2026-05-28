@@ -31,7 +31,7 @@ export default function CreationLogoMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Création Logo Marrakech" }
       ]}
       title="Création de logo à Marrakech"

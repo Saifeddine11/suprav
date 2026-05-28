@@ -31,7 +31,7 @@ export default function RedactionWebSeo() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Rédaction Web SEO" }
       ]}
       title="Rédaction web SEO à Marrakech"

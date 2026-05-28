@@ -31,7 +31,7 @@ export default function CommunityManagementMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Community Management Marrakech" }
       ]}
       title="Community management à Marrakech"

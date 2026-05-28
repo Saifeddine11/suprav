@@ -31,7 +31,7 @@ export default function SiteVitrineMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Site Vitrine Marrakech" }
       ]}
       title="Création de site vitrine à Marrakech"

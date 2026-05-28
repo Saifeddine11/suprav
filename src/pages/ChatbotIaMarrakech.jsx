@@ -31,7 +31,7 @@ export default function ChatbotIaMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Chatbot IA Marrakech" }
       ]}
       title="Chatbot IA à Marrakech — WhatsApp & site web"

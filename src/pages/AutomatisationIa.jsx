@@ -31,7 +31,7 @@ export default function AutomatisationIa() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Automatisation IA" }
       ]}
       title="Automatisation IA à Marrakech"

@@ -31,7 +31,7 @@ export default function ApplicationMobileMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Application Mobile Marrakech" }
       ]}
       title="Développement d'application mobile à Marrakech"

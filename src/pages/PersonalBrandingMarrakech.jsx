@@ -31,7 +31,7 @@ export default function PersonalBrandingMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Personal Branding Marrakech" }
       ]}
       title="Personal branding à Marrakech"

@@ -31,7 +31,7 @@ export default function SeoLocalMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "SEO Local Marrakech" }
       ]}
       title="SEO local à Marrakech — Dominez Google Maps"

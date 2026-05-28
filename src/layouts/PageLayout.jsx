@@ -35,7 +35,7 @@ export default function PageLayout({ children }) {
                 <li><a href="/#faq" className="nav__link">FAQ</a></li>
               </ul>
               <span className="nav__separator" aria-hidden="true" />
-              <a href="/#contact" className="btn btn--primary nav__cta">
+              <a href="/devis-gratuit" className="btn btn--primary nav__cta">
                 Parlons de votre projet →
               </a>
               <button
@@ -63,7 +63,7 @@ export default function PageLayout({ children }) {
               <li><a href="/#faq" onClick={() => setNavOpen(false)}>FAQ</a></li>
             </ul>
             <span className="nav__mobile-separator" aria-hidden="true" />
-            <a href="/#contact" className="btn btn--primary nav__mobile-cta" onClick={() => setNavOpen(false)}>
+            <a href="/devis-gratuit" className="btn btn--primary nav__mobile-cta" onClick={() => setNavOpen(false)}>
               Parlons de votre projet →
             </a>
           </div>
@@ -97,7 +97,7 @@ export default function PageLayout({ children }) {
                 <h4 className="site-footer__col-title">Services</h4>
                 <a href="/creation-site-web-marrakech">Création site web</a>
                 <a href="/branding-marrakech">Branding & identité</a>
-                <a href="/automatisation-ia">Automatisation IA</a>
+                <a href="/automatisation-ia-marrakech">Automatisation IA</a>
                 <a href="/agence-communication-marrakech">Agence communication</a>
               </div>
               <div className="site-footer__col">

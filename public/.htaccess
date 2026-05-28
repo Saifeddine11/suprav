@@ -5,21 +5,28 @@ DirectoryIndex index.html
   RewriteEngine On
   RewriteBase /
 
-  # www → non-www + http → https
+  # 1. HTTPS + domaine canonique www
   RewriteCond %{HTTPS} !=on [OR]
-  RewriteCond %{HTTP_HOST} ^www\.suprav3\.com$ [NC]
-  RewriteRule ^ https://suprav3.com%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} !^www\.suprav3\.com$ [NC]
+  RewriteRule ^ https://www.suprav3.com%{REQUEST_URI} [R=301,L]
 
-  # API
+  # 2. Redirections 301 — alias → URL canonique
+  RewriteRule ^automatisation-ia/?$ /automatisation-ia-marrakech [R=301,L]
+  RewriteRule ^community-management-marrakech/?$ /gestion-reseaux-sociaux-marrakech [R=301,L]
+  RewriteRule ^production-contenu/?$ /agence-video-marrakech [R=301,L]
+  RewriteRule ^agence-web-marrakech/?$ /creation-site-web-marrakech [R=301,L]
+  RewriteRule ^redaction-web-seo/?$ /referencement-seo-marrakech [R=301,L]
+  RewriteRule ^audit-seo/?$ /referencement-seo-marrakech [R=301,L]
+
+  # 3. API
   RewriteRule ^api/contact/?$ /api/contact.php [L,QSA]
 
-  # HTML pré-rendu (dist/contact/index.html, dist/blog/.../index.html, etc.)
-  # Fichiers et dossiers réels → servir directement
+  # 4. Fichiers et dossiers existants (HTML pré-rendu)
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Routes SPA non pré-rendues → index.html (hydratation client)
+  # 5. Fallback SPA React Router
   RewriteRule ^ /index.html [L]
 </IfModule>
 

@@ -31,7 +31,7 @@ export default function AgenceImmobilierMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Communication Immobilier Marrakech" }
       ]}
       title="Communication immobilier à Marrakech"

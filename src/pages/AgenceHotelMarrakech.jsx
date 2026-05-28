@@ -31,7 +31,7 @@ export default function AgenceHotelMarrakech() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Communication Hôtel Marrakech" }
       ]}
       title="Communication hôtelière à Marrakech — Supra v3"

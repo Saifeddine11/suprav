@@ -31,7 +31,7 @@ export default function AuditSeo() {
       }}
       breadcrumb={[
         { label: "Accueil", path: "/" },
-        { label: "Services", path: "/services" },
+        { label: "Services", path: "/agence-communication-marrakech" },
         { label: "Audit SEO" }
       ]}
       title="Audit SEO à Marrakech — Diagnostic complet de votre site"
