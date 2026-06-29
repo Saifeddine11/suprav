@@ -1,3 +1,5 @@
+import './TopNavbar.css'
+
 export function TopNavbar() {
   return (
     <div className="top-navbar-wrap">

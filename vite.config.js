@@ -17,4 +17,17 @@ function removeSensitivePublicFiles() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), removeSensitivePublicFiles()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+          if (id.includes('motion') || id.includes('framer-motion')) return 'motion'
+          if (id.includes('react-router')) return 'router'
+          if (id.includes('react-dom') || id.includes('/react/')) return 'react-vendor'
+          return undefined
+        },
+      },
+    },
+  },
 })

@@ -69,8 +69,12 @@ async function prerenderRoute(page, route) {
 
   await page.waitForFunction(
     () => {
-      const root = document.querySelector('#root')
-      return root && root.innerHTML.trim().length > 200
+      const shell =
+        document.querySelector('.app main') ||
+        document.querySelector('main.page-content') ||
+        document.querySelector('.seo-page') ||
+        document.querySelector('.blog-page')
+      return shell && shell.innerHTML.trim().length > 200
     },
     { timeout: WAIT_TIMEOUT_MS },
   )
@@ -97,7 +101,8 @@ async function prerenderRoute(page, route) {
     return Boolean(
       document.querySelector('.seo-page') ||
         document.querySelector('.app main') ||
-        document.querySelector('main.page-content'),
+        document.querySelector('main.page-content') ||
+        document.querySelector('.blog-page'),
     )
   })
   if (!hasMainContent) {

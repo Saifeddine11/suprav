@@ -5,7 +5,7 @@
    Inspiré du style Agero (Framer)
    
    FONTS À IMPORTER (dans index.html ou _app.js) :
-   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+   Montserrat 600–900 + Poppins 400–500, chargement non bloquant (index.html).
    ================================================================ */
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -311,7 +311,7 @@ button {
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: clamp(32px, 4.2vw, 64px);
+  gap: clamp(24px, 3.4vw, 48px);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -595,6 +595,7 @@ button {
 
 .hero__title,
 .hero__subtitle,
+.hero__intro,
 .hero__cta {
   position: relative;
   z-index: 2;
@@ -602,6 +603,14 @@ button {
 
 .hero__subtitle {
   animation: heroContentRise 0.72s cubic-bezier(0.19, 1, 0.22, 1) 0.9s both;
+}
+
+.hero__intro {
+  margin-top: 14px;
+  max-width: 52ch;
+  margin-left: auto;
+  margin-right: auto;
+  animation: heroContentRise 0.72s cubic-bezier(0.19, 1, 0.22, 1) 0.95s both;
 }
 
 .hero__cta {
@@ -672,6 +681,7 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .trust-bar,
   .hero__subtitle,
+  .hero__intro,
   .hero__cta,
   .hero-word {
     animation: none;
@@ -679,6 +689,11 @@ button {
     transform: none;
     filter: none;
   }
+
+  .blurred-stagger-char {
+    filter: none !important;
+  }
+
 }
 
 /* Gris foncé (hiérarchie type réf. : connecteurs / déterminants) */
@@ -1134,7 +1149,8 @@ button {
     line-height: 1.16;
   }
 
-  .hero__subtitle {
+  .hero__subtitle,
+  .hero__intro {
     font-size: var(--text-base);
     max-width: 100%;
   }

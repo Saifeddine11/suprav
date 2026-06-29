@@ -7,10 +7,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 import '../App.css'
 import { ANIMATE_VARIANTS, VIEWPORT_SETTINGS } from '../animationConstants.js'
+import { PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL } from '../data/contactChannels.js'
+import AnimatedText from './animations/AnimatedText.jsx'
 
-import partner3  from '../../media/partners/3.webp'
-import partner5  from '../../media/partners/5.webp'
-import partner12 from '../../media/partners/12.webp'
+import { partnerImage } from '../data/partnerAssets.js'
 
 const stagger  = ANIMATE_VARIANTS.staggerContainer
 const fadeUp   = ANIMATE_VARIANTS.fadeUp
@@ -108,7 +108,7 @@ const WEEKDAYS = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM']
 /* ─────────────────────────────────────────
    Composant — même JSX que la home
 ───────────────────────────────────────── */
-export default function BookingCTA() {
+export default function BookingCTA({ pageHero = false }) {
   const [today, setToday]               = useState(() => startOfLocalDay(new Date()))
   const initialDate                     = useMemo(() => findFirstAvailableDate(today), [today])
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1))
@@ -149,11 +149,11 @@ export default function BookingCTA() {
     const text = encodeURIComponent(
       `Bonjour, je souhaite réserver un créneau le ${dateStr} de ${effectiveTime} pour discuter de mon projet. Je viens de votre site web.`
     )
-    return `https://wa.me/33744208673?text=${text}`
+    return `${WHATSAPP_URL}?text=${text}`
   }
 
   return (
-    <section className="cta-final" id="contact">
+    <section className={`cta-final${pageHero ? ' cta-final--page-hero' : ''}`} id="contact">
       <div className="container">
         <motion.div
           className="cta-final__inner"
@@ -169,20 +169,30 @@ export default function BookingCTA() {
             <motion.div className="cta-contact-copy" variants={stagger}>
               <motion.div className="cta-contact-copy__head" variants={fadeUp}>
                 <span className="cta-form__pill">Contact</span>
-                <h2>Démarrons votre projet.</h2>
+                <AnimatedText
+                  as={pageHero ? 'h1' : 'h2'}
+                  text="Démarrons votre projet."
+                  animateBy="words"
+                  direction="top"
+                  delay={100}
+                  stepDuration={0.35}
+                  instant={pageHero}
+                  threshold={0.15}
+                  rootMargin="-50px"
+                />
                 <p>Construisons une marque, un site ou un outil digital qui travaille vraiment pour vous.</p>
               </motion.div>
 
               <motion.div className="cta-contact-copy__details" variants={fadeUp}>
-                <a href="tel:+33744208673">+33 7 44 20 86 73</a>
-                <a href="/contact">contact@suprav3.com</a>
+                <a href={PHONE_TEL}>{PHONE_DISPLAY}</a>
+                <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
               </motion.div>
 
               <motion.div className="cta-social-proof" variants={fadeUp} aria-label="Note clients 4.9 sur 5">
                 <div className="cta-social-proof__avatars" aria-hidden="true">
-                  <span><img src={partner3}  alt="" /></span>
-                  <span><img src={partner5}  alt="" /></span>
-                  <span><img src={partner12} alt="" /></span>
+                  <span><img src={partnerImage(3)} alt="" width={40} height={40} loading="lazy" decoding="async" aria-hidden="true" /></span>
+                  <span><img src={partnerImage(5)} alt="" width={40} height={40} loading="lazy" decoding="async" aria-hidden="true" /></span>
+                  <span><img src={partnerImage(12)} alt="" width={40} height={40} loading="lazy" decoding="async" aria-hidden="true" /></span>
                   <span>+</span>
                 </div>
                 <p><strong>4.9 / 5</strong> clients accompagnés</p>
@@ -270,7 +280,7 @@ export default function BookingCTA() {
 
               <a
                 className="cta-booking__emergency"
-                href="https://wa.me/33744208673?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
+                href="https://wa.me/212728521896?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
                 target="_blank"
                 rel="noreferrer"
               >

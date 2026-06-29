@@ -3,9 +3,23 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import '../App.css'
 
+function setMetaRobots(content) {
+  let el = document.querySelector('meta[name="robots"]')
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute('name', 'robots')
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+}
+
 export default function NotFound() {
   useEffect(() => {
     document.title = 'Page introuvable — Supra v3'
+    setMetaRobots('noindex, nofollow')
+    return () => {
+      setMetaRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+    }
   }, [])
 
   return (
@@ -57,8 +71,8 @@ export default function NotFound() {
             lineHeight: 1.7,
           }}
         >
-          Cette page n'existe pas ou a été déplacée.
-          Revenez à l'accueil pour retrouver nos services.
+          Cette page n&apos;existe pas ou a été déplacée.
+          Revenez à l&apos;accueil ou contactez-nous pour votre projet.
         </p>
 
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -76,11 +90,11 @@ export default function NotFound() {
               textDecoration: 'none',
             }}
           >
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
 
           <Link
-            to="/devis-gratuit"
+            to="/contact"
             style={{
               display: 'inline-block',
               padding: '14px 32px',
@@ -94,7 +108,7 @@ export default function NotFound() {
               textDecoration: 'none',
             }}
           >
-            Obtenir un devis
+            Nous contacter
           </Link>
         </div>
       </motion.div>

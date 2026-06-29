@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from 'motion/react'
 import PageSEO from './PageSEO.jsx'
 import Breadcrumb from './Breadcrumb.jsx'
 import BookingCTA from './BookingCTA.jsx'
+import AnimatedText from './animations/AnimatedText.jsx'
 
 import { ANIMATE_VARIANTS, VIEWPORT_SETTINGS, EASING } from '../animationConstants.js'
+import { whatsappUrlWithMessage } from '../data/contactChannels.js'
 
-const DEFAULT_WHATSAPP =
-  'https://wa.me/33744208673?text=' +
-  encodeURIComponent(
-    'Bonjour Supra v3, je souhaite discuter d\'un projet pour mon entreprise.\nType de projet :\nBudget estimé :\nDélai souhaité :'
-  )
+const DEFAULT_WHATSAPP = whatsappUrlWithMessage(
+  'Bonjour Supra v3, je souhaite discuter d\'un projet pour mon entreprise.\nType de projet :\nBudget estimé :\nDélai souhaité :',
+)
 
 /* ─────────────────────────────────────────
    Reprend exactement le système d'animation de la page d'accueil
@@ -60,7 +60,7 @@ export default function SeoPageTemplate({
   sectionNum = '—', // numéro de section pour les labels
   richContent = [], // [{ heading, body, bullets?, sub? }]
   servicesHeadline = null, // React node ; défaut = titre générique Marrakech
-  primaryCta = { href: '/devis-gratuit', label: 'Demander un diagnostic →' },
+  primaryCta = { href: '/contact', label: 'Demander un diagnostic →' },
   secondaryCta = { href: DEFAULT_WHATSAPP, label: 'WhatsApp', external: true },
   internalLinks = [], // [{ label, path, desc? }]
   children = null,
@@ -100,9 +100,16 @@ export default function SeoPageTemplate({
               </motion.p>
 
               {/* H1 */}
-              <motion.h1 className="seo-hero__title" variants={fadeUp}>
-                {title}
-              </motion.h1>
+              <AnimatedText
+                as="h1"
+                className="seo-hero__title"
+                text={title}
+                animateBy="words"
+                direction="top"
+                delay={100}
+                stepDuration={0.35}
+                instant
+              />
 
               {/* Intro */}
               <motion.p className="seo-hero__body" variants={fadeUp}>
@@ -265,9 +272,22 @@ export default function SeoPageTemplate({
                 variants={stagger}
               >
                 <motion.p className="label" variants={fadeUp}>— Aller plus loin</motion.p>
-                <motion.h2 className="seo-section-head__title" variants={fadeUp}>
-                  Pages utiles <span className="text-accent">pour la suite.</span>
-                </motion.h2>
+                <AnimatedText
+                  as="h2"
+                  className="seo-section-head__title"
+                  lines={[
+                    [
+                      { text: 'Pages utiles ' },
+                      { text: 'pour la suite.', className: 'text-accent' },
+                    ],
+                  ]}
+                  animateBy="words"
+                  direction="top"
+                  delay={100}
+                  stepDuration={0.35}
+                  threshold={0.15}
+                  rootMargin="-50px"
+                />
               </motion.div>
               <motion.ul
                 className="seo-related__list"

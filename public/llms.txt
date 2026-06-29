@@ -1,24 +1,18 @@
 # Supra v3
 
-> Agence de communication 360 a Marrakech specialisee en branding, sites web, contenus, marketing digital, applications et automatisation IA.
+> Agence de communication 360 a Marrakech : strategie, production, distribution et suivi — branding, sites web, contenus, marketing digital et automatisation IA.
 
 ## Site
 
-- Home: https://suprav3.com/
-- Realisations: https://suprav3.com/#works
-- Sitemap: https://suprav3.com/sitemap.xml
-- Contact: contact@suprav3.com
+- Home: https://www.suprav3.com/
+- Realisations: https://www.suprav3.com/realisations
+- Contact: https://www.suprav3.com/contact
+- Mentions legales: https://www.suprav3.com/mentions-legales
+- Sitemap: https://www.suprav3.com/sitemap.xml
+- Email: contact@suprav3.com
 - Instagram: https://www.instagram.com/supra_v3/
 - TikTok: https://www.tiktok.com/@supravofficiel
 - Snapchat: https://snapchat.com/t/jL89tQsB
-
-## Services
-
-- Strategie de marque et branding
-- Creation de sites web a Marrakech
-- Production photo, video et contenus sociaux
-- Marketing digital et campagnes Meta/TikTok Ads
-- Applications web, plateformes SaaS et automatisation IA
 
 ## Positionnement
 

@@ -41,10 +41,18 @@ jobs:
       - name: Verify prerender output
         run: |
           set -euo pipefail
-          test -f dist/agence-communication-marrakech/index.html
-          grep -q 'agence-communication-marrakech' dist/agence-communication-marrakech/index.html
-          ! grep -q '15 000 MAD' dist/agence-communication-marrakech/index.html
-          grep -q 'Agence digitale Marrakech' dist/agence-communication-marrakech/index.html
+          for route in services realisations realisations/websites realisations/production-videos contact mentions-legales blog; do
+            test -f "dist/${route}/index.html"
+          done
+          grep -q 'Blog' dist/blog/index.html
+          grep -q 'Les prochains articles arrivent' dist/blog/index.html
+          grep -q 'Nos services' dist/services/index.html
+          grep -q 'Réalisations' dist/realisations/index.html
+          grep -q 'Sites web' dist/realisations/websites/index.html
+          grep -q 'Production vidéos' dist/realisations/production-videos/index.html
+          grep -q 'Contact' dist/contact/index.html
+          ! grep -q '15 000 MAD' dist/index.html
+          ! grep -q '15 000 MAD' dist/realisations/index.html
 
       - name: Verify build output
         run: |

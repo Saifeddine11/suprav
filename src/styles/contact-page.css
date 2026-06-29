@@ -1,0 +1,21 @@
+/* Contact — single premium hero block inside PageLayout */
+.contact-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  padding: clamp(12px, 2vw, 24px) clamp(12px, 2.5vw, 20px) clamp(24px, 4vw, 48px);
+}
+
+.contact-page .cta-final {
+  padding: 0;
+  background: transparent;
+}
+
+.contact-page .cta-final .container {
+  padding: 0;
+}
+
+.contact-page .cta-final__inner {
+  width: 100%;
+  max-width: min(100%, 1840px);
+}

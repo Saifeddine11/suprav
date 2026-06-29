@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
-const SITE = 'https://suprav3.com'
-const DEFAULT_OG_IMAGE = 'https://suprav3.com/logo.webp'
+const SITE = 'https://www.suprav3.com'
+const DEFAULT_OG_IMAGE = 'https://www.suprav3.com/logo.webp'
 const SOCIAL_PROFILE_URLS = [
   'https://www.instagram.com/supra_v3/',
   'https://www.tiktok.com/@supravofficiel',

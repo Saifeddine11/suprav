@@ -1,0 +1,390 @@
+/* FocusCards — Projets en ligne (/realisations) */
+
+.focus-cards.website-projects-grid {
+  align-items: start;
+}
+
+.focus-cards__item {
+  position: relative;
+  z-index: 0;
+  transform-origin: center center;
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Media frame */
+.focus-cards__item .website-project-card__media {
+  transition:
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.focus-cards__media-inner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.focus-cards__media-inner--browser {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+}
+
+.focus-cards__media-inner--browser .browser-mockup {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Pas d’ombre sur le lien média — évite le halo gris sous le mockup */
+.website-project-card__media--browser,
+.focus-cards__item--focused .website-project-card__media--browser,
+a.website-project-card__media--browser:hover,
+a.website-project-card__media--browser:focus-visible {
+  box-shadow: none;
+  filter: none;
+}
+
+.focus-cards__item--focused .website-project-card__media--browser {
+  transform: none;
+}
+
+.focus-cards__media-inner img,
+.focus-cards__media-inner video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hover overlay (image) */
+.focus-cards__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 20px 18px 18px;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(
+      165deg,
+      rgba(232, 73, 28, 0.12) 0%,
+      transparent 38%
+    ),
+    linear-gradient(
+      to top,
+      rgba(12, 12, 12, 0.78) 0%,
+      rgba(12, 12, 12, 0.38) 48%,
+      rgba(12, 12, 12, 0.06) 100%
+    );
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.focus-cards__accent-line {
+  position: absolute;
+  left: 18px;
+  bottom: 0;
+  width: 56px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--color-accent, #e8481c);
+  box-shadow: 0 0 18px rgba(232, 73, 28, 0.45);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.focus-cards__overlay-title,
+.focus-cards__overlay-cta {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.focus-cards__overlay-title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.8vw, 22px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  max-width: 16ch;
+}
+
+.focus-cards__overlay-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.focus-cards__item .website-project-card__brand {
+  z-index: 4;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Bottom copy */
+.focus-cards__copy {
+  min-width: 0;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.focus-cards__copy-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.focus-cards__number {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: rgba(17, 17, 17, 0.32);
+}
+
+.focus-cards__sector {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: rgba(17, 17, 17, 0.5);
+}
+
+.focus-cards__copy h3,
+.focus-cards__card-title {
+  margin: 0;
+  transition:
+    color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.focus-cards__description {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(17, 17, 17, 0.62);
+  max-width: 44ch;
+}
+
+.focus-cards__tag {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgba(17, 17, 17, 0.62);
+  background: rgba(17, 17, 17, 0.05);
+  border: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.focus-cards__cta {
+  transition:
+    color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Desktop focus / hover */
+@media (hover: hover) and (pointer: fine) {
+  .focus-cards:focus-within .focus-cards__item--dimmed,
+  .focus-cards:has(.focus-cards__item--focused) .focus-cards__item--dimmed {
+    opacity: 0.58;
+    filter: blur(3px) saturate(0.82);
+    transform: scale(0.98);
+  }
+
+  .focus-cards__item--focused {
+    z-index: 3;
+    opacity: 1;
+    filter: none;
+    transform: scale(1.028);
+  }
+
+  .focus-cards__item--focused .website-project-card__media:not(.website-project-card__media--browser) {
+    box-shadow:
+      0 28px 64px rgba(17, 17, 17, 0.2),
+      0 12px 28px rgba(17, 17, 17, 0.1),
+      0 0 0 1px rgba(232, 73, 28, 0.14);
+  }
+
+  .focus-cards__item--focused .focus-cards__media-inner img,
+  .focus-cards__item--focused .focus-cards__media-inner video {
+    transform: scale(1.08);
+    filter: saturate(1.08) contrast(1.02);
+  }
+
+  .focus-cards__item--focused .focus-cards__overlay {
+    opacity: 1;
+  }
+
+  /* Overlay limité au mockup — dégradé plus court, sans traînée basse */
+  .website-project-card__media--browser .focus-cards__overlay {
+    border-radius: inherit;
+    background:
+      linear-gradient(
+        165deg,
+        rgba(232, 73, 28, 0.08) 0%,
+        transparent 32%
+      ),
+      linear-gradient(
+        to top,
+        rgba(12, 12, 12, 0.72) 0%,
+        rgba(12, 12, 12, 0.28) 42%,
+        transparent 72%
+      );
+  }
+
+  .website-project-card__media--browser .focus-cards__accent-line {
+    box-shadow: 0 0 10px rgba(232, 73, 28, 0.35);
+  }
+
+  .focus-cards__item--focused .focus-cards__accent-line {
+    transform: scaleX(1);
+  }
+
+  .focus-cards__item--focused .focus-cards__overlay-title,
+  .focus-cards__item--focused .focus-cards__overlay-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .focus-cards__item--focused .website-project-card__brand {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(17, 17, 17, 0.12);
+  }
+
+  .focus-cards__item--focused .focus-cards__copy {
+    transform: translateY(-3px);
+  }
+
+  .focus-cards__item--focused .focus-cards__copy h3,
+  .focus-cards__item--focused .focus-cards__card-title {
+    color: #111111;
+  }
+
+  .focus-cards__item--focused .focus-cards__cta {
+    color: var(--color-accent, #e8481c);
+    transform: translateX(3px);
+    opacity: 1;
+  }
+
+}
+
+/* Idle: bottom CTA slightly subdued on desktop only */
+@media (hover: hover) and (pointer: fine) {
+  .focus-cards:has(.focus-cards__item--focused) .focus-cards__item--idle .focus-cards__cta,
+  .focus-cards:has(.focus-cards__item--focused) .focus-cards__item--dimmed .focus-cards__cta {
+    opacity: 0.72;
+  }
+}
+
+.website-projects-section__intro {
+  max-width: 560px;
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.4vw, 16px);
+  line-height: 1.65;
+  color: rgba(17, 17, 17, 0.58);
+}
+
+/* /realisations — seul bloc projets, juste sous le hero */
+.website-projects-section--solo {
+  min-height: auto;
+  padding-top: clamp(48px, 6vw, 72px);
+}
+
+.website-projects-section--videos {
+  min-height: auto;
+  padding-top: clamp(56px, 7vw, 88px);
+  padding-bottom: clamp(72px, 8vw, 104px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-cards__item,
+  .focus-cards__item .website-project-card__media,
+  .focus-cards__media-inner img,
+  .focus-cards__media-inner video,
+  .focus-cards__overlay,
+  .focus-cards__accent-line,
+  .focus-cards__overlay-title,
+  .focus-cards__overlay-cta,
+  .focus-cards__copy,
+  .focus-cards__cta,
+  .focus-cards__item .website-project-card__brand {
+    transition: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .focus-cards:focus-within .focus-cards__item--dimmed,
+    .focus-cards:has(.focus-cards__item--focused) .focus-cards__item--dimmed {
+      opacity: 1;
+      filter: none;
+      transform: none;
+    }
+
+    .focus-cards__item--focused {
+      transform: none;
+    }
+
+    .focus-cards__item--focused .focus-cards__overlay {
+      opacity: 0.85;
+    }
+
+    .focus-cards__item--focused .focus-cards__overlay-title,
+    .focus-cards__item--focused .focus-cards__overlay-cta {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .focus-cards.website-projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .focus-cards__overlay {
+    display: none;
+  }
+
+  .focus-cards__item {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .focus-cards__media-inner img,
+  .focus-cards__media-inner video {
+    transform: scale(1.02) !important;
+  }
+
+  .focus-cards__cta {
+    opacity: 1 !important;
+  }
+}

@@ -1,40 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, useMotionValueEvent, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react'
 import './App.css'
 import './TopNavbar.css'
 import { TopNavbar } from './TopNavbar.jsx'
-import ScrollMorphHero from '../components/ui/scroll-morph-hero.tsx'
+import SiteHeader from './components/SiteHeader.jsx'
+import SiteFooter from './components/SiteFooter.jsx'
 import { ParallaxBackground } from './useParallax.jsx'
 import { DURATION, EASING, STAGGER, ANIMATE_VARIANTS, TRANSITION_PROPS, VIEWPORT_SETTINGS, HOVER_TRANSITION } from './animationConstants.js'
-import vid1 from '../media/videos/vid1.mp4'
-import vid2 from '../media/videos/vid2.mp4'
-import vid3 from '../media/videos/vid3.mp4'
-import vid4 from '../media/videos/vid4.mp4'
-import vid5 from '../media/videos/vid5.mp4'
-import vid6 from '../media/videos/vid6.mp4'
-import logoImage from '../media/logo.webp'
-import palmeraiePoster from '../media/site-screens/palmeraie-stays.webp'
-import ourikaPoster from '../media/site-screens/ourika-living.webp'
-import studioPoster from '../media/site-screens/studio-medina.webp'
-import maisonPoster from '../media/site-screens/maison-noura.webp'
-import verdePoster from '../media/site-screens/verde-paris.jpg'
-import merrachiPoster from '../media/site-screens/merrachi.jpg'
-import hachkarPoster from '../media/site-screens/hachkar.jpg'
-import emaraPoster from '../media/site-screens/emara-estates.jpg'
-import partner1 from '../media/partners/1.webp'
-import partner2 from '../media/partners/2.webp'
-import partner3 from '../media/partners/3.webp'
-import partner4 from '../media/partners/4.webp'
-import partner5 from '../media/partners/5.webp'
-import partner6 from '../media/partners/6.webp'
-import partner7 from '../media/partners/7.webp'
-import partner8 from '../media/partners/8.webp'
-import partner9 from '../media/partners/9.webp'
-import partner10 from '../media/partners/10.webp'
-import partner11 from '../media/partners/11.webp'
-import partner12 from '../media/partners/12.webp'
-import partner13 from '../media/partners/13.webp'
+import { HOMEPAGE_VIDEO_ITEMS } from './data/videoProjects.js'
+import { SEO_PAGES } from './data/seoPages.js'
+import { partnerImage } from './data/partnerAssets.js'
+import useFinePointer from './hooks/useFinePointer.js'
+const VideoReelModal = lazy(() => import('./components/ui/VideoReelModal.jsx'))
+import HomeWebsiteShowcase from './components/home/HomeWebsiteShowcase.jsx'
+import TargetingSection from './components/home/TargetingSection.jsx'
+import AnimatedText from './components/animations/AnimatedText.jsx'
+import { PHONE_DISPLAY, PHONE_TEL } from './data/contactChannels.js'
+
+const LOGO_SRC = '/logo.webp'
 const nousImage = '/nous.webp'
 
 /* ============================================================
@@ -144,80 +128,6 @@ const writeLocalContactRecap = (recap) => {
   const sanitized = sanitizeRecap(recap)
   if (!sanitized) return
   window.localStorage.setItem(CONTACT_RECAP_STORAGE_KEY, JSON.stringify(sanitized))
-}
-
-function LazyAutoVideo({
-  src,
-  poster,
-  className,
-  ariaLabel,
-  preload = 'none',
-  rootMargin = '700px 0px',
-  threshold = 0.18,
-  eager = false,
-}) {
-  const videoRef = useRef(null)
-  const [shouldLoad, setShouldLoad] = useState(false)
-  const shouldUseSource = eager || shouldLoad
-
-  useEffect(() => {
-    if (eager) return undefined
-
-    const video = videoRef.current
-    if (!video) return undefined
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          video.pause()
-          return
-        }
-
-        setShouldLoad(true)
-        window.requestAnimationFrame(() => {
-          video.play().catch(() => {})
-        })
-      },
-      { rootMargin, threshold }
-    )
-
-    observer.observe(video)
-
-    return () => observer.disconnect()
-  }, [eager, rootMargin, threshold])
-
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video || !shouldUseSource) return undefined
-
-    const playVideo = () => {
-      if (video.paused) video.play().catch(() => {})
-    }
-
-    video.addEventListener('loadeddata', playVideo)
-    video.addEventListener('canplay', playVideo)
-    playVideo()
-
-    return () => {
-      video.removeEventListener('loadeddata', playVideo)
-      video.removeEventListener('canplay', playVideo)
-    }
-  }, [shouldUseSource])
-
-  return (
-    <video
-      ref={videoRef}
-      className={className}
-      src={shouldUseSource ? src : undefined}
-      poster={poster}
-      muted
-      loop
-      playsInline
-      autoPlay={shouldUseSource}
-      preload={shouldUseSource ? preload : 'none'}
-      aria-label={ariaLabel}
-    />
-  )
 }
 
 const isLikelyPhone = (value) => {
@@ -361,29 +271,6 @@ function HoverButtonLink({ href, className = '', children }) {
   )
 }
 
-function AnimatedHeroLine({ words, start = 0 }) {
-  return (
-    <span className="hero__title-line">
-      {words.map((word, index) => {
-        const className = [
-          'hero-word',
-          word.className,
-        ].filter(Boolean).join(' ')
-
-        return (
-          <span
-            key={`${word.text}-${index}`}
-            className={className}
-            style={{ animationDelay: `${start + index * 0.055}s` }}
-          >
-            {word.text}
-          </span>
-        )
-      })}
-    </span>
-  )
-}
-
 function BlurredStaggerHeading({ lines }) {
   const container = {
     hidden: { opacity: 1 },
@@ -399,7 +286,7 @@ function BlurredStaggerHeading({ lines }) {
     hidden: {
       opacity: 0,
       y: 8,
-      filter: 'blur(10px)',
+      filter: 'blur(4px)',
     },
     show: {
       opacity: 1,
@@ -477,8 +364,9 @@ const serviceCardVariants = {
 const SERVICES = [
   {
     num: '01',
-    learnMorePath: '/branding-marrakech',
     title: 'Stratégie de marque & branding',
+    contactCta: 'Discuter stratégie de marque →',
+    learnCta: 'Services — stratégie & branding →',
     desc: "On définit qui vous êtes vraiment avant de produire quoi que ce soit : positionnement, promesse, langage, identité visuelle. Vous repartez avec un nom (si besoin), un logo, une charte complète et un brand book qui sert de référence à toute votre équipe. C'est l'étape que la plupart des entreprises sautent — et c'est exactement pour ça que leur communication se dilue six mois plus tard. Nous, on commence par là.",
     kw: 'stratégie de marque Marrakech',
     icon: (
@@ -489,8 +377,9 @@ const SERVICES = [
   },
   {
     num: '02',
-    learnMorePath: '/creation-site-web-marrakech',
     title: 'Création de site web',
+    contactCta: 'Parler création de site web →',
+    learnCta: 'Services — sites web →',
     desc: "Sites vitrines, one pages, e-commerce, sites corporate. Codés sur-mesure, jamais sur template, pensés pour charger sous deux secondes et être référencés sur Google dès la première ligne de code. Chaque parcours est conçu pour amener le visiteur à faire ce que vous voulez : appeler, remplir, acheter, prendre rendez-vous. La plupart des sites d'agences à Marrakech sont des cartes de visite passives — les nôtres travaillent.",
     kw: 'création site web Marrakech',
     icon: (
@@ -501,8 +390,9 @@ const SERVICES = [
   },
   {
     num: '03',
-    learnMorePath: '/agence-video-marrakech',
     title: 'Production de contenus',
+    contactCta: 'Parler production de contenus →',
+    learnCta: 'Services — production vidéo →',
     desc: "Photo, vidéo, films de marque, contenus verticaux pour Instagram, TikTok et Reels, captations d'événements, motion design. On vient avec notre matériel, notre équipe et notre direction artistique. L'objectif : que vous arrêtiez d'utiliser des photos de stock fades qui cassent la perception de votre marque. Le contenu est ce que vos prospects voient en premier — il doit être à hauteur de ce que vous facturez.",
     kw: 'production vidéo Marrakech',
     icon: (
@@ -513,8 +403,9 @@ const SERVICES = [
   },
   {
     num: '04',
-    learnMorePath: '/marketing-digital-marrakech',
     title: 'Publicité digitale & Meta Ads',
+    contactCta: 'Discuter publicité digitale →',
+    learnCta: 'Services — Meta Ads →',
     desc: "Création des visuels, ciblage précis, optimisation continue sur Meta, TikTok et Snapchat. La règle qu'on s'impose : un dirham dépensé doit rapporter un dirham mesurable. Pas de pub \"de notoriété\" floue qui consomme votre budget sans qu'on sache où il va. Chaque campagne a un objectif chiffré et un tableau de bord que vous lisez en trente secondes.",
     kw: 'agence publicité Meta Ads Marrakech',
     icon: (
@@ -525,8 +416,9 @@ const SERVICES = [
   },
   {
     num: '05',
-    learnMorePath: '/gestion-reseaux-sociaux-marrakech',
     title: 'Social media management',
+    contactCta: 'Discuter social media →',
+    learnCta: 'Services — réseaux sociaux →',
     desc: "Ligne éditoriale, calendrier mensuel, création des publications, animation au quotidien. Service récurrent, pas projet ponctuel. L'objectif : que votre Instagram, votre LinkedIn ou votre TikTok parlent exactement la même langue que votre marque, sans rupture de ton. Pour beaucoup de PME marrakchies, c'est ce qui fait basculer la perception de \"petit acteur local\" à \"marque sérieuse à suivre\".",
     kw: 'community management Marrakech',
     icon: (
@@ -537,8 +429,9 @@ const SERVICES = [
   },
   {
     num: '06',
-    learnMorePath: '/application-mobile-marrakech',
     title: 'Applications web & mobile',
+    contactCta: 'Parler application sur-mesure →',
+    learnCta: 'Services — applications →',
     desc: "Apps iOS, Android et PWA. Cadrage, wireframes, design, développement, mise en production sur les stores, maintenance. Notre obsession : du code propre, une architecture pensée pour durer trois ans minimum, et une interface tellement claire que vos utilisateurs n'ont pas besoin de tutoriel. Typiquement déployé pour des restaurants, des hôtels ou des entreprises avec un besoin métier spécifique.",
     kw: 'développement application mobile Marrakech',
     icon: (
@@ -549,8 +442,9 @@ const SERVICES = [
   },
   {
     num: '07',
-    learnMorePath: '/application-saas',
     title: 'SaaS & plateformes sur-mesure',
+    contactCta: 'Parler plateforme SaaS →',
+    learnCta: 'Services — SaaS →',
     desc: "Quand un processus marche bien chez vous mais vit encore dans un Excel partagé, on le transforme en plateforme web propre : dashboards en temps réel, espace client, outil interne qui remplace cinq logiciels mal connectés. Si vous avez un bon processus, on en fait un produit digital qui travaille pour vous 24h/24. Et si vous voulez un jour le commercialiser comme un vrai SaaS, on sait aussi le construire dans cette logique-là.",
     kw: 'développement SaaS Marrakech',
     icon: (
@@ -561,8 +455,9 @@ const SERVICES = [
   },
   {
     num: '08',
-    learnMorePath: '/automatisation-ia-marrakech',
     title: 'Automatisation & agents IA',
+    contactCta: 'Discuter automatisation IA →',
+    learnCta: 'Services — agents IA →',
     desc: "On connecte vos outils pour que les tâches répétitives se fassent toutes seules, et on construit des agents IA qui répondent à vos prospects, qualifient vos leads ou traitent vos emails 24h/24. Un agent bien fait gère 80 % des demandes basiques sans intervention humaine. Notre règle : l'IA doit servir vos opérations, pas faire de la démonstration. On ne déploie un agent que s'il vous fait gagner cinq heures par semaine — mesurées.",
     kw: 'automatisation IA Marrakech',
     icon: (
@@ -579,161 +474,6 @@ const METHODE = [
   { num: '03', title: 'Créer', desc: "Identité, contenus, interfaces, code. Produits livrables concrets.", tags: 'Branding • Design • Contenu' },
   { num: '04', title: 'Déployer', desc: "Mise en ligne, diffusion, campagnes, mise sous tension.", tags: 'Setup • Lancement • Campagnes' },
   { num: '05', title: 'Optimiser', desc: "Mesure, ajustements, itération. Un projet vivant, pas un livrable figé.", tags: 'Testing • Mesure • Amélioration continue' },
-]
-
-const WORK_PROJECTS = [
-  {
-    num: '01',
-    category: 'Identité de marque',
-    client: 'Programme immobilier haut standing — Marrakech',
-    mission: 'Positionnement, naming, logo, charte graphique, supports de commercialisation print et digital.',
-    result: "Le projet est passé d'une plaquette Word envoyée par WhatsApp à une identité complète déclinée sur 12 supports — du panneau chantier à la story Instagram. Première vente signée 3 semaines après le lancement de la communication.",
-    tag: 'Branding · Immobilier · Marrakech',
-    video: vid1,
-  },
-  {
-    num: '02',
-    category: 'Film de marque + contenus sociaux',
-    client: 'Restaurant gastronomique — Guéliz, Marrakech',
-    mission: 'Film de marque 60 secondes, 15 capsules verticales pour Instagram Reels et TikTok, direction artistique photo du menu.',
-    result: "Taux d'engagement Instagram passé de 1,2 % à 6,8 % en deux mois. Le film a été repris en story par trois influenceurs Marrakech sans achat média.",
-    tag: 'Contenus · Hospitality · Marrakech',
-    video: vid2,
-  },
-  {
-    num: '03',
-    category: 'Site web vitrine + SEO local',
-    client: "Cabinet d'architecture — Marrakech",
-    mission: 'Site one-page codé sur-mesure, référencement naturel ciblé "architecte Marrakech", intégration du formulaire de contact connecté au CRM.',
-    result: 'Page 1 de Google sur "architecte intérieur Marrakech" en 8 semaines. Le site génère en moyenne 14 demandes de devis par mois depuis la mise en ligne.',
-    tag: 'Site web · SEO · Marrakech',
-    video: vid3,
-  },
-  {
-    num: '04',
-    category: 'Campagne Meta Ads immobilière',
-    client: "Promoteur résidentiel — Route de l'Ourika",
-    mission: 'Création des visuels publicitaires, ciblage géolocalisé Marrakech + diaspora MRE, landing page de captation, suivi des leads.',
-    result: '217 leads qualifiés en 45 jours de campagne. Trois lots vendus directement via les leads Meta, avec un retour publicitaire mesuré et suivi en continu.',
-    tag: 'Meta Ads · Immobilier · Acquisition',
-    video: vid4,
-  },
-  {
-    num: '05',
-    category: 'Social media management',
-    client: 'Marque de prêt-à-porter féminin — Marrakech',
-    mission: "Prise en main complète d'Instagram et TikTok pendant 6 mois. Ligne éditoriale, calendrier, 4 publications par semaine, gestion des messages privés.",
-    result: 'Passage de 1 800 à 11 400 abonnés Instagram en 6 mois. Le canal Instagram est devenu la première source de ventes en boutique — les clientes arrivent en disant "j\'ai vu ça sur votre Insta".',
-    tag: 'Social media · Retail · Marrakech',
-    video: vid5,
-  },
-  {
-    num: '06',
-    category: 'Application web + automatisation IA',
-    client: 'Agence de location courte durée — Palmeraie, Marrakech',
-    mission: "Développement d'une plateforme de gestion des réservations multi-canaux (Airbnb, Booking, direct), agent IA conversationnel pour qualifier les demandes WhatsApp entrantes, automatisation des factures et rappels.",
-    result: "Temps de gestion administrative réduit de 4 heures par jour à 45 minutes. L'agent IA traite 73 % des demandes WhatsApp sans intervention humaine. Le taux de réponse est passé sous 3 minutes en moyenne, contre 4 heures avant.",
-    tag: 'Application · IA · Automatisation · Marrakech',
-    video: vid6,
-  },
-]
-
-const WEBSITE_TABS = [
-  {
-    id: 'vitrine',
-    label: 'Site vitrine',
-    title: 'Un site clair qui transforme les visiteurs en demandes.',
-    text: "Pour les marques, cabinets, restaurants, riads et programmes immobiliers qui veulent une présence premium, rapide et crédible. On structure le message, on design l'interface et on code une page qui guide vers l'appel, le formulaire ou WhatsApp.",
-    tags: ['UX/UI Design', 'SEO local', 'Responsive'],
-    timeline: '3 - 5 semaines',
-    scope: 'Estimation personnalisée après cadrage',
-    video: vid3,
-  },
-  {
-    id: 'landing',
-    label: 'Landing page',
-    title: 'Une page de campagne pensée pour capter des leads.',
-    text: "Pour Meta Ads, lancement immobilier, offre saisonnière ou campagne événementielle. Une seule promesse, un parcours court, un tracking propre et une prise de contact sans friction.",
-    tags: ['Meta Ads', 'Lead capture', 'Tracking'],
-    timeline: '7 - 12 jours',
-    scope: 'Estimation personnalisée après cadrage',
-    video: vid4,
-  },
-  {
-    id: 'ecommerce',
-    label: 'E-commerce',
-    title: 'Une boutique en ligne qui garde la marque au centre.',
-    text: "Catalogue, fiches produit, paiement, livraison, gestion des commandes et storytelling visuel. On conçoit l'expérience pour vendre sans dégrader la perception de votre marque.",
-    tags: ['Shop', 'Paiement', 'Catalogue'],
-    timeline: '5 - 8 semaines',
-    scope: 'Estimation personnalisée après cadrage',
-    video: vid5,
-  },
-  {
-    id: 'webapp',
-    label: 'Application web',
-    title: 'Un outil métier pour remplacer les fichiers dispersés.',
-    text: "Dashboards, espaces clients, réservation, automatisation, CRM léger ou plateforme interne. On transforme votre processus en interface fiable, lisible et prête à évoluer.",
-    tags: ['Dashboard', 'Automatisation', 'IA'],
-    scope: 'Diagnostic puis proposition sur mesure',
-    timeline: '6 - 12 semaines',
-    video: vid6,
-  },
-]
-
-const WEBSITE_PROJECTS = [
-  {
-    name: 'Palmeraie Stays',
-    type: 'Plateforme de location courte durée',
-    video: vid6,
-    poster: palmeraiePoster,
-  },
-  {
-    name: 'Ourika Living',
-    type: 'Landing page immobilière',
-    video: vid4,
-    poster: ourikaPoster,
-  },
-  {
-    name: 'Studio Medina',
-    type: 'Site vitrine créatif',
-    video: vid3,
-    poster: studioPoster,
-  },
-  {
-    name: 'Maison Noura',
-    type: 'Site e-commerce retail',
-    video: vid5,
-    poster: maisonPoster,
-  },
-  {
-    name: 'Verde Paris',
-    type: 'Site vitrine restaurant — Paris',
-    video: null,
-    poster: verdePoster,
-    url: 'https://verde-paris.fr/',
-  },
-  {
-    name: 'Merrachi',
-    type: 'Site e-commerce artisanat marocain',
-    video: null,
-    poster: merrachiPoster,
-    url: 'https://merrachi.com/',
-  },
-  {
-    name: 'Hachkar',
-    type: 'Site vitrine & e-commerce',
-    video: null,
-    poster: hachkarPoster,
-    url: 'https://hachkar.com/',
-  },
-  {
-    name: 'Emara Estates',
-    type: 'Site immobilier premium',
-    video: null,
-    poster: emaraPoster,
-    url: 'https://emaraestates.com/',
-  },
 ]
 
 const SEGMENTS = [
@@ -781,8 +521,6 @@ const FAQ = [
     a: "Oui, des contrats mensuels couvrent l'hébergement, les mises à jour, les ajustements de contenu et le support prioritaire. Nous proposons aussi du social media management et de la gestion de campagnes en continu.",
   },
 ]
-
-const SECTORS = ['Immobilier', 'Hôtellerie', 'Restaurants', 'Retail', 'E-commerce', 'Start-ups', 'PME', 'Personal brands']
 
 const BOOKING_TIME_SLOTS = ['10h - 12h', '11h - 13h', '14h - 16h', '16h - 18h', '17h - 21h']
 const BOOKING_AVAILABILITY = {
@@ -890,46 +628,25 @@ const getMillisecondsUntilNextDay = (date = new Date()) => {
 const DESKTOP_COLLABORATOR_SLOTS = [4, 5, 6, 7, 8, 0, 1, 2, 3, 9, 10, 11]
 
 const COLLABORATORS = [
-  { name: 'Partner 3', role: 'Collaborateur', image: partner3 },
-  { name: 'Partner 5', role: 'Collaborateur', image: partner5 },
-  { name: 'Partner 12', role: 'Collaborateur', image: partner12 },
-  { name: 'Partner 2', role: 'Collaborateur', image: partner2 },
-  { name: 'Partner 1', role: 'Collaborateur', image: partner1 },
-  { name: 'Partner 4', role: 'Collaborateur', image: partner4 },
-  { name: 'Partner 6', role: 'Collaborateur', image: partner6 },
-  { name: 'Partner 7', role: 'Collaborateur', image: partner7 },
-  { name: 'Partner 8', role: 'Collaborateur', image: partner8 },
-  { name: 'Partner 9', role: 'Collaborateur', image: partner9 },
-  { name: 'Partner 10', role: 'Collaborateur', image: partner10 },
-  { name: 'Partner 11', role: 'Collaborateur', image: partner11 },
+  { name: 'Partner 3', role: 'Collaborateur', image: partnerImage(3) },
+  { name: 'Partner 5', role: 'Collaborateur', image: partnerImage(5) },
+  { name: 'Partner 12', role: 'Collaborateur', image: partnerImage(12) },
+  { name: 'Partner 2', role: 'Collaborateur', image: partnerImage(2) },
+  { name: 'Partner 1', role: 'Collaborateur', image: partnerImage(1) },
+  { name: 'Partner 4', role: 'Collaborateur', image: partnerImage(4) },
+  { name: 'Partner 6', role: 'Collaborateur', image: partnerImage(6) },
+  { name: 'Partner 7', role: 'Collaborateur', image: partnerImage(7) },
+  { name: 'Partner 8', role: 'Collaborateur', image: partnerImage(8) },
+  { name: 'Partner 9', role: 'Collaborateur', image: partnerImage(9) },
+  { name: 'Partner 10', role: 'Collaborateur', image: partnerImage(10) },
+  { name: 'Partner 11', role: 'Collaborateur', image: partnerImage(11) },
 ]
 
-const BELOW_WHEEL_COLLABORATOR = { name: 'Trips Experts', image: partner13 }
+const BELOW_WHEEL_COLLABORATOR = { name: 'Trips Experts', image: partnerImage(13) }
 
 /* ============================================================
    SECTION COMPONENTS
    ============================================================ */
-
-function SectorsMarquee() {
-  return (
-    <section className="sectors-bar" aria-label="Secteurs accompagnés par Supra v à Marrakech">
-      <div className="sectors-bar__inner">
-        <motion.div
-          className="sectors-bar__track"
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-        >
-          {[...SECTORS, ...SECTORS, ...SECTORS].map((s, i) => (
-            <span key={i} className="sectors-bar__item">
-              <span className="sectors-bar__dot" />
-              {s}
-            </span>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  )
-}
 
 function CollaboratorsSection() {
   const visibleCollaborators = COLLABORATORS
@@ -1006,7 +723,7 @@ function CollaboratorsSection() {
           />
           <motion.a variants={fadeUpChild} href="#contact" className="collab-call-pill magnetic-btn">
             <span className="collab-call-pill__avatar">
-              <img src="/favicon.svg" alt="" />
+              <img src="/favicon.svg" alt="" aria-hidden="true" />
             </span>
             <span>
               <strong>Réserver un appel gratuit</strong>
@@ -1042,15 +759,13 @@ function ServiceScrollCard({ service }) {
           <span className="svc-card__num">{service.num}</span>
           <div className="svc-card__icon">{service.icon}</div>
         </div>
-        <h3 className="svc-card__title">{service.title}</h3>
+        <p className="svc-card__title">{service.title}</p>
         <p className="svc-card__desc">{service.desc}</p>
         <div className="svc-card__bottom">
           <div className="svc-card__kw">{service.kw}</div>
           <div className="svc-card__actions">
-            <a href="/devis-gratuit" className="svc-card__devis">Obtenir un devis →</a>
-            {service.learnMorePath && (
-              <a href={service.learnMorePath} className="svc-card__learn">Découvrir le service →</a>
-            )}
+            <a href="/contact" className="svc-card__devis">{service.contactCta}</a>
+            <a href="/services" className="svc-card__learn">{service.learnCta}</a>
           </div>
         </div>
       </motion.article>
@@ -1084,9 +799,23 @@ function ServicesSection() {
             viewport={revealViewport}
           >
             <motion.p variants={fadeUpChild} className="label">02 — Services</motion.p>
-            <motion.h2 variants={fadeUpChild} className="section-head__title">
-              Nos services de communication, création web et <span className="text-accent">intelligence artificielle</span>.
-            </motion.h2>
+            <AnimatedText
+              as="h2"
+              className="section-head__title"
+              lines={[
+                [
+                  { text: 'Nos services de communication, création web et ' },
+                  { text: 'intelligence artificielle', className: 'text-accent' },
+                  { text: '.' },
+                ],
+              ]}
+              animateBy="words"
+              direction="top"
+              delay={100}
+              stepDuration={0.35}
+              threshold={0.15}
+              rootMargin="-50px"
+            />
             <motion.p variants={fadeUpChild} className="section-head__lead">
               De la stratégie de marque au produit digital finalisé. Supra v3 couvre toute la chaîne, sans sous-traiter, depuis Marrakech.
             </motion.p>
@@ -1161,10 +890,10 @@ function MethodeSection() {
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h3>{active.title}</h3>
+              <p className="methode-stage-copy__title">{active.title}</p>
               <p>{active.desc}</p>
               <div className="methode-stage-tags">{active.tags}</div>
-              <a href="#contact" className="methode-stage-button">Parler de votre projet</a>
+              <a href="/contact" className="methode-stage-button">Planifier un échange sur votre projet</a>
             </motion.div>
 
             <div className="methode-progress">
@@ -1222,7 +951,7 @@ function SegmentsSection() {
               transition={HOVER_TRANSITION}
             >
               <span className="seg-card__tag">{seg.tag}</span>
-              <h3 className="seg-card__title">{seg.title}</h3>
+              <p className="seg-card__title">{seg.title}</p>
               <p className="seg-card__desc">{seg.desc}</p>
               <svg className="seg-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M7 17L17 7M8 7h9v9"/>
@@ -1276,7 +1005,7 @@ function FaqSection() {
                   aria-expanded={isOpen}
                 >
                   <span className="faq-item__num">0{i + 1}</span>
-                  <h3 className="faq-item__title">{item.q}</h3>
+                  <span className="faq-item__title">{item.q}</span>
                   <span className={`faq-item__toggle ${isOpen ? 'is-open' : ''}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                       <path d="M12 5v14M5 12h14"/>
@@ -1637,20 +1366,30 @@ function CtaSection() {
             <motion.div className="cta-contact-copy" variants={stagger}>
               <motion.div className="cta-contact-copy__head" variants={fadeUpChild}>
                 <span className="cta-form__pill">Contact</span>
-                <h2>Démarrons votre projet.</h2>
+                <AnimatedText
+                  as="h2"
+                  className=""
+                  text="Démarrons votre projet."
+                  animateBy="words"
+                  direction="top"
+                  delay={100}
+                  stepDuration={0.35}
+                  threshold={0.15}
+                  rootMargin="-50px"
+                />
                 <p>Construisons une marque, un site ou un outil digital qui travaille vraiment pour vous.</p>
               </motion.div>
 
               <motion.div className="cta-contact-copy__details" variants={fadeUpChild}>
-                <a href="tel:+33744208673">+33 7 44 20 86 73</a>
+                <a href={PHONE_TEL}>{PHONE_DISPLAY}</a>
                 <a href="/contact">contact@suprav3.com</a>
               </motion.div>
 
               <motion.div className="cta-social-proof" variants={fadeUpChild} aria-label="Note clients 4.9 sur 5">
                 <div className="cta-social-proof__avatars" aria-hidden="true">
-                  <span><img src={partner3} alt="" /></span>
-                  <span><img src={partner5} alt="" /></span>
-                  <span><img src={partner12} alt="" /></span>
+                  <span><img src={partnerImage(3)} alt="Client accompagné par Supra v3" width={40} height={40} loading="lazy" decoding="async" /></span>
+                  <span><img src={partnerImage(5)} alt="Marque accompagnée par Supra v3" width={40} height={40} loading="lazy" decoding="async" /></span>
+                  <span><img src={partnerImage(12)} alt="Projet réalisé avec Supra v3" width={40} height={40} loading="lazy" decoding="async" /></span>
                   <span>+</span>
                 </div>
                 <p><strong>4.9 / 5</strong> clients accompagnés</p>
@@ -1680,7 +1419,7 @@ function CtaSection() {
                 >
                   <span className="cta-booking__eyebrow">Prendre rendez-vous</span>
                   <div className="cta-booking__top">
-                    <h3>{monthLabel}</h3>
+                    <p className="cta-booking__month">{monthLabel}</p>
                     <div className="cta-booking__month-controls">
                       <button type="button" onClick={() => changeCalendarMonth(-1)} aria-label="Mois précédent">‹</button>
                       <button type="button" onClick={() => changeCalendarMonth(1)} aria-label="Mois suivant">›</button>
@@ -1750,7 +1489,7 @@ function CtaSection() {
                   </div>
                   <a
                     className="cta-booking__emergency"
-                    href="https://wa.me/33744208673?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
+                    href="https://wa.me/212728521896?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -1835,7 +1574,7 @@ function CtaSection() {
                     <input
                       name="phone"
                       type="tel"
-                      placeholder="+33 7 44 20 86 73"
+                      placeholder="+212 728-521896"
                       autoComplete="tel"
                       inputMode="tel"
                       minLength="8"
@@ -1933,171 +1672,28 @@ function CtaSection() {
   )
 }
 
-function SiteFooter() {
-  return (
-    <footer className="site-footer">
-      <div className="container">
-        <div className="site-footer__grid">
-          <div className="site-footer__brand">
-            <a href="/" className="site-footer__logo" aria-label="Supra v3 - Accueil">
-              <img src={logoImage} alt="Supra v3" />
-            </a>
-            <p className="site-footer__tagline">
-              Agence de communication 360° à Marrakech. Branding, sites web, applications et agents IA. Une équipe, de la stratégie au code.
-            </p>
-          </div>
-
-          <div className="site-footer__col">
-            <h4 className="site-footer__col-title">Navigation</h4>
-            <a href="/#works">Réalisations</a>
-            <a href="/#services">Services</a>
-            <a href="/#methode">Méthode</a>
-            <a href="/#segments">Pour qui</a>
-            <a href="/#faq">FAQ</a>
-          </div>
-
-          <div className="site-footer__col">
-            <h4 className="site-footer__col-title">Services</h4>
-            <a href="/branding-marrakech">Stratégie de marque</a>
-            <a href="/creation-site-web-marrakech">Création site web Marrakech</a>
-            <a href="/application-mobile-marrakech">Applications mobiles</a>
-            <a href="/automatisation-ia-marrakech">Automatisation IA</a>
-          </div>
-
-          <div className="site-footer__col">
-            <h4 className="site-footer__col-title">Contact</h4>
-            <a href="/contact">contact@suprav3.com</a>
-            <a href="https://wa.me/33744208673">+33 7 44 20 86 73</a>
-            <address style={{fontStyle:'normal'}}>Guéliz, Marrakech 40000, Maroc</address>
-          </div>
-        </div>
-
-        <div className="site-footer__bottom">
-          <span>© 2026 Supra v3 — Agence de communication 360</span>
-          <span>Conçu &amp; codé en interne</span>
-        </div>
-      </div>
-    </footer>
-  )
-}
-
-function WhatsappFab() {
-  return (
-    <motion.a
-      href="https://wa.me/33744208673"
-      className="whatsapp-fab"
-      aria-label="Contacter Supra v sur WhatsApp"
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 1.5, type: 'spring', stiffness: 200, damping: 15 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-      </svg>
-    </motion.a>
-  )
-}
-
-function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
-  return (
-    <header className={`site-nav ${className} ${scrolled ? 'site-nav--scrolled' : ''}`}>
-      <div className={`site-header__bar ${scrolled ? 'site-header__bar--scrolled' : ''}`}>
-        <nav className="nav" aria-label="Navigation principale">
-          <a href="/" className="nav__logo" aria-label="Supra v3 - Accueil">
-            <img src={logoImage} alt="Supra v3" />
-          </a>
-          <ul className="nav__links">
-            <li>
-              <a href="/#works" className="nav__link">
-                Réalisations
-              </a>
-            </li>
-            <li>
-              <a href="/#services" className="nav__link">
-                Services
-              </a>
-            </li>
-            <li>
-              <a href="/#about" className="nav__link">
-                L'agence
-              </a>
-            </li>
-            <li>
-              <a href="/#faq" className="nav__link">
-                FAQ
-              </a>
-            </li>
-          </ul>
-          <span className="nav__separator" aria-hidden="true" />
-          <a href="/devis-gratuit" className="btn btn--primary nav__cta">
-            Parlons de votre projet →
-          </a>
-          <button
-            type="button"
-            className={`nav__hamburger ${navOpen ? 'is-open' : ''}`}
-            aria-expanded={navOpen}
-            aria-controls="mobile-nav"
-            aria-label={navOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-            onClick={() => setNavOpen((open) => !open)}
-          >
-            <span className="nav__hamburger-line nav__hamburger-line--top" />
-            <span className="nav__hamburger-line nav__hamburger-line--bottom" />
-          </button>
-        </nav>
-      </div>
-
-      <div
-        id="mobile-nav"
-        className={`nav__mobile-panel ${navOpen ? 'is-open' : ''}`}
-        aria-hidden={!navOpen}
-      >
-        <ul className="nav__mobile-links">
-          <li>
-            <a href="/#works" onClick={() => setNavOpen(false)}>
-              Réalisations
-            </a>
-          </li>
-          <li>
-            <a href="/#services" onClick={() => setNavOpen(false)}>
-              Services
-            </a>
-          </li>
-          <li>
-            <a href="/#about" onClick={() => setNavOpen(false)}>
-              L'agence
-            </a>
-          </li>
-          <li>
-            <a href="/#faq" onClick={() => setNavOpen(false)}>
-              FAQ
-            </a>
-          </li>
-        </ul>
-        <span className="nav__mobile-separator" aria-hidden="true" />
-        <a href="/devis-gratuit" className="btn btn--primary nav__mobile-cta" onClick={() => setNavOpen(false)}>
-          Parlons de votre projet →
-        </a>
-      </div>
-    </header>
-  )
-}
-
-function MediaVideoCard({ videoSrc, index }) {
-  const [isMobileVideo, setIsMobileVideo] = useState(() => (
-    typeof window === 'undefined' ? false : window.matchMedia('(max-width: 768px)').matches
-  ))
+function MediaVideoCard({ item, onOpen }) {
+  const videoRef = useRef(null)
+  const finePointer = useFinePointer()
+  const [hovered, setHovered] = useState(false)
+  const videoSrc = item.videoSrc || item.video
+  const showPreviewVideo = Boolean(videoSrc && finePointer && hovered)
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)')
-    const updateMobileVideo = () => setIsMobileVideo(mediaQuery.matches)
+    const el = videoRef.current
+    if (!el || !showPreviewVideo) return
+    const play = el.play()
+    if (play?.catch) play.catch(() => {})
+    return () => {
+      el.pause()
+    }
+  }, [showPreviewVideo])
 
-    updateMobileVideo()
-    mediaQuery.addEventListener('change', updateMobileVideo)
-
-    return () => mediaQuery.removeEventListener('change', updateMobileVideo)
-  }, [])
+  const openModal = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    onOpen(item)
+  }
 
   return (
     <motion.article
@@ -2108,23 +1704,53 @@ function MediaVideoCard({ videoSrc, index }) {
         boxShadow: "0 20px 60px rgba(17, 17, 17, 0.12), 0 8px 24px rgba(17, 17, 17, 0.08)"
       }}
       transition={HOVER_TRANSITION}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <LazyAutoVideo
-        className="video-card"
-        src={videoSrc}
-        preload="metadata"
-        rootMargin="1400px 0px"
-        threshold={0.01}
-        eager={isMobileVideo && index < 3}
-        ariaLabel="Réalisation vidéo agence de communication Marrakech"
-      />
+      <button
+        type="button"
+        className="media-clouds__card-trigger"
+        onClick={openModal}
+        aria-label={item.ariaLabel || 'Lire la vidéo'}
+      >
+        {showPreviewVideo ? (
+          <video
+            ref={videoRef}
+            className="video-card"
+            src={videoSrc}
+            poster={item.poster || undefined}
+            muted
+            loop
+            playsInline
+            preload="none"
+            tabIndex={-1}
+            aria-hidden="true"
+          />
+        ) : item.poster ? (
+          <img
+            className="video-card"
+            src={item.poster}
+            alt=""
+            width={360}
+            height={640}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : null}
+        <span className="media-clouds__play" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5.14v14.72a1 1 0 0 0 1.52.85l11.02-7.36a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z" />
+          </svg>
+        </span>
+      </button>
     </motion.article>
   )
 }
 
-function MediaCloudsSection({ videos }) {
+function MediaCloudsSection({ items }) {
   const sectionRef = useRef(null)
   const [shouldLoadVideos, setShouldLoadVideos] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(null)
 
   useEffect(() => {
     if (shouldLoadVideos) return undefined
@@ -2132,13 +1758,18 @@ function MediaCloudsSection({ videos }) {
     const section = sectionRef.current
     if (!section) return undefined
 
+    const rootMargin =
+      typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+        ? '120px 0px'
+        : '200px 0px'
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
         setShouldLoadVideos(true)
         observer.disconnect()
       },
-      { rootMargin: '900px 0px' }
+      { rootMargin }
     )
 
     observer.observe(section)
@@ -2155,204 +1786,47 @@ function MediaCloudsSection({ videos }) {
         whileInView="visible"
         viewport={revealViewport}
       >
-        <motion.p variants={fadeUpChild} className="label">01 — Réalisations</motion.p>
+        <motion.p variants={fadeUpChild} className="label">01 — Production vidéo</motion.p>
         <motion.h2 variants={fadeUpChild} className="heading-2">
-          Du brand book à la campagne, les projets qui ont tourné en 2025.
+          Production vidéo pour marques ambitieuses
         </motion.h2>
         <motion.p variants={fadeUpChild} className="media-clouds__lead">
-          Six extraits de productions récentes — identités, films de marque, contenus publicitaires diffusés sur Meta et TikTok.
+          Des vidéos pensées pour capter l&apos;attention, raconter votre marque et transformer vos
+          contenus en vrais leviers de visibilité.
+        </motion.p>
+        <motion.p variants={fadeUpChild} style={{ marginTop: 20 }}>
+          <a href="/realisations" className="btn btn--secondary">
+            Découvrir nos réalisations vidéo →
+          </a>
         </motion.p>
       </motion.div>
 
       <div className="media-clouds__frame">
         <div className="media-clouds__viewport">
           <div className="media-clouds__track">
-            {shouldLoadVideos && videos.concat(videos).map((videoSrc, index) => (
-              <MediaVideoCard
-                key={`${videoSrc}-${index}`}
-                videoSrc={videoSrc}
-                index={index}
-              />
-            ))}
+            {shouldLoadVideos &&
+              items.concat(items).map((item, index) => (
+                <MediaVideoCard
+                  key={`${item.id}-${index}`}
+                  item={item}
+                  onOpen={() => setActiveIndex(index % items.length)}
+                />
+              ))}
           </div>
         </div>
       </div>
-    </section>
-  )
-}
-
-function WorkProjectCard({ project, shouldLoadVideo }) {
-  return (
-    <motion.article
-      className="work-card"
-      variants={fadeUpChild}
-      whileHover={{ y: -6 }}
-      transition={HOVER_TRANSITION}
-    >
-      <div className="work-card__media">
-        <video
-          className="work-card__video"
-          src={shouldLoadVideo ? project.video : undefined}
-          muted
-          loop
-          preload={project.num <= '03' ? 'metadata' : 'none'}
-          playsInline
-          controls
-          aria-label={`${project.category} pour ${project.client}`}
-        />
-      </div>
-      <div className="work-card__body">
-        <div className="work-card__topline">
-          <span>Projet {project.num}</span>
-          <span>{project.category}</span>
-        </div>
-        <h3>{project.category}</h3>
-        <dl className="work-card__details">
-          <div>
-            <dt>Client</dt>
-            <dd>{project.client}</dd>
-          </div>
-          <div>
-            <dt>Mission</dt>
-            <dd>{project.mission}</dd>
-          </div>
-          <div>
-            <dt>Ce qui a changé</dt>
-            <dd>{project.result}</dd>
-          </div>
-        </dl>
-        <p className="work-card__tag">{project.tag}</p>
-      </div>
-    </motion.article>
-  )
-}
-
-function WorkProjectRow({ project, shouldLoadVideo }) {
-  return (
-    <motion.article className="work-row" variants={fadeUpChild}>
-      <h3 className="work-row__title">Projet {project.num} — {project.category}</h3>
-
-      <div className="work-row__media-wrap">
-        <video
-          className="work-row__video"
-          src={shouldLoadVideo ? project.video : undefined}
-          muted
-          loop
-          preload={project.num <= '03' ? 'metadata' : 'none'}
-          playsInline
-          controls
-          aria-label={`${project.category} pour ${project.client}`}
-        />
-        <div className="work-row__chips" aria-label={`Tags ${project.category}`}>
-          {project.tag.split(' · ').map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-      </div>
-
-      <div className="work-row__copy">
-        <p className="work-row__client">{project.client}</p>
-        <p className="work-row__mission">{project.mission}</p>
-        <dl className="work-row__stats">
-          <div>
-            <dt>Client</dt>
-            <dd>{project.client}</dd>
-          </div>
-          <div>
-            <dt>Ce qui a changé</dt>
-            <dd>{project.result}</dd>
-          </div>
-        </dl>
-      </div>
-    </motion.article>
-  )
-}
-
-function WorksPage() {
-  return (
-    <div id="works">
-      <div className="works-page">
-        <ScrollMorphHero />
-      </div>
-      <WebsiteProjectsSection />
-    </div>
-  )
-}
-
-function WebsiteProjectsSection() {
-  return (
-    <section className="website-projects-section" aria-label="Sites web réalisés">
-      <div className="website-projects-section__grid-bg" aria-hidden="true" />
-      <div className="website-projects-section__inner">
-        <div className="website-projects-section__pill">
-          <span className="website-projects-section__pill-avatar">
-            <img src={partner1} alt="" />
-          </span>
-          <strong>Supra v3</strong>
-          <small aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </small>
-        </div>
-
-        <div className="website-projects-section__head">
-          <p>Réalisations</p>
-          <h2>
-            Sites <span>web</span>
-          </h2>
-        </div>
-
-        <div className="website-projects-grid">
-          {WEBSITE_PROJECTS.map((project) => {
-            const linkHref = project.url || '/#contact'
-            const linkTarget = project.url ? '_blank' : undefined
-            const linkRel = project.url ? 'noreferrer noopener' : undefined
-            return (
-              <article className="website-project-card" key={project.name}>
-                <a
-                  href={linkHref}
-                  target={linkTarget}
-                  rel={linkRel}
-                  className="website-project-card__media"
-                  aria-label={`Voir le projet ${project.name}`}
-                >
-                  {project.video ? (
-                    <LazyAutoVideo
-                      src={project.video}
-                      poster={project.poster}
-                      className="website-project-card__video"
-                      preload="metadata"
-                      rootMargin="560px 0px"
-                      threshold={0.2}
-                      ariaLabel={`Aperçu vidéo du projet ${project.name}`}
-                    />
-                  ) : (
-                    <img
-                      src={project.poster}
-                      alt={`Capture d'écran du site ${project.name}`}
-                      className="website-project-card__video website-project-card__screenshot"
-                      loading="lazy"
-                    />
-                  )}
-                  <span className="website-project-card__brand">Supra v3</span>
-                </a>
-
-                <div className="website-project-card__bottom">
-                  <div>
-                    <h3>{project.name}</h3>
-                    <p>{project.type}</p>
-                  </div>
-                  <a href={linkHref} target={linkTarget} rel={linkRel}>
-                    Voir le projet
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </article>
-            )
-          })}
-        </div>
-      </div>
+      {activeIndex !== null ? (
+        <Suspense fallback={null}>
+          <VideoReelModal
+            item={items[activeIndex]}
+            items={items}
+            activeIndex={activeIndex}
+            onNext={() => setActiveIndex((current) => (current + 1) % items.length)}
+            onPrev={() => setActiveIndex((current) => (current - 1 + items.length) % items.length)}
+            onClose={() => setActiveIndex(null)}
+          />
+        </Suspense>
+      ) : null}
     </section>
   )
 }
@@ -2487,17 +1961,9 @@ function StorySection() {
   )
 }
 
-const DEFAULT_SEO = {
-  title: 'Agence de communication 360 à Marrakech | Supra v3',
-  description:
-    'Supra v3 accompagne les marques à Marrakech avec branding, sites web, contenu, marketing digital, production vidéo et systèmes d’automatisation.',
-  canonical: 'https://suprav3.com/',
-}
-
-const WORKS_SEO = {
-  title: 'Réalisations Supra v3 | Projets de communication à Marrakech',
-  description: 'Découvrez les réalisations de Supra v3, agence de communication à Marrakech : identités de marque, sites web, campagnes Meta Ads, applications et automatisation IA.',
-  canonical: 'https://suprav3.com/works',
+const HOME_SEO = {
+  ...SEO_PAGES.home,
+  canonical: 'https://www.suprav3.com/',
 }
 
 function setMetaContent(selector, content) {
@@ -2505,44 +1971,27 @@ function setMetaContent(selector, content) {
   if (element) element.setAttribute('content', content)
 }
 
-function useCurrentPath() {
-  const [path, setPath] = useState(() => window.location.pathname)
-
-  useEffect(() => {
-    const handleNavigation = () => setPath(window.location.pathname)
-    window.addEventListener('popstate', handleNavigation)
-
-    return () => window.removeEventListener('popstate', handleNavigation)
-  }, [])
-
-  return path
-}
-
 /* ============================================================
    MAIN APP
    ============================================================ */
 function App() {
-  const currentPath = useCurrentPath()
-  const normalizedPath = currentPath.replace(/\/+$/, '') || '/'
-  const isWorksPage = normalizedPath === '/works'
   const [scrolled, setScrolled] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
   const scrolledRef = useRef(false)
   const navOpenRef = useRef(false)
   const { scrollY } = useScroll()
-  const seo = isWorksPage ? WORKS_SEO : DEFAULT_SEO
 
   useEffect(() => {
-    document.title = seo.title
-    setMetaContent('meta[name="description"]', seo.description)
-    setMetaContent('meta[property="og:title"]', seo.title)
-    setMetaContent('meta[property="og:description"]', seo.description)
-    setMetaContent('meta[name="twitter:title"]', seo.title)
-    setMetaContent('meta[name="twitter:description"]', seo.description)
+    document.title = HOME_SEO.title
+    setMetaContent('meta[name="description"]', HOME_SEO.description)
+    setMetaContent('meta[property="og:title"]', HOME_SEO.title)
+    setMetaContent('meta[property="og:description"]', HOME_SEO.description)
+    setMetaContent('meta[name="twitter:title"]', HOME_SEO.title)
+    setMetaContent('meta[name="twitter:description"]', HOME_SEO.description)
 
     const canonical = document.head.querySelector('link[rel="canonical"]')
-    if (canonical) canonical.setAttribute('href', seo.canonical)
-  }, [seo])
+    if (canonical) canonical.setAttribute('href', HOME_SEO.canonical)
+  }, [])
 
   useEffect(() => {
     navOpenRef.current = navOpen
@@ -2577,26 +2026,7 @@ function App() {
     }
   })
 
-  if (isWorksPage) {
-    return (
-      <div className="app app--works">
-        <TopNavbar />
-        <main className="page-content works-page-content">
-          <SiteHeader
-            scrolled={scrolled}
-            navOpen={navOpen}
-            setNavOpen={setNavOpen}
-            className="works-site-nav"
-          />
-          <div className="works-only">
-            <WorksPage />
-          </div>
-        </main>
-      </div>
-    )
-  }
-
-  const videos = [vid1, vid2, vid3, vid4, vid5, vid6]
+  const homepageVideos = HOMEPAGE_VIDEO_ITEMS
 
   return (
     <div className="app">
@@ -2616,13 +2046,13 @@ function App() {
             <div className="trust-bar__inner">
               <div className="trust-bar__avatars" aria-hidden="true">
                 <div className="trust-bar__avatar">
-                  <img src={partner3} alt="" />
+                  <img src={partnerImage(3)} alt="Client accompagné par Supra v3" width={32} height={32} decoding="async" />
                 </div>
                 <div className="trust-bar__avatar">
-                  <img src={partner5} alt="" />
+                  <img src={partnerImage(5)} alt="Marque accompagnée par Supra v3" width={32} height={32} decoding="async" />
                 </div>
                 <div className="trust-bar__avatar">
-                  <img src={partner12} alt="" />
+                  <img src={partnerImage(12)} alt="Projet réalisé avec Supra v3" width={32} height={32} decoding="async" />
                 </div>
               </div>
               <p className="trust-bar__text">
@@ -2631,74 +2061,83 @@ function App() {
             </div>
           </div>
 
-          <h1 className="heading-hero hero__title">
-            <AnimatedHeroLine
-              start={0.1}
-              words={[
+          <AnimatedText
+            as="h1"
+            className="heading-hero hero__title"
+            lineClassName="hero__title-line"
+            lines={[
+              [
                 { text: 'Agence' },
                 { text: 'de' },
                 { text: 'communication' },
                 { text: '360°', className: 'text-accent hero__number' },
-              ]}
-            />
-            <AnimatedHeroLine
-              start={0.32}
-              words={[
+              ],
+              [
                 { text: 'à' },
                 { text: 'Marrakech' },
                 { text: 'pour', className: 'hero__title-muted' },
                 { text: 'faire' },
                 { text: 'grandir' },
-              ]}
-            />
-            <AnimatedHeroLine
-              start={0.62}
-              words={[
+              ],
+              [
                 { text: 'votre', className: 'hero__title-muted' },
                 { text: 'marque', className: 'text-accent' },
-              ]}
-            />
-          </h1>
+              ],
+            ]}
+            animateBy="words"
+            direction="top"
+            delay={90}
+            stepDuration={0.35}
+            instant
+          />
 
-          <p className="text-body hero__subtitle">
-            Supra v3 aide les marques ambitieuses à Marrakech à construire une image forte, un site performant et une communication qui génère des demandes concrètes — branding, contenus, web, marketing digital et automatisation IA.
-          </p>
+          <AnimatedText
+            as="p"
+            className="text-body hero__subtitle"
+            text="Supra v3 aide les marques ambitieuses à Marrakech à construire une image forte, un site performant et une communication qui génère des demandes concrètes — branding, contenus, web, marketing digital et automatisation IA."
+            animateBy="words"
+            direction="top"
+            delay={80}
+            stepDuration={0.32}
+            instant
+          />
 
           <div className="hero__cta">
-            <a href="/#services" className="btn btn--primary">
+            <a href="/services" className="btn btn--primary">
               Découvrir nos services
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
-            <HoverButtonLink href="/devis-gratuit" className="btn btn--secondary hero-hover-button">
+            <HoverButtonLink href="/contact" className="btn btn--secondary hero-hover-button">
               Demander un diagnostic
             </HoverButtonLink>
           </div>
         </section>
 
-        {/* ========== SECTORS BAR ========== */}
-        <SectorsMarquee />
+        {/* Bandeau vitrine sites web (remplace l’ancien ticker secteurs noir) */}
+        <HomeWebsiteShowcase />
 
         {/* ========== COLLABORATEURS ========== */}
         <CollaboratorsSection />
 
         {/* ========== RÉALISATIONS (existant) ========== */}
-        <MediaCloudsSection videos={videos} />
-
-        {/* ========== STORY ========== */}
-        <StorySection />
+        <MediaCloudsSection items={homepageVideos} />
 
         {/* ========== NEW SECTIONS ========== */}
         <ServicesSection />
+        <TargetingSection />
         <MethodeSection />
+
+        {/* ========== STORY (après Process / Méthode) ========== */}
+        <StorySection />
+
         <SegmentsSection />
         <FaqSection />
         <CtaSection />
       </main>
 
       <SiteFooter />
-      <WhatsappFab />
     </div>
   )
 }

@@ -1,6 +1,12 @@
 Options -Indexes
 DirectoryIndex index.html
 
+AddDefaultCharset UTF-8
+
+<IfModule mod_mime.c>
+  AddCharset UTF-8 .html .css .js .json .xml .txt .svg
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -10,30 +16,89 @@ DirectoryIndex index.html
   RewriteCond %{HTTP_HOST} !^www\.suprav3\.com$ [NC]
   RewriteRule ^ https://www.suprav3.com%{REQUEST_URI} [R=301,L]
 
-  # 2. Redirections 301 — alias → URL canonique
-  RewriteRule ^automatisation-ia/?$ /automatisation-ia-marrakech [R=301,L]
-  RewriteRule ^community-management-marrakech/?$ /gestion-reseaux-sociaux-marrakech [R=301,L]
-  RewriteRule ^production-contenu/?$ /agence-video-marrakech [R=301,L]
-  RewriteRule ^agence-web-marrakech/?$ /creation-site-web-marrakech [R=301,L]
-  RewriteRule ^redaction-web-seo/?$ /referencement-seo-marrakech [R=301,L]
-  RewriteRule ^audit-seo/?$ /referencement-seo-marrakech [R=301,L]
+  # 2. Redirections 301 — anciennes URLs (ne pas rediriger /services)
+  RewriteRule ^portfolio/?$ /realisations [R=301,L]
+  RewriteRule ^works/?$ /realisations [R=301,L]
+  RewriteRule ^devis-gratuit/?$ /contact [R=301,L]
+  RewriteRule ^a-propos/?$ / [R=301,L]
+
+  RewriteRule ^blog/combien-coute-site-web-marrakech/?$ /blog [R=301,L]
+  RewriteRule ^blog/comment-choisir-agence-communication/?$ /blog [R=301,L]
+  RewriteRule ^blog/seo-local-guide-marrakech/?$ /blog [R=301,L]
+  RewriteRule ^blog/ia-communication-entreprise/?$ /blog [R=301,L]
+  RewriteRule ^blog/creation-site-web-marrakech/?$ /blog [R=301,L]
+  RewriteRule ^blog/agence-communication-marrakech/?$ /blog [R=301,L]
+  RewriteRule ^blog/production-video-marque/?$ /blog [R=301,L]
+  RewriteRule ^blog/seo-local-marrakech/?$ /blog [R=301,L]
+  RewriteRule ^blog/combien-coute-site-web-maroc/?$ /blog [R=301,L]
+
+  RewriteRule ^agence-communication-marrakech/?$ / [R=301,L]
+  RewriteRule ^creation-site-web-marrakech/?$ / [R=301,L]
+  RewriteRule ^site-vitrine-marrakech/?$ / [R=301,L]
+  RewriteRule ^site-ecommerce-marrakech/?$ / [R=301,L]
+  RewriteRule ^refonte-site-web/?$ / [R=301,L]
+  RewriteRule ^application-mobile-marrakech/?$ / [R=301,L]
+  RewriteRule ^application-saas/?$ / [R=301,L]
+  RewriteRule ^agence-web-marrakech/?$ / [R=301,L]
+  RewriteRule ^branding-marrakech/?$ / [R=301,L]
+  RewriteRule ^creation-logo-marrakech/?$ / [R=301,L]
+  RewriteRule ^charte-graphique/?$ / [R=301,L]
+  RewriteRule ^agence-video-marrakech/?$ / [R=301,L]
+  RewriteRule ^production-contenu/?$ / [R=301,L]
+  RewriteRule ^publicite-marrakech/?$ / [R=301,L]
+  RewriteRule ^gestion-reseaux-sociaux-marrakech/?$ / [R=301,L]
+  RewriteRule ^community-management-marrakech/?$ / [R=301,L]
+  RewriteRule ^marketing-digital-marrakech/?$ / [R=301,L]
+  RewriteRule ^referencement-seo-marrakech/?$ / [R=301,L]
+  RewriteRule ^seo-local-marrakech/?$ / [R=301,L]
+  RewriteRule ^audit-seo/?$ / [R=301,L]
+  RewriteRule ^redaction-web-seo/?$ / [R=301,L]
+  RewriteRule ^automatisation-ia-marrakech/?$ / [R=301,L]
+  RewriteRule ^automatisation-ia/?$ / [R=301,L]
+  RewriteRule ^chatbot-ia-marrakech/?$ / [R=301,L]
+  RewriteRule ^agence-communication-immobilier-marrakech/?$ / [R=301,L]
+  RewriteRule ^agence-communication-hotel-marrakech/?$ / [R=301,L]
+  RewriteRule ^agence-communication-restaurant-marrakech/?$ / [R=301,L]
+  RewriteRule ^personal-branding-marrakech/?$ / [R=301,L]
 
   # 3. API
   RewriteRule ^api/contact/?$ /api/contact.php [L,QSA]
 
-  # 4. Fichiers et dossiers existants (HTML pré-rendu)
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
+  # 4. Fichiers statiques directs
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # 5. Fallback SPA React Router
+  # 5. Routes pré-rendues : /realisations → /realisations/index.html
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+?)/?$ $1/index.html [L]
+
+  # 6. Fallback SPA React Router
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ /index.html [L]
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 year"
 </IfModule>
 
 <IfModule mod_headers.c>
   Header always unset X-Robots-Tag
   <FilesMatch "\.(html?)$">
     Header always set X-Robots-Tag "all"
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(js|css|webp|png|jpe?g|svg|woff2?|mp4)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
