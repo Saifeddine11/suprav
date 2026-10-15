@@ -1,7 +1,10 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import App from './App.jsx'
+import HomeV3 from './pages/home-v3/HomeV3.jsx'
 import PageLayout from './layouts/PageLayout.jsx'
+
+// Ancienne page d'accueil, conservée pour revenir en arrière si besoin :
+// remplacer <HomeV3 /> par <App /> ci-dessous et réimporter './App.jsx'.
 
 const Services = lazy(() => import('./pages/Services.jsx'))
 const RealisationsHub = lazy(() => import('./pages/RealisationsHub.jsx'))
@@ -24,7 +27,7 @@ const wrap = (Component) => (
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<HomeV3 />} />
       <Route path="/services" element={wrap(Services)} />
       <Route path="/realisations" element={wrap(RealisationsHub)} />
       <Route path="/realisations/websites" element={wrap(RealisationsWebsites)} />
