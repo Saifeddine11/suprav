@@ -29,7 +29,7 @@ export default function MentionsLegales() {
       ]}
       title="Mentions légales"
       subtitle="Informations relatives au site suprav3.com"
-      intro="Le site suprav3.com est édité par Supra v3, agence de communication, création web, marketing digital et automatisation IA. Pour toute demande relative au site, à un contenu publié ou à une collaboration, vous pouvez nous contacter à l'adresse contact@suprav3.com ou via WhatsApp au +212 728-521896."
+      intro="Le site suprav3.com est édité par Supra v3, agence de communication, création web, marketing digital et automatisation IA. Pour toute demande relative au site, à un contenu publié ou à une collaboration, vous pouvez nous contacter à l'adresse contact@suprav3.com ou via WhatsApp au +212 7 86 44 95 72."
       services={[
         {
           title: 'Éditeur du site',

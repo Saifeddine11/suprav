@@ -1489,7 +1489,7 @@ function CtaSection() {
                   </div>
                   <a
                     className="cta-booking__emergency"
-                    href="https://wa.me/212728521896?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
+                    href="https://wa.me/212786449572?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -1574,7 +1574,7 @@ function CtaSection() {
                     <input
                       name="phone"
                       type="tel"
-                      placeholder="+212 728-521896"
+                      placeholder="+212 7 86 44 95 72"
                       autoComplete="tel"
                       inputMode="tel"
                       minLength="8"
