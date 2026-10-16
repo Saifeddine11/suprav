@@ -933,3 +933,16 @@
 .v3 .k5 b{font:600 26px/1 var(--display);letter-spacing:-.04em}
 .v3 .k5 small{font:500 8px/1 var(--body);color:#a9a39d;letter-spacing:.08em;text-transform:uppercase}
 @media (max-width:420px){.v3 .b1{font-size:12px;padding-top:18px}.v3 .b3{font-size:9.5px;padding-top:18px}.v3 .b3 b{font-size:10px}.v3 .k4{font-size:30px}.v3 .k5 b{font-size:20px}}
+
+/* refonte d'identité : exemple Supra v3 */
+.v3 .av2{background:var(--ac);display:grid;place-items:center}
+.v3 .av2 i{width:56%;height:56%;background-size:auto 100%;background-repeat:no-repeat;background-position:100% 50%;filter:brightness(0) invert(1)}
+.v3 .b2{background:#fff;color:#2f6fde;font:700 17px/1 "Comic Sans MS","Comic Neue","Chalkboard SE",cursive;text-shadow:0 0 6px #7afcff,2px 2px 0 #ff4fd8;border:2px dashed #ffb800}
+.v3 .b2 small{display:block;margin-top:4px;font:italic 400 10px/1 "Times New Roman",Times,serif;color:#8b5a2b;text-shadow:none}
+.v3 .k6{background:repeating-radial-gradient(circle at 50% 115%,rgba(255,255,255,.14) 0 1px,transparent 1.5px 11px),var(--ac)}
+.v3 .k6 i{width:80%;aspect-ratio:420/59;background-size:contain;background-repeat:no-repeat;background-position:center;filter:brightness(0) invert(1)}
+.v3 .k7{background:#F1ECE5}
+.v3 .k7 i{width:50%;aspect-ratio:1;background-size:auto 100%;background-repeat:no-repeat;background-position:100% 50%}
+.v3 .k3s{gap:5px}
+.v3 .sw3{display:flex;gap:4px}.sw3 i{width:12px;height:12px;border-radius:50%;background:var(--ac)}.sw3 i:nth-child(2){background:#0A0A0A}.sw3 i:nth-child(3){background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+@media (max-width:420px){.v3 .b2{font-size:13px}.v3 .b2 small{font-size:8.5px}.v3 .sw3 i{width:9px;height:9px}.v3 .k3s small{font-size:7.5px}}
