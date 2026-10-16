@@ -1,9 +1,11 @@
-/* Section « En chiffres » : uniquement des chiffres vérifiables (note Google, logos clients, villes, délai de lancement). */
+import { BRAND } from '../data/icons.js'
+
+/* Section « En chiffres » : note Google, logos clients, villes, budget Meta Ads géré chaque mois (chiffre donné par Supra v3). */
 export default function Chiffres() {
   return (
     <section className="sec dark wrap vstats" id="chiffres">
       <div className="c">
-        <div className="st-hd" data-r><span className="nb"><b>En chiffres</b>Ce que vous pouvez vérifier</span><h2 className="sr">Supra v3 en chiffres</h2></div>
+        <div className="st-hd" data-r><span className="nb"><b>En chiffres</b>Nos repères</span><h2 className="sr">Supra v3 en chiffres</h2></div>
         <div className="stg" id="stg">
           <article className="sc4" style={{ "--i": "0" }}>
             <div className="num" data-to="5,0"><span className="od" aria-hidden="true">5,0</span><span className="sx">/5</span><span className="sr">5,0 sur 5</span></div>
@@ -26,9 +28,9 @@ export default function Chiffres() {
               </svg></div>
           </article>
           <article className="sc4" style={{ "--i": "3" }}>
-            <div className="num" data-to={5}><span className="od" aria-hidden="true">5</span><span className="sx">jours</span><span className="sr">5 jours</span></div>
-            <p className="lbl">Pour qu'une campagne publicitaire soit en ligne.</p>
-            <div className="viz vz-days"><span className="dbar"><i style={{ "--k": "0" }}><em>J1</em></i><i style={{ "--k": "1" }}><em>J2</em></i><i style={{ "--k": "2" }}><em>J3</em></i><i style={{ "--k": "3" }}><em>J4</em></i><i style={{ "--k": "4" }}><em>J5</em></i></span><span className="live"><u />En ligne</span></div>
+            <div className="num" data-to="150"><span className="od" aria-hidden="true">150</span><span className="sx">K€</span><span className="sr">150 000 €</span></div>
+            <p className="lbl">Gérés chaque mois en Meta Ads pour nos clients, du Maroc à Miami.</p>
+            <div className="viz vz-ads"><svg className="spend" viewBox="0 0 112 48" aria-hidden="true"><rect className="b" style={{ "--k": "0" }} x="1" y="36" width="10" height="12" rx="2" /><rect className="b" style={{ "--k": "1" }} x="17" y="30" width="10" height="18" rx="2" /><rect className="b" style={{ "--k": "2" }} x="33" y="33" width="10" height="15" rx="2" /><rect className="b" style={{ "--k": "3" }} x="49" y="25" width="10" height="23" rx="2" /><rect className="b" style={{ "--k": "4" }} x="65" y="20" width="10" height="28" rx="2" /><rect className="b" style={{ "--k": "5" }} x="81" y="13" width="10" height="35" rx="2" /><rect className="b hi" style={{ "--k": "6" }} x="97" y="6" width="10" height="42" rx="2" /><path className="ln" d="M6 33 L22 27 L38 30 L54 22 L70 17 L86 10 L102 3" /><circle className="endp" cx="102" cy="3" r="3" /><circle className="end" cx="102" cy="3" r="2.6" /></svg><span className="mchip"><span className="gtag"><span className="ap ap-meta" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={BRAND.meta.d} /></svg></span>Meta Ads</span><span className="mpl"><span className="ap ap-facebook" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={BRAND.facebook.d} /></svg></span><span className="ap ap-instagram" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d={BRAND.instagram.d} /></svg></span>Facebook · Instagram</span></span></div>
           </article>
         </div>
       </div>
