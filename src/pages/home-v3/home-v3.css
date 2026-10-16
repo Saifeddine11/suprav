@@ -802,6 +802,7 @@
 .v3 .a-vid-legacy-social-media{background-image:url(/media/videos/posters/legacy-social-media.webp)}
 .v3 .a-vid-sbr-beauty-ad{background-image:url(/media/videos/posters/sbr-beauty-ad.webp)}
 .v3 .a-vid-scultbody-video-01{background-image:url(/media/videos/posters/scultbody-video-01.webp)}
+.v3 .a-vid-faissal-ads-1{background-image:url(/media/videos/posters/faissal-ads-1.webp)}
 .v3 .a-vid-yasmine-ads{background-image:url(/media/videos/posters/yasmine-ads.webp)}
 
 /* SEO : le H1 porte le mot-clé principal en surtitre */
@@ -945,4 +946,6 @@
 .v3 .k7 i{width:50%;aspect-ratio:1;background-size:auto 100%;background-repeat:no-repeat;background-position:100% 50%}
 .v3 .k3s{gap:5px}
 .v3 .sw3{display:flex;gap:4px}.sw3 i{width:12px;height:12px;border-radius:50%;background:var(--ac)}.sw3 i:nth-child(2){background:#0A0A0A}.sw3 i:nth-child(3){background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.v3 .aft .ph .rv{position:absolute;top:7px;right:7px;z-index:1;width:15px;height:15px;fill:#fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
+.v3 .aft .ph.vy{background-position:center 42%}.aft .ph.vf{background-position:center 38%}
 @media (max-width:420px){.v3 .b2{font-size:13px}.v3 .b2 small{font-size:8.5px}.v3 .sw3 i{width:9px;height:9px}.v3 .k3s small{font-size:7.5px}}
