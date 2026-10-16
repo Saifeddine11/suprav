@@ -920,3 +920,16 @@
 .v3 .whint{display:none}
 @media (max-width:760px){.v3 .wlede{margin-top:-40px;font-size:15px}.v3 .wgal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:calc(var(--gl) * -1) calc(var(--gr) * -1);padding:4px var(--gr) 18px var(--gl);scroll-padding-inline:var(--gl);scrollbar-width:none;-webkit-overflow-scrolling:touch}.v3 .wgal::-webkit-scrollbar{display:none}.v3 .wrow,.v3 .wmore{display:contents}.v3 .wmore::after,.v3 .wbtn{display:none}.v3 .wmore .wrow{filter:none;opacity:1;transform:none;pointer-events:auto}.v3 .wcard{flex:0 0 84%;height:auto;aspect-ratio:4/3;scroll-snap-align:start;border-radius:18px}.v3 .whint{display:flex;align-items:center;gap:8px;margin:2px 0 0;font-size:13px;color:var(--tx-3,#8a837c)}.v3 .whint svg{width:16px;height:16px}}
 @media (prefers-reduced-motion:reduce){.v3 .wcard img,.v3 .wcard .wimg,.v3 .wcard figcaption,.v3 .wmore,.v3 .wmore .wrow{transition:none}}
+
+/* refonte d'identité : visuels inventés */
+.v3 .b1{background:linear-gradient(135deg,#ff00a8,#ff7a00 55%,#ffe600);color:#fff;font:900 15px/1.05 "Arial Black",Impact,sans-serif;text-shadow:2px 2px 0 #7a00ff;padding:22px 6px 6px}
+.v3 .b3{background:#fff;color:#333;border:3px double #ff4fd8;font:11px/1.35 "Times New Roman",Times,serif;padding:22px 6px 6px}
+.v3 .b3 b{display:block;font:700 12px/1.15 Arial,Helvetica,sans-serif;color:#d40000;text-decoration:underline;margin-bottom:4px}
+.v3 .k4{background:repeating-radial-gradient(circle at 50% 115%,rgba(255,255,255,.16) 0 1px,transparent 1.5px 11px),var(--ac);color:#0d0d0d;font:700 40px/1 var(--display);letter-spacing:-.07em}
+.v3 .k4 em{font-style:normal;color:#fff}
+.v3 .k5{background:#141414;color:#fff;align-content:center}
+.v3 .k5>span{display:grid;gap:4px;justify-items:center}
+.v3 .k5 i{font-style:normal;color:var(--ac);font-size:10px;letter-spacing:1px}
+.v3 .k5 b{font:600 26px/1 var(--display);letter-spacing:-.04em}
+.v3 .k5 small{font:500 8px/1 var(--body);color:#a9a39d;letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:420px){.v3 .b1{font-size:12px;padding-top:18px}.v3 .b3{font-size:9.5px;padding-top:18px}.v3 .b3 b{font-size:10px}.v3 .k4{font-size:30px}.v3 .k5 b{font-size:20px}}
