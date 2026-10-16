@@ -99,10 +99,7 @@
 /* hero */
 .v3 .vhero{position:relative;isolation:isolate;overflow:hidden;padding-top:calc(env(safe-area-inset-top,0px) + 150px);padding-bottom:clamp(70px,8vw,120px)}
 .v3 .aur{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.v3 .aur .haze{position:absolute;left:-10%;right:-10%;bottom:-20%;height:75%;background:radial-gradient(60% 70% at 18% 100%,rgba(232,73,28,.55),transparent 70%),radial-gradient(50% 60% at 85% 100%,rgba(255,140,60,.35),transparent 70%);filter:blur(30px)}
-.v3 .beam{position:absolute;bottom:-10%;width:var(--w,90px);height:var(--h,70%);left:var(--x);background:linear-gradient(to top,rgba(255,120,60,var(--o,.7)),rgba(232,73,28,.25) 45%,transparent);filter:blur(var(--b,22px));transform-origin:bottom center;animation:v3-sway var(--t,9s) ease-in-out infinite alternate;opacity:.85;mix-blend-mode:screen}
 @keyframes v3-sway{from{transform:skewX(-6deg) scaleY(.92)}to{transform:skewX(7deg) scaleY(1.06)}}
-.v3 .aur .top{position:absolute;inset:0 0 auto 0;height:62%;background:linear-gradient(var(--ink) 30%,transparent)}
 .v3 .aur .grain{position:absolute;inset:0;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:overlay}
 .v3 .hc{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px}
 .v3 .hb{display:inline-flex;align-items:center;gap:10px;padding:4px 14px 4px 4px;border-radius:10px;border:1px solid var(--line-d2);background:rgba(255,255,255,.04);font-size:13px;color:#DAD5CF;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -568,10 +565,6 @@
 @media (max-width:900px){.v3 .faq{grid-template-columns:1fr}.v3 .faq .fl{position:static}}
 
 /* ===== light pass: most sections on white / mist, dark kept for écosystème, one tarif card, the final CTA card and the footer ===== */
-.v3 .vhero.light .aur .haze{background:radial-gradient(55% 65% at 15% 100%,rgba(232,73,28,.30),transparent 70%),radial-gradient(45% 55% at 88% 100%,rgba(255,150,80,.26),transparent 70%);filter:blur(40px)}
-.v3 .vhero.light .beam{mix-blend-mode:normal;opacity:.32;background:linear-gradient(to top,rgba(255,120,60,var(--o,.7)),rgba(232,73,28,.10) 45%,transparent)}
-.v3 .vhero.light .aur .top{background:linear-gradient(var(--paper) 38%,rgba(255,255,255,0))}
-.v3 .vhero.light .aur .grain{opacity:.05;mix-blend-mode:multiply}
 .v3 .vhero.light .hb{border-color:var(--line-l);background:#fff;color:#3b3833;box-shadow:0 8px 24px -16px rgba(0,0,0,.25)}
 .v3 .vhero.light .lede{color:var(--tx-2)}
 .v3 .vhero.light .plat{color:var(--tx-2)}
@@ -823,3 +816,6 @@
 .v3 .reel .rvid{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease;pointer-events:none}
 .v3 .reel .rvid.ready{opacity:1}
 .v3 .reel.on .rvid.ready~.play{opacity:0}
+/* hero : dégradé de couleurs animé (canvas basse résolution agrandi = flou doux) */
+.v3 .aur .mesh{position:absolute;inset:-3%;width:106%;height:106%;display:block;max-width:none}
+.v3 .aur .vig{position:absolute;inset:0;background:radial-gradient(62% 48% at 50% 36%,rgba(11,7,6,.62),rgba(11,7,6,.18) 70%,transparent 90%),linear-gradient(180deg,rgba(11,7,6,.7) 0%,rgba(11,7,6,0) 26%,rgba(11,7,6,0) 74%,var(--ink) 100%)}

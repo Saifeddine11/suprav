@@ -35,6 +35,44 @@ export default function initHomeV3(root) {
     t.scrollIntoView({ behavior: R ? 'auto' : 'smooth' });
   }));
 
+  /* hero : dégradé de couleurs animé, qui suit légèrement le pointeur */
+  const mesh = $id('mesh')
+  if (mesh && mesh.getContext) {
+    const mx = mesh.getContext('2d', { alpha: false })
+    const SC = 0.14
+    const BL = [
+      { c: '232,73,28', a: 0.95, r: 0.62, x: 0.16, y: 0.8, ax: 0.16, ay: 0.1, f: 0.00013, p: 0, m: 0.16 },
+      { c: '255,150,58', a: 0.55, r: 0.46, x: 0.8, y: 0.84, ax: 0.14, ay: 0.09, f: 0.00017, p: 1.7, m: -0.12 },
+      { c: '150,24,14', a: 0.9, r: 0.6, x: 0.64, y: 0.3, ax: 0.2, ay: 0.12, f: 0.00011, p: 3.1, m: 0.1 },
+      { c: '255,86,104', a: 0.42, r: 0.42, x: 0.36, y: 0.52, ax: 0.22, ay: 0.14, f: 0.00015, p: 4.4, m: -0.18 },
+      { c: '112,46,214', a: 0.34, r: 0.44, x: 0.94, y: 0.16, ax: 0.1, ay: 0.1, f: 0.00009, p: 2.2, m: 0.08 },
+      { c: '255,200,150', a: 0.22, r: 0.28, x: 0.5, y: 0.98, ax: 0.26, ay: 0.05, f: 0.00021, p: 5.3, m: -0.1 },
+    ]
+    let MW = 0, MH = 0, px = 0, py = 0, tx = 0, ty = 0, mVis = true, mRaf = 0
+    const msize = () => { const r = mesh.getBoundingClientRect(); MW = Math.max(2, Math.round(r.width * SC)); MH = Math.max(2, Math.round(r.height * SC)); mesh.width = MW; mesh.height = MH }
+    const mdraw = (now) => {
+      px += (tx - px) * 0.05; py += (ty - py) * 0.05
+      mx.globalCompositeOperation = 'source-over'; mx.fillStyle = '#0B0706'; mx.fillRect(0, 0, MW, MH)
+      mx.globalCompositeOperation = 'lighter'
+      const D = Math.max(MW, MH)
+      BL.forEach((b) => {
+        const k = now * b.f + b.p
+        const x = (b.x + Math.sin(k) * b.ax + px * b.m) * MW, y = (b.y + Math.cos(k * 1.3) * b.ay + py * b.m) * MH
+        const rr = b.r * D * (1 + Math.sin(k * 0.7) * 0.12)
+        const g = mx.createRadialGradient(x, y, 0, x, y, rr)
+        g.addColorStop(0, `rgba(${b.c},${b.a})`); g.addColorStop(0.55, `rgba(${b.c},${(b.a * 0.35).toFixed(3)})`); g.addColorStop(1, `rgba(${b.c},0)`)
+        mx.fillStyle = g; mx.fillRect(0, 0, MW, MH)
+      })
+      mx.globalCompositeOperation = 'source-over'
+      mRaf = (mVis && !R) ? rAF(mdraw) : 0
+    }
+    msize(); mdraw(performance.now())
+    onWin('resize', () => { msize(); if (!mRaf) mdraw(performance.now()) })
+    const heroEl = $id('top')
+    heroEl.addEventListener('pointermove', (e) => { const r = heroEl.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width - 0.5; ty = (e.clientY - r.top) / r.height - 0.5 })
+    if ('IntersectionObserver' in window) IO((es) => { mVis = es[0].isIntersecting; if (mVis && !mRaf && !R) mRaf = rAF(mdraw) }).observe(heroEl)
+  }
+
   /* hero swash + marker */
   later(() => { $id('sw1').classList.add('on'); $id('mk1').classList.add('on'); }, R ? 0 : 900);
 

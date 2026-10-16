@@ -5,15 +5,8 @@ export default function Hero() {
   return (
     <section className="vhero dark" id="top">
       <div className="aur" aria-hidden="true">
-        <div className="haze" />
-        <i className="beam" style={{ "--x": "4%", "--w": "70px", "--h": "78%", "--t": "8s", "--o": ".75" }} />
-        <i className="beam" style={{ "--x": "12%", "--w": "140px", "--h": "92%", "--t": "11s", "--b": "34px", "--o": ".55" }} />
-        <i className="beam" style={{ "--x": "24%", "--w": "46px", "--h": "66%", "--t": "7s", "--o": ".9" }} />
-        <i className="beam" style={{ "--x": "38%", "--w": "110px", "--h": "58%", "--t": "12s", "--b": "30px", "--o": ".35" }} />
-        <i className="beam" style={{ "--x": "58%", "--w": "60px", "--h": "62%", "--t": "9s", "--o": ".4" }} />
-        <i className="beam" style={{ "--x": "71%", "--w": "130px", "--h": "84%", "--t": "10s", "--b": "36px", "--o": ".55" }} />
-        <i className="beam" style={{ "--x": "86%", "--w": "56px", "--h": "74%", "--t": "8.5s", "--o": ".7" }} />
-        <div className="top" />
+        <canvas className="mesh" id="mesh" />
+        <div className="vig" />
         <div className="grain" />
       </div>
       <div className="wrap">
