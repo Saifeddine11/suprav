@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function Comparatif() {
   return (
-    <section className="sec dark wrap" id="benefices" style={{ paddingTop: "0" }}>
+    <section className="sec dark wrap" id="benefices">
       <div className="c">
         <div className="shead" data-r>
           <span className="nb"><b>Comparatif</b>Pourquoi nous</span>

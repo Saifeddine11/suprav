@@ -402,6 +402,199 @@ void main(){
     later(() => { wmore.style.height = 'auto'; }, R ? 0 : 950);
   });
 
+  /* jeu du serpent : la marque attrape les clients qui passent (démo automatique, puis jouable) */
+  const snkC = $id('snk');
+  if (snkC && snkC.getContext) {
+    const sx = snkC.getContext('2d');
+    const sWrap = snkC.closest('.snk'), sBox = $id('snkbox'), sScore = $id('snkscore'), sBest = $id('snkbest'), sMode = $id('snkmode');
+    const sPlay = $id('snkplay'), sOver = $id('snkover'), sOverN = $id('snkovern'), sOverL = $id('snkoverl'), sLab = $id('snklab'), sAgain = $id('snkagain');
+    const lab = n => n > 1 ? 'clients attrapés' : 'client attrapé';
+    const PL = ['instagram', 'tiktok', 'google', 'whatsapp', 'facebook', 'snapchat'];
+    const PC = { instagram: ['#E1306C', '#fff'], tiktok: ['#111', '#fff'], google: ['#fff', '#4285F4'], whatsapp: ['#25D366', '#fff'], facebook: ['#0866FF', '#fff'], snapchat: ['#FFFC00', '#111'] };
+    const PN = { instagram: 'Instagram', tiktok: 'TikTok', google: 'Google', whatsapp: 'WhatsApp', facebook: 'Facebook', snapchat: 'Snapchat' };
+    const PATH = {};
+    PL.forEach(k => { try { PATH[k] = new Path2D(BR[k].d); } catch { PATH[k] = null; } });
+    const DIRS = [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }];
+    const KEYS = { ArrowUp: 'u', ArrowDown: 'd', ArrowLeft: 'l', ArrowRight: 'r', w: 'u', s: 'd', a: 'l', d: 'r', z: 'u', q: 'l' };
+    const DV = { u: { x: 0, y: -1 }, d: { x: 0, y: 1 }, l: { x: -1, y: 0 }, r: { x: 1, y: 0 } };
+    let COLS = 20, ROWS = 14, cell = 24, W = 0, H = 0, ox = 0, oy = 0;
+    let snake = [], prev = [], dir = DV.r, nextDir = null, food = [], fx = [], score = 0, best = 0, playing = false, dead = false;
+    let acc = 0, last = performance.now(), sRaf = 0, sVis = false, demoT = 0;
+    try { best = +localStorage.getItem('suprav3-snake-best') || 0; } catch { best = 0; }
+    const key = (x, y) => x + ',' + y;
+    const wrap = (v, m) => (v + m) % m;
+    const step = () => playing ? Math.max(70, 125 - score * 2.5) : 115;
+    const hud = bump => {
+      sScore.textContent = score; sBest.textContent = best; sLab.textContent = lab(score);
+      if (bump) { sScore.classList.remove('bump'); void sScore.offsetWidth; sScore.classList.add('bump'); }
+      sMode.textContent = playing ? 'À vous de jouer' : 'Démo automatique';
+      sWrap.classList.toggle('on', playing);
+    };
+    const occupied = (x, y) => snake.some(s => s.x === x && s.y === y) || food.some(f => f.x === x && f.y === y);
+    const spawn = () => {
+      for (let t = 0; t < 300; t++) {
+        const top = Math.ceil(46 / cell), x = Math.floor(Math.random() * COLS), y = top + Math.floor(Math.random() * (ROWS - top));
+        if (!occupied(x, y)) { food.push({ x, y, k: PL[Math.floor(Math.random() * PL.length)], b: performance.now() }); return; }
+      }
+    };
+    const reset = () => {
+      const cx = Math.floor(COLS / 3), cy = Math.floor(ROWS / 2);
+      snake = [{ x: cx, y: cy }, { x: cx - 1, y: cy }, { x: cx - 2, y: cy }];
+      prev = snake.map(p => ({ x: p.x, y: p.y })); dir = DV.r; nextDir = null; food = []; fx = []; score = 0; dead = false; acc = 0;
+      for (let i = 0; i < 4; i++) spawn();
+      hud(false);
+    };
+    const flood = (x0, y0, body) => {
+      const seen = new Set([key(x0, y0)]), st = [[x0, y0]];
+      while (st.length && seen.size < COLS * ROWS) {
+        const [x, y] = st.pop();
+        for (const d of DIRS) { const nx = wrap(x + d.x, COLS), ny = wrap(y + d.y, ROWS), k = key(nx, ny); if (!seen.has(k) && !body.has(k)) { seen.add(k); st.push([nx, ny]); } }
+      }
+      return seen.size;
+    };
+    const aiDir = () => {
+      const h = snake[0], body = new Set(snake.slice(0, -1).map(s => key(s.x, s.y)));
+      const goals = new Set(food.map(f => key(f.x, f.y))), from = new Map([[key(h.x, h.y), null]]), q = [[h.x, h.y]];
+      let hit = null;
+      while (q.length && !hit) {
+        const [x, y] = q.shift();
+        for (const d of DIRS) {
+          const nx = wrap(x + d.x, COLS), ny = wrap(y + d.y, ROWS), k = key(nx, ny);
+          if (from.has(k) || body.has(k)) continue;
+          from.set(k, { x, y, d }); q.push([nx, ny]);
+          if (goals.has(k)) { hit = k; break; }
+        }
+      }
+      if (hit) {
+        let k = hit, first = null;
+        for (;;) { const p = from.get(k); if (!p) break; first = p.d; if (p.x === h.x && p.y === h.y) break; k = key(p.x, p.y); }
+        if (first && !(first.x === -dir.x && first.y === -dir.y)) {
+          const nx = wrap(h.x + first.x, COLS), ny = wrap(h.y + first.y, ROWS);
+          if (flood(nx, ny, body) > snake.length + 2) return first;
+        }
+      }
+      let bd = dir, bn = -1;
+      for (const d of DIRS) {
+        if (d.x === -dir.x && d.y === -dir.y) continue;
+        const nx = wrap(h.x + d.x, COLS), ny = wrap(h.y + d.y, ROWS);
+        if (body.has(key(nx, ny))) continue;
+        const n = flood(nx, ny, body); if (n > bn) { bn = n; bd = d; }
+      }
+      return bd;
+    };
+    const die = () => {
+      dead = true;
+      if (playing) {
+        playing = false;
+        if (score > best) { best = score; try { localStorage.setItem('suprav3-snake-best', String(best)); } catch { /* stockage indisponible */ } }
+        sOverN.textContent = score; sOverL.textContent = lab(score); sOver.hidden = false; hud(false); sMode.textContent = 'Partie terminée';
+      } else { demoT = performance.now(); }
+    };
+    const tick = () => {
+      if (!playing) dir = aiDir(); else if (nextDir) { dir = nextDir; nextDir = null; }
+      const old = snake.map(p => ({ x: p.x, y: p.y })), h = snake[0];
+      const nh = { x: wrap(h.x + dir.x, COLS), y: wrap(h.y + dir.y, ROWS) };
+      const fi = food.findIndex(f => f.x === nh.x && f.y === nh.y);
+      const body = fi >= 0 ? snake : snake.slice(0, -1);
+      if (body.some(s => s.x === nh.x && s.y === nh.y)) { die(); return; }
+      snake.unshift(nh); if (fi < 0) snake.pop();
+      prev = old; if (fi >= 0) prev.push({ x: old[old.length - 1].x, y: old[old.length - 1].y });
+      if (fi >= 0) {
+        const f = food.splice(fi, 1)[0]; score++; fx.push({ x: nh.x, y: nh.y, k: f.k, t: performance.now() }); spawn();
+        if (food.length < 3) spawn();
+        hud(true);
+      }
+    };
+    const size = () => {
+      const r = sBox.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.max(1, r.width); H = Math.max(1, r.height);
+      snkC.width = Math.round(W * dpr); snkC.height = Math.round(H * dpr); sx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const nc = W < 520 ? 14 : 20; cell = Math.floor(W / nc); const nr = Math.max(8, Math.floor(H / cell));
+      ox = (W - nc * cell) / 2; oy = (H - nr * cell) / 2;
+      if (nc !== COLS || nr !== ROWS || !snake.length) { COLS = nc; ROWS = nr; reset(); }
+    };
+    const px = x => ox + (x + .5) * cell, py = y => oy + (y + .5) * cell;
+    const mix = (a, b, t) => `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)},${Math.round(a[1] + (b[1] - a[1]) * t)},${Math.round(a[2] + (b[2] - a[2]) * t)})`;
+    const HEAD = [255, 106, 43], TAIL = [140, 29, 10];
+    const rr = (x, y, w, h, r) => { sx.beginPath(); sx.moveTo(x + r, y); sx.arcTo(x + w, y, x + w, y + h, r); sx.arcTo(x + w, y + h, x, y + h, r); sx.arcTo(x, y + h, x, y, r); sx.arcTo(x, y, x + w, y, r); sx.closePath(); };
+    const app = (k, x, y, s) => {
+      const c = PC[k]; sx.save(); sx.translate(x, y);
+      sx.shadowColor = 'rgba(0,0,0,.45)'; sx.shadowBlur = s * .35; sx.shadowOffsetY = s * .08;
+      if (k === 'instagram') { const g = sx.createLinearGradient(-s / 2, s / 2, s / 2, -s / 2); g.addColorStop(0, '#FEDA75'); g.addColorStop(.35, '#FA7E1E'); g.addColorStop(.65, '#D62976'); g.addColorStop(1, '#4F5BD5'); sx.fillStyle = g; } else sx.fillStyle = c[0];
+      rr(-s / 2, -s / 2, s, s, s * .26); sx.fill(); sx.shadowColor = 'transparent';
+      if (PATH[k]) { const g = s * .58; sx.translate(-g / 2, -g / 2); sx.scale(g / 24, g / 24); sx.fillStyle = c[1]; sx.fill(PATH[k]); }
+      sx.restore();
+    };
+    const draw = now => {
+      sx.clearRect(0, 0, W, H);
+      sx.fillStyle = 'rgba(255,255,255,.07)';
+      for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) { sx.beginPath(); sx.arc(px(x), py(y), 1.1, 0, 6.283); sx.fill(); }
+      food.forEach(f => {
+        const p = Math.min(1, (now - f.b) / 420), e = 1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2);
+        app(f.k, px(f.x), py(f.y) + Math.sin(now / 380 + f.x) * cell * .05, cell * .8 * Math.max(0, e));
+      });
+      const a = Math.min(1, acc / step());
+      const pts = snake.map((p, i) => {
+        const q = prev[i] || p;
+        if (Math.abs(p.x - q.x) > 1 || Math.abs(p.y - q.y) > 1) return [px(p.x), py(p.y), true];
+        return [px(q.x + (p.x - q.x) * a), py(q.y + (p.y - q.y) * a), false];
+      });
+      const n = pts.length; sx.lineCap = 'round';
+      for (let i = n - 1; i > 0; i--) {
+        const t = i / (n - 1), A = pts[i], B = pts[i - 1];
+        if (Math.hypot(A[0] - B[0], A[1] - B[1]) > cell * 1.6) continue;
+        sx.strokeStyle = mix(HEAD, TAIL, t); sx.lineWidth = cell * (.78 - t * .3);
+        sx.beginPath(); sx.moveTo(A[0], A[1]); sx.lineTo(B[0], B[1]); sx.stroke();
+      }
+      const hd = pts[0];
+      sx.save(); sx.shadowColor = 'rgba(255,106,43,.75)'; sx.shadowBlur = cell * .9; sx.fillStyle = mix(HEAD, HEAD, 0);
+      sx.beginPath(); sx.arc(hd[0], hd[1], cell * .46, 0, 6.283); sx.fill(); sx.restore();
+      const ex = dir.x, ey = dir.y, sp = cell * .19;
+      [[-1], [1]].forEach(([s]) => {
+        const exx = hd[0] + ex * cell * .14 + (-ey) * sp * s, eyy = hd[1] + ey * cell * .14 + ex * sp * s;
+        sx.fillStyle = '#fff'; sx.beginPath(); sx.arc(exx, eyy, cell * .11, 0, 6.283); sx.fill();
+        sx.fillStyle = '#111'; sx.beginPath(); sx.arc(exx + ex * cell * .04, eyy + ey * cell * .04, cell * .055, 0, 6.283); sx.fill();
+      });
+      fx = fx.filter(f => now - f.t < 950);
+      fx.forEach(f => {
+        const t = (now - f.t) / 950, x = px(f.x), y = py(f.y);
+        sx.strokeStyle = `rgba(232,73,28,${(1 - t).toFixed(3)})`; sx.lineWidth = 2;
+        sx.beginPath(); sx.arc(x, y, cell * (.5 + t * 1.6), 0, 6.283); sx.stroke();
+        sx.globalAlpha = Math.max(0, 1 - t * 1.1); sx.fillStyle = '#fff'; sx.font = `600 ${Math.max(11, cell * .5)}px Poppins, sans-serif`; sx.textAlign = 'center';
+        sx.fillText('+1 client · ' + PN[f.k], x, y - cell * (.8 + t * 1.4)); sx.globalAlpha = 1;
+      });
+    };
+    const loop = now => {
+      const dt = Math.min(120, Math.max(0, now - last)); last = now;
+      if (!dead) { acc += dt; let g = 0; while (acc >= step() && g++ < 4) { acc -= step(); tick(); if (dead) break; } }
+      else if (!playing && sOver.hidden && now - demoT > 900) reset();
+      draw(now);
+      sRaf = (sVis && (!R || playing)) ? rAF(loop) : 0;
+    };
+    const go = () => { if (!sRaf && sVis) { last = performance.now(); sRaf = rAF(loop); } };
+    const start = () => { playing = true; sOver.hidden = true; reset(); hud(false); try { sBox.focus({ preventScroll: true }); } catch { /* focus indisponible */ } go(); };
+    const turn = d => {
+      if (!playing) return; const v = DV[d]; const cur = nextDir || dir;
+      if (v.x === -cur.x && v.y === -cur.y) return; if (v.x === cur.x && v.y === cur.y) return; nextDir = v;
+    };
+    sPlay.addEventListener('click', start); sAgain.addEventListener('click', start);
+    sWrap.querySelectorAll('.pd').forEach(b => b.addEventListener('click', () => { if (!playing) start(); turn(b.dataset.d); }));
+    onWin('keydown', e => {
+      if (!playing) return; const d = KEYS[e.key] || KEYS[e.key && e.key.toLowerCase()]; if (!d) return;
+      e.preventDefault(); turn(d);
+    });
+    let tp = null;
+    sBox.addEventListener('pointerdown', e => { if (playing) tp = { x: e.clientX, y: e.clientY }; });
+    sBox.addEventListener('pointerup', e => {
+      if (!tp) return; const dx = e.clientX - tp.x, dy = e.clientY - tp.y; tp = null;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return; turn(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'r' : 'l') : (dy > 0 ? 'd' : 'u'));
+    });
+    size(); draw(performance.now());
+    onWin('resize', () => { size(); draw(performance.now()); });
+    if ('IntersectionObserver' in window) IO(es => { sVis = es[0].isIntersecting; if (sVis) go(); }).observe(sBox);
+    else { sVis = true; go(); }
+  }
+
   /* agent steps */
   const steps = [...root.querySelectorAll('#agent .st')]; let si = 0;
   const tick = () => { steps.forEach((s, i) => s.classList.toggle('on', i <= si)); si = (si + 1) % (steps.length + 2); };
