@@ -980,3 +980,13 @@
 .v3 .snk-pad{display:none}
 @media (max-width:900px){.v3 .snk{grid-template-columns:1fr}.v3 .snk-tx{justify-items:start}}
 @media (max-width:760px){.v3 .snk-box{aspect-ratio:1/1;border-radius:20px}.v3 .snk-hud{font-size:11px;left:10px;right:10px;top:10px}.v3 .snk-sc b{font-size:13px}.v3 .snk-hint{display:none}.v3 .snk-bar{justify-content:space-between}.v3 .snk-pad{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px);gap:6px}.v3 .pd{display:grid;place-items:center;border:0;border-radius:12px;background:#151515;color:#fff;cursor:pointer}.v3 .pd svg{width:18px;height:18px}.v3 .pd:active{background:var(--ac)}.v3 .pd-u{grid-column:2;grid-row:1}.v3 .pd-l{grid-column:1;grid-row:2}.v3 .pd-d{grid-column:2;grid-row:2}.v3 .pd-r{grid-column:3;grid-row:2}}
+
+/* chiffres : mini-carte des villes */
+.v3 .vz-map .land circle{fill:rgba(255,255,255,.22)}
+.v3 .vz-map .arc{stroke-dasharray:1;stroke-dashoffset:1}
+.v3 .vz-map .pulse{transform-box:fill-box;transform-origin:center}
+.v3 .vz-map .lb{font:500 7.5px var(--body);fill:#A9A39D;letter-spacing:.02em;opacity:0;transition:opacity .6s;transition-delay:calc(var(--i) * 150ms + 1.7s)}
+.v3 .vz-map .lb.m{text-anchor:middle}.vz-map .lb.e{text-anchor:end}
+.v3 .stg.in .vz-map .lb{opacity:1}
+@media (max-width:560px){.v3 .vz-map .lb{display:none}}
+@media (prefers-reduced-motion:reduce){.v3 .vz-map .lb{opacity:1}}
