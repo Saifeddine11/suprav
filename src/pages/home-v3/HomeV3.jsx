@@ -24,6 +24,8 @@ import V3Dock from './sections/V3Dock.jsx'
  * Page d'accueil v3 (refonte octobre 2026).
  * Le balisage est statique ; les animations et interactions sont branchées
  * une seule fois au montage par initHomeV3, qui renvoie son propre nettoyage.
+ * Ordre des sections pensé pour la conversion : accroche, preuves, offre,
+ * différenciation, confiance, adéquation, méthode, prix, objections, contact.
  */
 export default function HomeV3() {
   const root = useRef(null)
@@ -34,19 +36,25 @@ export default function HomeV3() {
     <div className="v3" ref={root}>
       <V3Nav />
       <main>
+        {/* Accroche */}
         <Hero />
         <LogoBand />
+        {/* Preuves */}
         <Realisations />
         <Chiffres />
+        {/* Conviction, puis l'offre */}
         <Vision />
-        <Presence />
         <Systeme />
         <Ecosysteme />
+        {/* Pourquoi nous, et la confiance qui le prouve */}
         <Comparatif />
-        <Methode />
         <Avis />
+        <Presence />
+        {/* Pour qui, comment, combien */}
         <Secteurs />
+        <Methode />
         <Tarifs />
+        {/* Objections, puis passage à l'action */}
         <Faq />
         <FinalCta />
       </main>
