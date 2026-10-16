@@ -5,6 +5,7 @@ import V3Nav from './sections/V3Nav.jsx'
 import Hero from './sections/Hero.jsx'
 import LogoBand from './sections/LogoBand.jsx'
 import Realisations from './sections/Realisations.jsx'
+import Chiffres from './sections/Chiffres.jsx'
 import Vision from './sections/Vision.jsx'
 import Presence from './sections/Presence.jsx'
 import Systeme from './sections/Systeme.jsx'
@@ -36,6 +37,7 @@ export default function HomeV3() {
         <Hero />
         <LogoBand />
         <Realisations />
+        <Chiffres />
         <Vision />
         <Presence />
         <Systeme />

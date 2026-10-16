@@ -312,6 +312,26 @@ export default function initHomeV3(root) {
     }));
   }
 
+  /* chiffres : compteurs qui défilent, mini animations, relance au survol */
+  const stg = $id('stg')
+  if (stg) {
+    stg.querySelectorAll('.num[data-to]').forEach((n) => {
+      let ci = 0
+      n.querySelector('.od').innerHTML = [...n.dataset.to].map((ch) => {
+        if (!/[0-9]/.test(ch)) return `<span class="ch">${ch}</span>`
+        const cells = Array.from({ length: 20 }, (_, k) => `<span>${k % 10}</span>`).join('')
+        return `<span class="dg" style="--c:${ci++};--t:${10 + Number(ch)}"><span class="strip">${cells}</span></span>`
+      }).join('')
+    })
+    const goS = () => stg.classList.add('in')
+    if (R || !('IntersectionObserver' in window)) goS()
+    else IO((es, o) => es.forEach((e) => { if (e.isIntersecting) { goS(); o.disconnect() } }), { threshold: 0.3 }).observe(stg)
+    stg.querySelectorAll('.sc4').forEach((c) => {
+      c.addEventListener('pointermove', (e) => { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px') })
+      c.addEventListener('pointerenter', () => { if (R || !stg.classList.contains('in')) return; c.classList.remove('rp'); void c.offsetWidth; c.classList.add('rp') })
+    })
+  }
+
   /* agent steps */
   const steps = [...root.querySelectorAll('#agent .st')]; let si = 0;
   const tick = () => { steps.forEach((s, i) => s.classList.toggle('on', i <= si)); si = (si + 1) % (steps.length + 2); };
@@ -356,6 +376,8 @@ export default function initHomeV3(root) {
     root.querySelectorAll('video.rvid').forEach((v) => v.pause())
     $id('tiles')?.replaceChildren()
     $id('blk3')?.replaceChildren()
+    root.querySelectorAll('#stg .num[data-to]').forEach((n) => { n.querySelector('.od').textContent = n.dataset.to })
+    root.querySelector('#stg')?.classList.remove('in')
     root.classList.remove('anim')
   }
 }
