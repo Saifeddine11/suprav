@@ -35,42 +35,72 @@ export default function initHomeV3(root) {
     t.scrollIntoView({ behavior: R ? 'auto' : 'smooth' });
   }));
 
-  /* hero : dégradé de couleurs animé, qui suit légèrement le pointeur */
-  const mesh = $id('mesh')
-  if (mesh && mesh.getContext) {
-    const mx = mesh.getContext('2d', { alpha: false })
-    const SC = 0.14
-    const BL = [
-      { c: '232,73,28', a: 0.95, r: 0.62, x: 0.16, y: 0.8, ax: 0.16, ay: 0.1, f: 0.00013, p: 0, m: 0.16 },
-      { c: '255,150,58', a: 0.55, r: 0.46, x: 0.8, y: 0.84, ax: 0.14, ay: 0.09, f: 0.00017, p: 1.7, m: -0.12 },
-      { c: '150,24,14', a: 0.9, r: 0.6, x: 0.64, y: 0.3, ax: 0.2, ay: 0.12, f: 0.00011, p: 3.1, m: 0.1 },
-      { c: '255,86,104', a: 0.42, r: 0.42, x: 0.36, y: 0.52, ax: 0.22, ay: 0.14, f: 0.00015, p: 4.4, m: -0.18 },
-      { c: '112,46,214', a: 0.34, r: 0.44, x: 0.94, y: 0.16, ax: 0.1, ay: 0.1, f: 0.00009, p: 2.2, m: 0.08 },
-      { c: '255,200,150', a: 0.22, r: 0.28, x: 0.5, y: 0.98, ax: 0.26, ay: 0.05, f: 0.00021, p: 5.3, m: -0.1 },
-    ]
-    let MW = 0, MH = 0, px = 0, py = 0, tx = 0, ty = 0, mVis = true, mRaf = 0
-    const msize = () => { const r = mesh.getBoundingClientRect(); MW = Math.max(2, Math.round(r.width * SC)); MH = Math.max(2, Math.round(r.height * SC)); mesh.width = MW; mesh.height = MH }
-    const mdraw = (now) => {
-      px += (tx - px) * 0.05; py += (ty - py) * 0.05
-      mx.globalCompositeOperation = 'source-over'; mx.fillStyle = '#0B0706'; mx.fillRect(0, 0, MW, MH)
-      mx.globalCompositeOperation = 'lighter'
-      const D = Math.max(MW, MH)
-      BL.forEach((b) => {
-        const k = now * b.f + b.p
-        const x = (b.x + Math.sin(k) * b.ax + px * b.m) * MW, y = (b.y + Math.cos(k * 1.3) * b.ay + py * b.m) * MH
-        const rr = b.r * D * (1 + Math.sin(k * 0.7) * 0.12)
-        const g = mx.createRadialGradient(x, y, 0, x, y, rr)
-        g.addColorStop(0, `rgba(${b.c},${b.a})`); g.addColorStop(0.55, `rgba(${b.c},${(b.a * 0.35).toFixed(3)})`); g.addColorStop(1, `rgba(${b.c},0)`)
-        mx.fillStyle = g; mx.fillRect(0, 0, MW, MH)
-      })
-      mx.globalCompositeOperation = 'source-over'
-      mRaf = (mVis && !R) ? rAF(mdraw) : 0
-    }
-    msize(); mdraw(performance.now())
-    onWin('resize', () => { msize(); if (!mRaf) mdraw(performance.now()) })
-    const heroEl = $id('top')
-    heroEl.addEventListener('pointermove', (e) => { const r = heroEl.getBoundingClientRect(); tx = (e.clientX - r.left) / r.width - 0.5; ty = (e.clientY - r.top) / r.height - 0.5 })
-    if ('IntersectionObserver' in window) IO((es) => { mVis = es[0].isIntersecting; if (mVis && !mRaf && !R) mRaf = rAF(mdraw) }).observe(heroEl)
+  /* hero : voiles de lumière en vagues (rubans soyeux qui ondulent, se tordent et réagissent à la vitesse du pointeur) */
+  const veil = $id('mesh');
+  if (veil && veil.getContext) {
+    /* rendu net sur un calque caché, puis réduit dans le canvas visible : la réduction lisse les fils et l'agrandissement CSS floute, sans filtre coûteux */
+    const off = document.createElement('canvas'), ox = off.getContext('2d', { alpha: false }), vx = veil.getContext('2d', { alpha: false });
+    /* c: couleur, a: opacité d'un fil, y0/sl: position et pente, amp/k: houle, w: demi-largeur, tw/ts: torsion, n: fils */
+    const RB = [
+      { c: '176,32,12', a: .125, y0: .13, sl: .26, amp: .05, k: .55, s: .00016, p: 3.6, w: .165, tw: .38, ts: .00015, n: 32 },
+      { c: '232,73,28', a: .17, y0: .42, sl: -.56, amp: .05, k: .7, s: .00021, p: 0, w: .12, tw: .46, ts: .00023, n: 36 },
+      { c: '255,112,40', a: .115, y0: .63, sl: -.30, amp: .045, k: .8, s: .00026, p: 1.9, w: .07, tw: .62, ts: .00028, n: 26 },
+      { c: '255,168,112', a: .05, y0: .37, sl: -.64, amp: .045, k: .75, s: .00024, p: 2.4, w: .032, tw: .8, ts: .00034, n: 16 },
+      { c: '210,52,16', a: .08, y0: .88, sl: .18, amp: .04, k: .6, s: .00019, p: 4.7, w: .09, tw: .5, ts: .0002, n: 24 },
+    ];
+    const SEG = 64, CX = new Float32Array(SEG + 1), CY = new Float32Array(SEG + 1), HW = new Float32Array(SEG + 1), TAU = Math.PI * 2;
+    let VW = 0, VH = 0, vVis = true, vRaf = 0, vT = 0, vLast = performance.now();
+    let px = .5, py = .5, tx = .5, ty = .5, lx = -1, ly = -1, lt = 0, en = 0, ef = 0;
+    const vsize = () => {
+      const r = veil.getBoundingClientRect(), sc = Math.min(.5, 700 / Math.max(1, r.width));
+      VW = Math.max(2, Math.round(r.width * sc)); VH = Math.max(2, Math.round(r.height * sc));
+      off.width = VW; off.height = VH;
+      veil.width = Math.max(2, Math.round(VW * .3)); veil.height = Math.max(2, Math.round(VH * .3));
+    };
+    const vdraw = now => {
+      const dt = Math.min(64, Math.max(0, now - vLast)); vLast = now;
+      en *= .95; ef += (en - ef) * .07;
+      vT += dt * 1.25 * (1 + ef * 2.4);
+      px += (tx - px) * .05; py += (ty - py) * .05;
+      ox.globalCompositeOperation = 'source-over'; ox.fillStyle = '#0A0A0A'; ox.fillRect(0, 0, VW, VH);
+      ox.globalCompositeOperation = 'lighter'; ox.lineJoin = 'round';
+      /* sur écran vertical : pentes adoucies et rubans proportionnés à la largeur */
+      const asp = Math.min(1, Math.sqrt(VW / VH / 1.05)), U = Math.min(VH, VW * 1.6), A = U / VH;
+      for (const b of RB) {
+        const hw0 = b.w * U, ph = vT * b.s + b.p, tp = vT * b.ts + b.p;
+        for (let s = 0; s <= SEG; s++) {
+          const x = s / SEG * 1.3 - .15;
+          let y = b.y0 + b.sl * asp * (x - .5) + b.amp * A * (Math.sin(x * b.k * TAU + ph) + .5 * Math.sin(x * b.k * 2.3 * TAU - ph * 1.35 + b.p));
+          const d = x - px, g = Math.exp(-d * d * 14);
+          y += (py - y) * g * (.06 + ef * .32);
+          CX[s] = x * VW; CY[s] = y * VH;
+          HW[s] = hw0 * Math.cos(x * b.tw * TAU + tp) * (1 + g * ef * .5);
+        }
+        ox.lineWidth = Math.max(1, hw0 * 2 / b.n * 1.7);
+        for (let i = 0; i < b.n; i++) {
+          const o = i / (b.n - 1) * 2 - 1;
+          ox.strokeStyle = `rgba(${b.c},${(b.a * (1 - o * o * .75)).toFixed(3)})`;
+          ox.beginPath();
+          for (let s = 0; s <= SEG; s++) { const yy = CY[s] + o * HW[s] + o * o * hw0 * .12; if (s) ox.lineTo(CX[s], yy); else ox.moveTo(CX[s], yy); }
+          ox.stroke();
+        }
+      }
+      ox.globalCompositeOperation = 'source-over';
+      vx.imageSmoothingEnabled = true; vx.imageSmoothingQuality = 'high';
+      vx.drawImage(off, 0, 0, veil.width, veil.height);
+      vRaf = (vVis && !R) ? rAF(vdraw) : 0;
+    };
+    vsize(); vdraw(performance.now());
+    onWin('resize', () => { vsize(); if (!vRaf) vdraw(performance.now()); });
+    const heroEl = $id('top');
+    heroEl.addEventListener('pointermove', e => {
+      const r = heroEl.getBoundingClientRect(), now = performance.now();
+      tx = (e.clientX - r.left) / r.width; ty = (e.clientY - r.top) / r.height;
+      if (lx >= 0 && now > lt) { const sp = Math.hypot(e.clientX - lx, e.clientY - ly) / r.width / (now - lt) * 16; en = Math.min(1.4, en + sp * 1.6); }
+      lx = e.clientX; ly = e.clientY; lt = now;
+    });
+    heroEl.addEventListener('pointerleave', () => { tx = .5; ty = .5; lx = -1; });
+    if ('IntersectionObserver' in window) IO(es => { vVis = es[0].isIntersecting; if (vVis && !vRaf && !R) { vLast = performance.now(); vRaf = rAF(vdraw); } }).observe(heroEl);
   }
 
   /* hero swash + marker */
