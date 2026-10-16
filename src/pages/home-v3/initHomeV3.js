@@ -395,6 +395,13 @@ void main(){
     })
   }
 
+  /* réalisations : déplie les sites floutés */
+  const wmore = $id('wmore'), wbtn = $id('wbtn');
+  if (wmore && wbtn) wbtn.addEventListener('click', () => {
+    wmore.style.height = wmore.scrollHeight + 'px'; wmore.classList.add('open'); wbtn.setAttribute('aria-expanded', 'true');
+    later(() => { wmore.style.height = 'auto'; }, R ? 0 : 950);
+  });
+
   /* agent steps */
   const steps = [...root.querySelectorAll('#agent .st')]; let si = 0;
   const tick = () => { steps.forEach((s, i) => s.classList.toggle('on', i <= si)); si = (si + 1) % (steps.length + 2); };
