@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 /* Jeu du serpent : la marque (serpent orange) attrape les clients qui passent et grossit.
    Démo automatique, jouable au clavier, au doigt ou avec les flèches à l'écran (initHomeV3). */
 export default function Jeu() {
@@ -12,7 +10,7 @@ export default function Jeu() {
             <h2 className="h2">Attrapez tous les clients <span className="it">qui passent devant vous</span>.</h2>
             <p className="lede">Chaque jour, des clients potentiels passent devant votre marque sur Instagram, TikTok, Google et WhatsApp. Avec des vidéos qui arrêtent le scroll, des publicités bien ciblées et un agent IA qui répond tout de suite, vous les attrapez un par un. Et votre marque grossit.</p>
             <ul className="checks snk-ck"><li>Des vidéos qui arrêtent le scroll.</li><li>Des publicités qui visent les bons profils.</li><li>Une réponse immédiate, jour et nuit.</li></ul>
-            <div className="snk-ctas"><Link className="vbtn b-ac" to="/contact"><span className="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>Réserver un appel</Link></div>
+            <div className="snk-ctas"><a className="vbtn b-ac" href="#contact"><span className="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>Réserver un appel</a></div>
           </div>
           <div className="snk-game" data-r="120">
             <div className="snk-box" id="snkbox" tabIndex="-1">
@@ -21,7 +19,7 @@ export default function Jeu() {
               <div className="snk-over" id="snkover" hidden>
                 <p className="snk-ot"><b id="snkovern">0</b> <span id="snkoverl">client attrapé</span></p>
                 <p className="snk-os">Avec Supra v3, ils ne vous échappent plus.</p>
-                <div className="snk-ob"><button type="button" className="vbtn b-dk snk-again" id="snkagain"><span className="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z" /></svg></span>Rejouer</button><Link className="vbtn b-ac" to="/contact"><span className="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>Réserver un appel</Link></div>
+                <div className="snk-ob"><button type="button" className="vbtn b-dk snk-again" id="snkagain"><span className="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l10.5-6.5z" /></svg></span>Rejouer</button><a className="vbtn b-ac" href="#contact"><span className="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>Réserver un appel</a></div>
               </div>
             </div>
             <div className="snk-bar">
