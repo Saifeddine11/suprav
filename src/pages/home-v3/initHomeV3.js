@@ -4,137 +4,27 @@
  */
 import { ICON, BRAND as BR } from './data/icons.js'
 import { LAND_DOTS } from './data/land.js'
+import createCtx from './core/ctx.js'
+import initMenu from './core/menu.js'
+import initVeil from './core/veil.js'
+import initReveals from './core/reveals.js'
+import initQuiz from './core/quiz.js'
+import initDock from './core/dock.js'
 
 export default function initHomeV3(root) {
   if (!root) return () => {}
-  let alive = true
-  const intervals = [], timeouts = [], rafs = new Set(), observers = [], winListeners = [], disposers = []
-  const $id = (id) => root.querySelector('#' + id)
-  const every = (fn, ms) => { const id = setInterval(fn, ms); intervals.push(id); return id }
-  const later = (fn, ms) => { const id = setTimeout(fn, ms); timeouts.push(id); return id }
-  const rAF = (fn) => { const id = requestAnimationFrame((t) => { rafs.delete(id); if (alive) fn(t) }); rafs.add(id); return id }
-  const IO = (cb, opts) => { const o = new IntersectionObserver(cb, opts); observers.push(o); return o }
-  const RO = (cb) => { const o = new ResizeObserver(cb); observers.push(o); return o }
-  const onWin = (type, fn, opts) => { window.addEventListener(type, fn, opts); winListeners.push([type, fn, opts]) }
-  const onDispose = (fn) => { disposers.push(fn) }
-
-  const R = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const ctx = createCtx(root)
+  const { $id, every, later, rAF, IO, RO, onWin, onDispose, R, clamp } = ctx
   const svg = (k, s = 1.7) => `<svg class="li" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${s}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="${ICON[k]}"/></svg>`;
   const bsvg = k => `<svg class="bi" viewBox="0 0 24 24" aria-hidden="true"><path d="${BR[k].d}"/></svg>`;
   if (!R) root.classList.add('anim');
 
 
   /* menu + anchors */
-  const mbtn = $id('mbtn'), mnav = $id('mnav');
-  let open = false;
-  const setMenu = o => { open = o; mnav.hidden = !o; mbtn.setAttribute('aria-expanded', String(o)); mbtn.setAttribute('aria-label', o ? 'Fermer le menu' : 'Ouvrir le menu'); };
-  mbtn.addEventListener('click', () => setMenu(!open));
-  root.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
-    const id = a.getAttribute('href'); if (id.length < 2) return; const t = root.querySelector(id); if (!t) return;
-    e.preventDefault(); setMenu(false);
-    t.scrollIntoView({ behavior: R ? 'auto' : 'smooth' });
-  }));
+  initMenu(ctx)
 
-  /* hero : voiles de lumière en vagues (rubans soyeux qui ondulent, se tordent et réagissent à la vitesse du pointeur).
-     Calculés pixel par pixel par la carte graphique (WebGL) : nets à toutes les tailles d'écran, sans filtre CSS. */
-  const veil = $id('mesh');
-  const gl = veil && veil.getContext && (veil.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power' }) || veil.getContext('experimental-webgl'));
-  const veilProg = gl && (() => {
-    /* y0/sl: position et pente, amp/k: houle, s: vitesse, w: demi-largeur, tw/ts: torsion, a: intensité */
-    const RB = [
-      { c: [176, 32, 12], a: .125, y0: .13, sl: .26, amp: .05, k: .55, s: .00016, p: 3.6, w: .165, tw: .38, ts: .00015 },
-      { c: [232, 73, 28], a: .17, y0: .42, sl: -.56, amp: .05, k: .7, s: .00021, p: 0, w: .12, tw: .46, ts: .00023 },
-      { c: [255, 112, 40], a: .115, y0: .63, sl: -.30, amp: .045, k: .8, s: .00026, p: 1.9, w: .07, tw: .62, ts: .00028 },
-      { c: [255, 168, 112], a: .05, y0: .37, sl: -.64, amp: .045, k: .75, s: .00024, p: 2.4, w: .032, tw: .8, ts: .00034 },
-      { c: [210, 52, 16], a: .08, y0: .88, sl: .18, amp: .04, k: .6, s: .00019, p: 4.7, w: .09, tw: .5, ts: .0002 },
-    ];
-    const N = RB.length, WR = 40 * Math.PI; /* phases ramenées sur une période commune : précision GPU conservée */
-    const FS = `#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
-precision mediump float;
-#endif
-uniform vec2 uR;uniform vec4 uP;uniform float uA,uT;
-uniform vec4 uG[${N}],uH[${N}],uI[${N}];uniform vec3 uC[${N}];
-const float TAU=6.2831853;
-float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-void main(){
-  vec2 f=gl_FragCoord.xy/uR;float x=f.x,y=1.-f.y,bl=.011*uA;
-  vec3 c=vec3(0.);
-  for(int i=0;i<${N};i++){
-    vec4 g=uG[i],h=uH[i],m=uI[i];
-    float yc=g.x+g.y*uP.w*(x-.5)+g.z*uA*(sin(x*g.w*TAU+h.x)+.5*sin(x*g.w*2.3*TAU-h.x*1.35+h.y));
-    float d=x-uP.x,k=exp(-d*d*14.);
-    yc+=(uP.y-yc)*k*(.06+uP.z*.32);
-    float hw0=h.z*uA,hw=hw0*cos(x*h.w*TAU+m.x)*(1.+k*uP.z*.5);
-    float ah=abs(hw),dy=abs(y-yc),o=min(dy/max(ah,1e-4),1.);
-    float edge=1.-smoothstep(ah-bl*.7,ah+bl*1.3,dy);
-    float dens=(hw0+bl*.6)/(ah+bl*.6);
-    float silk=1.+.08*sin((y-yc)/max(ah,1e-4)*17.)*smoothstep(.012,.05,ah);
-    float hal=exp(-dy*dy/((ah+bl*5.)*(ah+bl*5.)));
-    c+=uC[i]*m.y*(1.9*dens*(1.-.62*o*o)*edge*silk+.32*hal);
-  }
-  c=vec3(.039)+(1.-exp(-c*1.1))*.961;
-  c+=(hash(gl_FragCoord.xy+fract(uT*.001)*91.)-.5)/255.;
-  gl_FragColor=vec4(c,1.);
-}`;
-    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
-    const vs = sh(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'), fs = sh(gl.FRAGMENT_SHADER, FS);
-    if (!vs || !fs) return null;
-    const pg = gl.createProgram(); gl.attachShader(pg, vs); gl.attachShader(pg, fs); gl.linkProgram(pg);
-    if (!gl.getProgramParameter(pg, gl.LINK_STATUS)) return null;
-    gl.useProgram(pg);
-    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(pg, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const u = n => gl.getUniformLocation(pg, n);
-    const uR = u('uR'), uP = u('uP'), uA = u('uA'), uT = u('uT'), uG = u('uG'), uH = u('uH'), uI = u('uI'), uC = u('uC');
-    const G = new Float32Array(N * 4), H = new Float32Array(N * 4), I = new Float32Array(N * 4), C = new Float32Array(N * 3);
-    RB.forEach((b, i) => { G.set([b.y0, b.sl, b.amp, b.k], i * 4); C.set(b.c.map(v => v / 255), i * 3); });
-    gl.uniform4fv(uG, G); gl.uniform3fv(uC, C);
-    return { pg, buf, draw(t, px, py, ef, asp, A) {
-      RB.forEach((b, i) => { H.set([(t * b.s + b.p) % WR, b.p, b.w, b.tw], i * 4); I.set([(t * b.ts + b.p) % WR, b.a, 0, 0], i * 4); });
-      gl.uniform2f(uR, veil.width, veil.height); gl.uniform4f(uP, px, py, ef, asp); gl.uniform1f(uA, A); gl.uniform1f(uT, t);
-      gl.uniform4fv(uH, H); gl.uniform4fv(uI, I);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    } };
-  })();
-  if (veil && !veilProg) veil.classList.add('flat');
-  if (veilProg) {
-    let VW = 1, VH = 1, vVis = true, vRaf = 0, vT = 0, vLast = performance.now(), vDead = false;
-    let px = .5, py = .5, tx = .5, ty = .5, lx = -1, ly = -1, lt = 0, en = 0, ef = 0;
-    const vsize = () => {
-      const r = veil.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      let w = r.width * dpr, h = r.height * dpr; const k = Math.sqrt(Math.min(1, 2.6e6 / Math.max(1, w * h)));
-      veil.width = Math.max(2, Math.round(w * k)); veil.height = Math.max(2, Math.round(h * k));
-      gl.viewport(0, 0, veil.width, veil.height); VW = Math.max(1, r.width); VH = Math.max(1, r.height);
-    };
-    const vdraw = now => {
-      if (vDead) { vRaf = 0; return; }
-      const dt = Math.min(64, Math.max(0, now - vLast)); vLast = now;
-      en *= .95; ef += (en - ef) * .07;
-      vT += dt * 1.25 * (1 + ef * 2.4);
-      px += (tx - px) * .05; py += (ty - py) * .05;
-      /* sur écran vertical : pentes adoucies et rubans proportionnés à la largeur */
-      veilProg.draw(vT, px, py, ef, Math.min(1, Math.sqrt(VW / VH / 1.05)), Math.min(VH, VW * 1.6) / VH);
-      vRaf = (vVis && !R) ? rAF(vdraw) : 0;
-    };
-    vsize(); vdraw(performance.now());
-    onWin('resize', () => { vsize(); if (!vRaf) vdraw(performance.now()); });
-    veil.addEventListener('webglcontextlost', e => { e.preventDefault(); vDead = true; veil.classList.add('flat'); });
-    const heroEl = $id('top');
-    const vMove = e => {
-      const r = heroEl.getBoundingClientRect(), now = performance.now();
-      tx = (e.clientX - r.left) / r.width; ty = (e.clientY - r.top) / r.height;
-      if (lx >= 0 && now > lt) { const sp = Math.hypot(e.clientX - lx, e.clientY - ly) / r.width / (now - lt) * 16; en = Math.min(1.4, en + sp * 1.6); }
-      lx = e.clientX; ly = e.clientY; lt = now;
-    };
-    const vLeave = () => { tx = .5; ty = .5; lx = -1; };
-    heroEl.addEventListener('pointermove', vMove); heroEl.addEventListener('pointerleave', vLeave);
-    onDispose(() => { heroEl.removeEventListener('pointermove', vMove); heroEl.removeEventListener('pointerleave', vLeave); gl.deleteProgram(veilProg.pg); gl.deleteBuffer(veilProg.buf); });
-    if ('IntersectionObserver' in window) IO(es => { vVis = es[0].isIntersecting; if (vVis && !vRaf && !R) { vLast = performance.now(); vRaf = rAF(vdraw); } }).observe(heroEl);
-  }
+  /* hero : voiles de lumière en vagues (core/veil.js) */
+  initVeil(ctx, $id('mesh'), $id('top'))
 
   /* hero swash + marker */
   later(() => { $id('sw1').classList.add('on'); $id('mk1').classList.add('on'); }, R ? 0 : 900);
@@ -323,25 +213,8 @@ void main(){
     const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
   }));
 
-  /* reveals, swashes, case cards */
-  const io = 'IntersectionObserver' in window ? IO(es => es.forEach(e => {
-    if (!e.isIntersecting) return; const t = e.target; t.classList.add('in');
-    t.querySelectorAll('[data-sw]').forEach(s => s.classList.add('on')); if (t.matches('[data-sw]')) t.classList.add('on');
-    io.unobserve(t);
-  }), { rootMargin: '0px 0px -10% 0px' }) : null;
-  root.querySelectorAll('[data-r]').forEach(el => {
-    if (R || !io) { el.querySelectorAll('[data-sw]').forEach(s => s.classList.add('on')); return; }
-    if (el.getBoundingClientRect().top > innerHeight * .9) { el.style.transitionDelay = (+el.dataset.r || 0) + 'ms'; el.classList.add('pre'); }
-    io.observe(el);
-  });
-  root.querySelectorAll('.case .card').forEach(el => { if (R || !io) el.classList.add('in'); else io.observe(el); });
-
-  /* icons: draw on sight, replay on hover; check lists pop */
-  const drawIO = 'IntersectionObserver' in window && !R ? IO(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('dr'); drawIO.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px' }) : null;
-  const watchIcons = root => root.querySelectorAll('.li').forEach((s, i) => { s.style.setProperty('--ld', (i % 4) * 90 + 'ms'); if (drawIO) drawIO.observe(s); else s.classList.add('dr'); });
-  watchIcons(document);
-  root.querySelectorAll('.bc,.scd,.pt,.row,.stp').forEach(c => c.addEventListener('pointerenter', () => c.querySelectorAll('.li').forEach(s => { s.classList.remove('dr'); void s.getBoundingClientRect(); s.style.setProperty('--ld', '0ms'); s.classList.add('dr'); })));
-  root.querySelectorAll('.checks').forEach(l => { [...l.children].forEach((li, i) => li.style.setProperty('--i', i)); if (drawIO) IO((es, o) => es.forEach(e => { if (e.isIntersecting) { l.classList.add('go'); o.disconnect(); } }), { threshold: .4 }).observe(l); else l.classList.add('go'); });
+  /* reveals, swashes, icônes, listes cochées (core/reveals.js) */
+  initReveals(ctx)
 
   /* before/after: wipe the "après" in when the card is on screen */
   root.querySelectorAll('.ba').forEach(el => { if (R || !('IntersectionObserver' in window)) { el.classList.add('go'); return; } IO((es, o) => es.forEach(e => { if (e.isIntersecting) { el.classList.add('go'); o.disconnect(); } }), { threshold: .5 }).observe(el); });
@@ -597,62 +470,11 @@ void main(){
     else { sVis = true; go(); }
   }
 
-  /* quiz : 4 questions en un clic, puis les coordonnées ; envoi au formulaire du site, sinon WhatsApp */
-  const qz = $id('qz'), QZ_API = '/api/contact.php';
-  if (qz) {
-    const qT0 = Date.now();
-    const qAC = new AbortController(), qOpt = { signal: qAC.signal };
-    onDispose(() => qAC.abort());
-    const qQs = [...qz.querySelectorAll('.qz-q')], qForm = $id('qzform'), qDone = $id('qzdone'), qBar = $id('qzbar'), qStep = $id('qzstep');
-    const qBack = $id('qzback'), qErr = $id('qzerr'), qGo = $id('qzgo'), qWa = $id('qzwa'), qSum = $id('qzsum'), qDt = $id('qzdt'), qDp = $id('qzdp');
-    const LABELS = ['Besoin', 'Secteur', 'Situation', 'Budget'], N = qQs.length - 1, ans = [];
-    const MSG = { name: 'Indiquez votre prénom et votre nom (lettres uniquement).', phone: 'Indiquez un numéro WhatsApp valide.', email: 'Indiquez une adresse e-mail valide.' };
-    let qCur = 0, qStarted = false;
-    const show = i => {
-      qCur = i;
-      qQs.forEach((q, k) => { const on = k === i; q.classList.toggle('on', on); q.disabled = !on; });
-      qBar.style.transform = `scaleX(${(i + 1) / (N + 1)})`;
-      qStep.textContent = i < N ? `Question ${i + 1} sur ${N}` : 'Dernière étape';
-      qBack.hidden = i === 0;
-      if (qStarted) { const f = qQs[i].querySelector('.qz-o.sel') || qQs[i].querySelector('.qz-o, input:not(.qz-hp)'); if (f) f.focus({ preventScroll: true }); }
-    };
-    qz.querySelectorAll('.qz-o').forEach(b => b.addEventListener('click', () => {
-      const q = b.closest('.qz-q'), i = qQs.indexOf(q);
-      q.querySelectorAll('.qz-o').forEach(o => { const s = o === b; o.classList.toggle('sel', s); o.setAttribute('aria-pressed', String(s)); });
-      ans[i] = b.dataset.v; qStarted = true;
-      later(() => show(Math.min(i + 1, N)), R ? 0 : 280);
-    }, qOpt));
-    qBack.addEventListener('click', () => { qStarted = true; show(Math.max(0, qCur - 1)); }, qOpt);
-    const summary = () => LABELS.map((l, i) => `${l} : ${ans[i] || 'non précisé'}`);
-    const finish = (name, sent) => {
-      const first = (name || '').split(' ')[0];
-      qForm.hidden = true; qDone.hidden = false; qz.classList.add('fin'); qStep.textContent = sent ? 'Envoyé' : 'Presque fini'; qBack.hidden = true; qBar.style.transform = 'scaleX(1)';
-      qDt.textContent = sent ? `C'est noté${first ? ', ' + first : ''} !` : `Plus qu'un clic${first ? ', ' + first : ''} !`;
-      qDp.textContent = sent ? 'On revient vers vous sous 24 h avec votre plan. Pour aller plus vite, écrivez-nous sur WhatsApp.' : 'Envoyez vos réponses sur WhatsApp et on vous répond rapidement avec votre plan.';
-      qSum.replaceChildren(...ans.filter(Boolean).map(a => { const li = document.createElement('li'); li.textContent = a; return li; }));
-      qWa.href = 'https://wa.me/212786449572?text=' + encodeURIComponent(`Bonjour Supra v3, je suis ${name || 'intéressé(e)'}. ${summary().join(' · ')}.`);
-    };
-    qForm.addEventListener('submit', async e => {
-      e.preventDefault(); qErr.textContent = '';
-      const fd = new FormData(qForm), name = String(fd.get('name') || '').trim().replace(/\s+/g, ' '), phone = String(fd.get('phone') || '').trim(), email = String(fd.get('email') || '').trim();
-      if (fd.get('website')) { finish(name, true); return; }
-      const digits = phone.replace(/\D/g, '');
-      const bad = !/^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+){0,5}$/.test(name) ? 'name' : (digits.length < 8 || digits.length > 15 || !/^\+?[0-9()[\]\s.-]{8,24}$/.test(phone)) ? 'phone' : !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]{2,}$/.test(email) ? 'email' : '';
-      if (bad) { qErr.textContent = MSG[bad]; const f = qForm.querySelector(`[name="${bad}"]`); if (f) f.focus(); return; }
-      if (!QZ_API) { finish(name, false); return; }
-      qGo.disabled = true;
-      let sent = false;
-      try {
-        const r = await fetch(QZ_API, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name, email, phone, website: '', startedAt: qT0, date: 'Demande via le quiz du site', time: 'À rappeler sous 24 h', message: `Demande via le quiz du site. ${summary().join(' · ')}.` }) });
-        const j = await r.json().catch(() => ({}));
-        sent = r.ok && j.ok === true;
-        if (!sent && j.errors && typeof j.errors === 'object') { const k = Object.keys(j.errors)[0]; qErr.textContent = j.errors[k]; qGo.disabled = false; return; }
-      } catch { sent = false; }
-      qGo.disabled = false;
-      finish(name, sent);
-    }, qOpt);
-    show(0);
-  }
+  /* quiz de contact (core/quiz.js) */
+  initQuiz(ctx)
+
+  /* barre de contact (core/dock.js) */
+  initDock(ctx)
 
   /* agent steps */
   const steps = [...root.querySelectorAll('#agent .st')]; let si = 0;
@@ -669,7 +491,6 @@ void main(){
   /* scroll-linked: stacked rows, parallax, timeline, dock */
   const rows = [...root.querySelectorAll('.row')], pars = [...root.querySelectorAll('.par')];
   const tlw = $id('tlw'), tfill = $id('tfill'), stps = [...tlw.querySelectorAll('.stp')];
-  const dock = $id('dock'), hero = $id('top'), fin = $id('contact');
   const frame = () => {
     const vh = innerHeight;
     if (!R && innerWidth > 900) rows.forEach((r, i) => {
@@ -682,20 +503,12 @@ void main(){
     const tr = tlw.getBoundingClientRect(); const tp = R ? 1 : clamp((vh * .55 - tr.top) / tr.height);
     tfill.style.setProperty('--p', tp.toFixed(4));
     stps.forEach(s => { const n = s.querySelector('.node').getBoundingClientRect(); s.classList.toggle('on', R || n.top < vh * .55); });
-    const hb = hero.getBoundingClientRect().bottom, ft = fin.getBoundingClientRect().top;
-    dock.classList.toggle('show', hb < vh * .35 && ft > vh * .7);
     rAF(frame);
   };
   rAF(frame);
 
   return () => {
-    alive = false
-    intervals.forEach(clearInterval)
-    timeouts.forEach(clearTimeout)
-    rafs.forEach(cancelAnimationFrame)
-    observers.forEach((o) => o.disconnect())
-    winListeners.forEach(([type, fn, opts]) => window.removeEventListener(type, fn, opts))
-    disposers.forEach((fn) => fn())
+    ctx.dispose()
     root.querySelectorAll('video.rvid').forEach((v) => v.pause())
     $id('tiles')?.replaceChildren()
     $id('blk3')?.replaceChildren()

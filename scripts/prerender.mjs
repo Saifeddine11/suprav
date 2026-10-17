@@ -76,6 +76,7 @@ async function prerenderRoute(page, route) {
     () => {
       const shell =
         document.querySelector('.app main') ||
+        document.querySelector('.v3 main') ||
         document.querySelector('main.page-content') ||
         document.querySelector('.seo-page') ||
         document.querySelector('.blog-page')
@@ -106,6 +107,7 @@ async function prerenderRoute(page, route) {
     return Boolean(
       document.querySelector('.seo-page') ||
         document.querySelector('.app main') ||
+        document.querySelector('.v3 main') ||
         document.querySelector('main.page-content') ||
         document.querySelector('.blog-page'),
     )

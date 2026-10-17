@@ -5,6 +5,10 @@
       "destination": "/api/contact"
     },
     {
+      "source": "/api/candidature.php",
+      "destination": "/api/candidature"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { useLocation, useNavigationType } from 'react-router-dom'
+import PageSEO from '../../components/PageSEO.jsx'
 import './home-v3.css'
 import initHomeV3 from './initHomeV3.js'
 import V3Nav from './sections/V3Nav.jsx'
@@ -30,11 +32,18 @@ import V3Dock from './sections/V3Dock.jsx'
  */
 export default function HomeV3() {
   const root = useRef(null)
+  const { hash } = useLocation()
+  const nav = useNavigationType()
 
-  useEffect(() => initHomeV3(root.current), [])
+  useEffect(() => {
+    if (nav !== 'POP' && !hash) window.scrollTo({ top: 0, behavior: 'instant' })
+    return initHomeV3(root.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- montage unique : le balisage est statique
+  }, [])
 
   return (
     <div className="v3" ref={root}>
+      <PageSEO title="Agence de communication 360° à Marrakech | Supra v3" description="Supra v3, agence de communication 360° à Marrakech, accompagne les marques en stratégie, branding, sites web, contenus, marketing digital et IA." path="/" />
       <V3Nav />
       <main>
         {/* Accroche */}

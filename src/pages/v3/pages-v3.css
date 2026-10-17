@@ -1,0 +1,82 @@
+/*
+ * Pages intérieures v3 : complète home-v3.css (mêmes jetons, mêmes boutons, mêmes animations).
+ * Tout est scopé sous .v3 ; les styles propres à une page vivent dans le fichier CSS de cette page.
+ */
+
+/* ---------- haut de page (voiles WebGL comme l'accueil) ---------- */
+.v3 .phero{position:relative;isolation:isolate;overflow:hidden;padding-top:calc(env(safe-area-inset-top,0px) + 148px);padding-bottom:clamp(72px,8vw,120px);min-height:min(78vh,760px);display:flex;flex-direction:column;justify-content:flex-end}
+.v3 .phero.sm{min-height:min(62vh,600px)}
+.v3 .ph-in{width:100%;display:grid;gap:clamp(28px,4vw,64px);align-items:end}
+.v3 .ph-in.has-aside{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.v3 .ph-main{display:grid;gap:22px;justify-items:start}
+.v3 .crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:#A9A39D}
+.v3 .crumbs a{transition:color .3s}
+.v3 .crumbs a:hover{color:#fff}
+.v3 .crumbs [aria-current]{color:#F3B39C}
+.v3 .crumbs span[aria-hidden]{opacity:.5}
+.v3 .h1.ph-t{font-size:clamp(40px,6vw,84px);max-width:15ch}
+.v3 .h1.ph-t .kick{margin-bottom:clamp(14px,1.6vw,22px)}
+.v3 .ph-tt{display:block}
+.v3 .phero .lede{color:#CFC9C2;max-width:58ch;font-size:clamp(15.5px,1.25vw,18px)}
+.v3 .ph-x{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.v3 .ph-aside{justify-self:end;width:100%;max-width:460px}
+@media (max-width:900px){.v3 .ph-in.has-aside{grid-template-columns:1fr}.v3 .ph-aside{justify-self:start}}
+@media (max-width:560px){.v3 .phero{padding-top:calc(env(safe-area-inset-top,0px) + 118px);min-height:0}.v3 .h1.ph-t{font-size:clamp(36px,10.5vw,52px)}}
+
+/* verre sombre posé sur les voiles (cartes d'appoint du haut de page) */
+.v3 .glass{border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(18,18,18,.55);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);box-shadow:0 30px 80px -40px rgba(0,0,0,.8)}
+
+/* ---------- puces de filtre ---------- */
+.v3 .flt{display:flex;flex-wrap:wrap;gap:8px}
+.v3 .flt button,.v3 .flt a{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:999px;border:1px solid rgba(11,11,11,.12);background:#fff;color:#3b3833;font:500 14px/1 var(--body);cursor:pointer;transition:background .3s,color .3s,border-color .3s,transform .4s var(--ease)}
+.v3 .flt button:hover,.v3 .flt a:hover{border-color:rgba(232,73,28,.55);transform:translateY(-1px)}
+.v3 .flt [aria-pressed="true"],.v3 .flt [aria-current="page"]{background:#0f0f0f;border-color:#0f0f0f;color:#fff}
+.v3 .flt .ct{font-size:12px;padding:3px 7px;border-radius:999px;background:rgba(11,11,11,.06);color:inherit;font-variant-numeric:tabular-nums}
+.v3 .flt [aria-pressed="true"] .ct,.v3 .flt [aria-current="page"] .ct{background:var(--ac);color:var(--on-ac)}
+.v3 .dark .flt button,.v3 .dark .flt a{background:rgba(255,255,255,.04);border-color:var(--line-d2);color:#E6E1DB}
+.v3 .dark .flt [aria-pressed="true"],.v3 .dark .flt [aria-current="page"]{background:var(--ac);border-color:var(--ac);color:var(--on-ac)}
+
+/* ---------- bandeau de repères chiffrés ---------- */
+.v3 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-radius:24px;border:1px solid var(--line-l);background:#fff;overflow:hidden}
+.v3 .kpi{padding:clamp(20px,2.4vw,30px);display:grid;gap:6px;border-left:1px solid var(--line-l)}
+.v3 .kpi:first-child{border-left:0}
+.v3 .kpi b{font:500 clamp(30px,3.4vw,46px)/1 var(--display);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.v3 .kpi b em{font-style:normal;color:var(--ac)}
+.v3 .kpi span{font-size:13.5px;color:var(--tx-2);line-height:1.45}
+.v3 .dark .kpis{background:#121212;border-color:var(--line-d)}
+.v3 .dark .kpi{border-color:var(--line-d)}
+.v3 .dark .kpi span{color:var(--fg-2)}
+@media (max-width:760px){.v3 .kpis{grid-template-columns:1fr 1fr}.v3 .kpi:nth-child(3){border-left:0}.v3 .kpi:nth-child(n+3){border-top:1px solid var(--line-l)}.v3 .dark .kpi:nth-child(n+3){border-top-color:var(--line-d)}}
+
+/* ---------- champs de formulaire (clairs, sur fond blanc ou brume) ---------- */
+.v3 .fld{display:grid;gap:7px;font:500 13px var(--body);color:#3b3833}
+.v3 .fld .opt{font-weight:400;color:#8b857e}
+.v3 .fld input,.v3 .fld select,.v3 .fld textarea{width:100%;min-height:52px;border-radius:14px;border:1px solid rgba(11,11,11,.14);background:#fff;color:var(--tx);font:400 15.5px var(--body);padding:0 16px;outline:none;transition:border-color .25s,box-shadow .25s}
+.v3 .fld textarea{padding:14px 16px;min-height:120px;resize:vertical;line-height:1.55}
+.v3 .fld select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C5752' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") right 14px center/18px no-repeat;padding-right:42px}
+.v3 .fld input::placeholder,.v3 .fld textarea::placeholder{color:#a19b94}
+.v3 .fld input:focus,.v3 .fld select:focus,.v3 .fld textarea:focus{border-color:var(--ac);box-shadow:0 0 0 4px rgba(232,73,28,.12)}
+.v3 .fld [aria-invalid="true"]{border-color:#d2361a;box-shadow:0 0 0 4px rgba(210,54,26,.1)}
+.v3 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
+/* ---------- bandeau d'appel secondaire ---------- */
+.v3 .band-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;border-radius:26px;padding:clamp(24px,3.4vw,44px);background:radial-gradient(120% 140% at 100% 0%,rgba(232,73,28,.22),transparent 55%),#0f0f0f;color:var(--fg);position:relative;overflow:hidden;isolation:isolate}
+.v3 .band-cta h2,.v3 .band-cta h3{font:500 clamp(24px,2.8vw,38px)/1.1 var(--display);letter-spacing:-.04em;max-width:22ch}
+.v3 .band-cta p{color:var(--fg-2);font-size:15px;margin-top:10px;max-width:52ch}
+
+/* ---------- carte vidéo (affiche, lecture au survol, plein écran au clic) ---------- */
+.v3 .vdlg{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:rgba(6,6,6,.92);display:none;place-items:center;z-index:90}
+.v3 .vdlg[open]{display:grid;animation:v3-fade .35s var(--ease)}
+.v3 .vdlg video{max-width:min(92vw,520px);max-height:86vh;border-radius:18px;background:#000;box-shadow:0 40px 120px -30px rgba(232,73,28,.45)}
+.v3 .vdlg .x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 16px);right:16px;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;display:grid;place-items:center;cursor:pointer}
+.v3 .vdlg .x svg{width:18px;height:18px}
+.v3 .vdlg .cap{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);text-align:center;font-size:13.5px;color:#CFC9C2}
+@keyframes v3-fade{from{opacity:0}}
+
+/* ---------- petits utilitaires ---------- */
+.v3 .pg main{display:block}
+.v3 .sec.tight{padding-block:clamp(56px,6vw,96px)}
+.v3 .muted{color:var(--tx-2)}
+.v3 .dark .muted{color:var(--fg-2)}
+.v3 .eyebrow{font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ac-ink)}
+.v3 .dark .eyebrow{color:#F3B39C}

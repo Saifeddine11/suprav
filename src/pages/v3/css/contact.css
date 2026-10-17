@@ -1,0 +1,88 @@
+/* Page /contact — classes ct-, scopées sous .v3. */
+
+/* ---------- haut de page : carte « au studio » en verre ---------- */
+.v3 .ct-now{padding:22px;display:grid;gap:8px;color:var(--fg)}
+.v3 .ct-now-t{display:flex;align-items:center;gap:10px;font-size:14px;color:#CFC9C2;padding:2px 2px 12px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:6px}
+.v3 .ct-now-t b{font:600 15px var(--display);color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.v3 .ct-now .live{width:8px;height:8px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 0 rgba(61,220,132,.6);animation:ct-live 2.2s infinite}
+@keyframes ct-live{0%{box-shadow:0 0 0 0 rgba(61,220,132,.55)}70%{box-shadow:0 0 0 8px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+.v3 .ct-now-r{display:flex;align-items:center;gap:14px;padding:10px;border-radius:14px;transition:background .3s}
+.v3 .ct-now-r:hover{background:rgba(255,255,255,.06)}
+.v3 .ct-now-r .ic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(232,73,28,.16);color:#FF8A5C}
+.v3 .ct-now-r .ic svg{width:18px;height:18px}
+.v3 .ct-now-r>span:last-child{display:grid;font:500 16px/1.3 var(--display);letter-spacing:-.01em;color:#fff;min-width:0;overflow-wrap:anywhere}
+.v3 .ct-now-r small{font:400 12px var(--body);color:var(--fg-2);letter-spacing:0}
+.v3 .ct-now-f{margin-top:6px;padding:12px 12px 2px;border-top:1px solid rgba(255,255,255,.1);font-size:12.5px;color:var(--fg-2)}
+@media (max-width:900px){.v3.ct .ph-aside{max-width:none}}
+
+/* le quiz suit directement le haut de page sombre */
+.v3.ct .final{padding-top:clamp(24px,3vw,40px)}
+
+/* ---------- canaux ---------- */
+.v3.ct .chead .l{justify-items:start}
+.v3 .ct-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.v3 .ct-card{position:relative;display:grid;align-content:start;gap:10px;padding:26px;border-radius:24px;background:#fff;border:1px solid var(--line-l);min-height:250px;transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.v3 .ct-card:hover{transform:translateY(-4px);box-shadow:0 30px 60px -35px rgba(0,0,0,.3)}
+.v3 .ct-card .ib{width:46px;height:46px;border-radius:13px;background:#0f0f0f;color:#fff;display:grid;place-items:center;margin-bottom:10px}
+.v3 .ct-card .ib svg{width:21px;height:21px}
+.v3 .ct-card .ib .bi path{fill:currentColor}
+.v3 .ct-card .lab{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#8b857e}
+.v3 .ct-card .val{font:500 clamp(19px,1.6vw,22px)/1.25 var(--display);letter-spacing:-.03em;overflow-wrap:anywhere}
+.v3 .ct-card .act{margin-top:auto;padding-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.v3 .ct-lnk{display:inline-flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#0f0f0f;color:#fff;font:600 13.5px var(--body);transition:background .3s}
+.v3 .ct-lnk:hover{background:var(--ac);color:var(--on-ac)}
+.v3 .ct-copy{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:999px;border:1px solid rgba(11,11,11,.14);background:#fff;color:#3b3833;font:500 13px var(--body);cursor:pointer;transition:border-color .3s,background .3s,color .3s}
+.v3 .ct-copy svg{width:15px;height:15px}
+.v3 .ct-copy:hover{border-color:rgba(232,73,28,.55)}
+.v3 .ct-copy.ok{background:#e9f9ef;border-color:#3ddc84;color:#13753c}
+.v3 .ct-wa{background:radial-gradient(120% 120% at 100% 0%,rgba(255,255,255,.22),transparent 55%),var(--ac);border-color:transparent;color:var(--on-ac);overflow:hidden;isolation:isolate}
+.v3 .ct-wa .ib{background:var(--on-ac);color:#fff}
+.v3 .ct-wa .lab{color:rgba(21,10,5,.7)}
+.v3 .ct-wa .vbtn{border-color:transparent}
+.v3 .ct-wa:hover{box-shadow:0 30px 60px -30px rgba(232,73,28,.8)}
+.v3 .ct-soc{gap:8px}
+.v3 .ct-soc a{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--mist);border:1px solid var(--line-l);color:#2a2724;transition:transform .4s var(--ease),background .3s,color .3s}
+.v3 .ct-soc a:hover{transform:translateY(-3px);background:#0f0f0f;color:#fff}
+.v3 .ct-soc svg{width:18px;height:18px}
+.v3 .ct-soc .bi path{fill:currentColor}
+@media (max-width:1060px){.v3 .ct-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.v3 .ct-grid{grid-template-columns:1fr}.v3 .ct-card{min-height:0}}
+
+/* ---------- le studio et la carte du Maroc en points ---------- */
+.v3 .ct-studio{padding-top:0}
+.v3 .ct-st{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,64px);align-items:center}
+.v3 .ct-st-l{display:grid;gap:22px;justify-items:start}
+.v3 .ct-st-l .h2 .it{color:var(--ac-ink)}
+.v3 .ct-st-l .ctas{justify-content:flex-start;align-items:center}
+.v3 .ct-addr{display:flex;gap:14px;align-items:flex-start;font-style:normal;padding:18px 20px;border-radius:18px;background:#fff;border:1px solid var(--line-l);font-size:15px;line-height:1.55;color:var(--tx-2)}
+.v3 .ct-addr b{display:block;color:var(--tx);font:600 15.5px var(--display);letter-spacing:-.01em;margin-bottom:2px}
+.v3 .ct-addr .ib{flex:none;width:40px;height:40px;border-radius:12px;background:var(--ac);color:var(--on-ac);display:grid;place-items:center}
+.v3 .ct-addr .ib svg{width:19px;height:19px}
+
+.v3 .ct-map{position:relative;display:block;border-radius:28px;overflow:hidden;background:radial-gradient(80% 70% at 42% 62%,rgba(232,73,28,.1),transparent 70%),#0d0d0d;border:1px solid rgba(0,0,0,.4);box-shadow:0 50px 100px -50px rgba(30,10,2,.55);padding:clamp(14px,2.6vw,30px)}
+.v3 .ct-map svg{display:block;width:100%;height:auto;overflow:visible}
+.v3 .ct-map .oth{fill:none;stroke:rgba(255,255,255,.07);stroke-width:4.4;stroke-linecap:round}
+.v3 .ct-map .ma{fill:none;stroke:rgba(255,255,255,.3);stroke-width:4.4;stroke-linecap:round}
+.v3 .ct-map .sea{font:italic 400 17px var(--serif);fill:rgba(255,255,255,.3);letter-spacing:.01em}
+.v3 .ct-map .lk{fill:none;stroke:var(--ac);stroke-width:2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0;opacity:.85}
+.v3 .ct-map.pre .lk{stroke-dashoffset:1}
+.v3 .ct-map.pre.in .lk{animation:ct-draw 1.4s var(--ease) forwards;animation-delay:calc(var(--k,0) * 220ms + 500ms)}
+@keyframes ct-draw{to{stroke-dashoffset:0}}
+.v3 .ct-map .town circle{fill:rgba(255,255,255,.55)}
+.v3 .ct-map .town.on circle{fill:#F6F4F1}
+.v3 .ct-map .town text{font:500 17px var(--body);fill:#8f8882}
+.v3 .ct-map .town.on text{fill:#CFC9C2}
+.v3 .ct-map .hq .dot{fill:var(--ac);stroke:#fff;stroke-width:4}
+.v3 .ct-map .hq text{font:600 22px var(--display);fill:#fff;letter-spacing:-.02em}
+.v3 .ct-map .ring{fill:none;stroke:var(--ac);stroke-width:2.4;transform-box:fill-box;transform-origin:center;animation:ct-ring 2.8s ease-out infinite}
+.v3 .ct-map .ring.r2{animation-delay:1.4s}
+@keyframes ct-ring{from{transform:scale(1);opacity:.9}to{transform:scale(5.5);opacity:0}}
+.v3 .ct-geo{position:absolute;left:clamp(14px,2.4vw,26px);bottom:clamp(12px,2.2vw,22px);display:inline-flex;align-items:center;height:38px;padding:0 13px;border-radius:999px;background:rgba(13,13,13,.82);border:1px solid rgba(255,255,255,.1);font:500 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:rgba(255,255,255,.55)}
+.v3 .ct-open{position:absolute;right:clamp(14px,2.4vw,26px);bottom:clamp(12px,2.2vw,22px);display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;font:600 13px var(--body);transition:background .3s,color .3s}
+.v3 .ct-open svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.v3 .ct-map:hover .ct-open{background:var(--ac);border-color:var(--ac);color:var(--on-ac)}
+.v3 .ct-map:hover .ct-open svg{transform:translate(2px,-2px)}
+@media (max-width:900px){.v3 .ct-st{grid-template-columns:1fr}}
+@media (max-width:560px){.v3 .ct-map{border-radius:22px}.v3 .ct-map .sea{font-size:22px}.v3 .ct-map .town text{font-size:24px}.v3 .ct-map .hq text{font-size:30px}.v3 .ct-geo{display:none}}
+@media (prefers-reduced-motion:reduce){.v3 .ct-map .ring,.v3 .ct-now .live{animation:none}.v3 .ct-map .ring{opacity:0}.v3 .ct-map .lk{stroke-dashoffset:0;animation:none}}
+.v3.ct #contact{scroll-margin-top:72px}
