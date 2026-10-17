@@ -126,6 +126,12 @@ async function prerenderRoute(page, route) {
 }
 
 async function main() {
+  // Vercel n'a pas les bibliothèques système de Chrome : le pré-rendu y fait échouer la build.
+  // Les aperçus Vercel servent donc la version SPA ; le pré-rendu reste fait pour Hostinger.
+  if (process.env.VERCEL && process.env.PRERENDER_ON_VERCEL !== '1') {
+    console.log('[prerender] Vercel détecté : pré-rendu ignoré (SPA servie telle quelle).')
+    return
+  }
   console.log(`\n[prerender] ${PRERENDER_ROUTES.length} routes → dist/…\n`)
 
   let preview
