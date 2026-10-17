@@ -574,12 +574,34 @@ button {
 
 .hero {
   text-align: center;
-  padding: var(--space-6xl) var(--space-4xl) var(--space-5xl);
-  max-width: var(--max-width-text);
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   backface-visibility: hidden;
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-width-text);
+  margin: 0 auto;
+  padding: var(--space-6xl) var(--space-4xl) var(--space-2xl);
+}
+
+.hero__cta {
+  margin-top: 28px;
+}
+
+.hero__trust {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-width-text);
+  margin: 0 auto;
+  padding: var(--space-3xl) var(--space-4xl) var(--space-4xl);
 }
 
 .hero__background {
@@ -711,7 +733,7 @@ button {
   align-items: center;
   width: 100%;
   max-width: 100%;
-  margin: 0 auto 50px;
+  margin: 0 auto 36px;
   padding: 0 var(--space-md);
   box-sizing: border-box;
 }
@@ -834,7 +856,7 @@ button {
 }
 
 .hero__cta {
-  margin-top: 44px;
+  margin-top: 28px;
 }
 
 
@@ -1140,8 +1162,15 @@ button {
   }
 
   .hero {
-    padding: var(--space-6xl) var(--space-2xl) var(--space-5xl);
     max-width: 100%;
+  }
+
+  .hero__content {
+    padding: var(--space-6xl) var(--space-2xl) var(--space-2xl);
+  }
+
+  .hero__trust {
+    padding: var(--space-2xl) var(--space-2xl) var(--space-3xl);
   }
 
   .hero__title {

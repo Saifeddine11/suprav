@@ -105,6 +105,9 @@ AddDefaultCharset UTF-8
   Header always set X-Frame-Options "DENY"
   Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
-  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self'; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self'; upgrade-insecure-requests"
+  # Tout script tiers chargé par index.html (pixel Meta, GA4, Ahrefs) doit être autorisé ci-dessous, sinon le navigateur le refuse.
+  # Pixel Meta : script-src (connect.facebook.net) puis www.facebook.com en connect-src, form-action et frame-src
+  # (sous Chrome, un événement de plus de 2048 caractères part par formulaire dans une iframe).
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://connect.facebook.net https://www.googletagmanager.com https://analytics.ahrefs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self'; connect-src 'self' https://challenges.cloudflare.com https://www.facebook.com https://www.googletagmanager.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://stats.g.doubleclick.net https://analytics.ahrefs.com; frame-src https://challenges.cloudflare.com https://www.facebook.com; form-action 'self' https://www.facebook.com; upgrade-insecure-requests"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 </IfModule>

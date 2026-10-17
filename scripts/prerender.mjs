@@ -21,6 +21,11 @@ const PREVIEW_URL = `http://127.0.0.1:${PREVIEW_PORT}`
 const IS_CI = process.env.CI === 'true'
 const NAV_TIMEOUT_MS = IS_CI ? 120_000 : 90_000
 const WAIT_TIMEOUT_MS = IS_CI ? 45_000 : 30_000
+// Scripts de mesure (GA4, pixel Meta, Ahrefs) : jamais chargés pendant le prerender,
+// sinon chaque build compterait des visites et des PageView fantômes.
+const ANALYTICS_HOSTS = ['googletagmanager.com', 'google-analytics.com', 'facebook.net', 'facebook.com', 'analytics.ahrefs.com']
+// Balise insérée dans le DOM par le snippet du pixel : retirée de l’instantané, le snippet la recrée au chargement.
+const INJECTED_PIXEL_SCRIPT = /<script[^>]*src="https:\/\/connect\.facebook\.net\/[^"]*fbevents\.js"[^>]*><\/script>/g
 
 function waitForPreviewReady(proc, timeoutMs = 60000) {
   return new Promise((resolve, reject) => {
@@ -109,7 +114,7 @@ async function prerenderRoute(page, route) {
     throw new Error(`Missing main content shell for ${route}`)
   }
 
-  const html = await page.content()
+  const html = (await page.content()).replace(INJECTED_PIXEL_SCRIPT, '')
   const outRel = routeToOutputFile(route)
   const outPath = join(DIST, outRel)
   await mkdir(dirname(outPath), { recursive: true })
@@ -135,6 +140,12 @@ async function main() {
     const page = await browser.newPage()
     await page.setViewport({ width: 1280, height: 800 })
     page.setDefaultNavigationTimeout(NAV_TIMEOUT_MS)
+    await page.setRequestInterception(true)
+    page.on('request', (request) => {
+      const { hostname } = new URL(request.url())
+      if (ANALYTICS_HOSTS.some((host) => hostname === host || hostname.endsWith(`.${host}`))) request.abort()
+      else request.continue()
+    })
     if (process.env.PUPPETEER_EXECUTABLE_PATH) {
       console.log(`[prerender] Chrome: ${process.env.PUPPETEER_EXECUTABLE_PATH}`)
     }

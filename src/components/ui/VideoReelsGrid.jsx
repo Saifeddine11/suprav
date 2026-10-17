@@ -84,6 +84,11 @@ function VideoReelCard({ item, onOpen }) {
         ) : null}
 
         <span className="video-reel-card__shade" aria-hidden="true" />
+        {item.stat ? (
+          <span className="video-reel-card__stat">
+            <strong>{item.stat.value}</strong> {item.stat.label}
+          </span>
+        ) : null}
 
         {showPlay ? (
           <button

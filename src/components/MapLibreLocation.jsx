@@ -46,6 +46,12 @@ export default function MapLibreLocation({ className = '' }) {
 
       if (cancelled || !containerRef.current) return
 
+      const markReady = () => {
+        if (cancelled) return
+        map?.resize()
+        setIsReady(true)
+      }
+
       map = new maplibregl.Map({
         container: containerRef.current,
         style: MAP_STYLE_URL,
@@ -59,6 +65,13 @@ export default function MapLibreLocation({ className = '' }) {
 
       mapRef.current = map
 
+      // Register immediately — cached styles can fire `load` before addControl/Marker finish.
+      if (map.loaded()) {
+        markReady()
+      } else {
+        map.once('load', markReady)
+      }
+
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
 
       const markerEl = document.createElement('div')
@@ -69,10 +82,6 @@ export default function MapLibreLocation({ className = '' }) {
       new maplibregl.Marker({ element: markerEl, anchor: 'center' })
         .setLngLat([OFFICE_LNG, OFFICE_LAT])
         .addTo(map)
-
-      map.on('load', () => {
-        if (!cancelled) setIsReady(true)
-      })
     }
 
     initMap().catch(() => {
@@ -89,7 +98,7 @@ export default function MapLibreLocation({ className = '' }) {
   return (
     <div
       ref={wrapperRef}
-      className={`map-location${className ? ` ${className}` : ''}`}
+      className={`map-location${isReady ? ' is-ready' : ''}${className ? ` ${className}` : ''}`}
       aria-label="Carte de localisation de Supra v3 à Marrakech"
     >
       <div className={`map-location__placeholder${isReady ? ' is-hidden' : ''}`} aria-hidden={isReady}>

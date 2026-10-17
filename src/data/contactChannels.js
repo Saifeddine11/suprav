@@ -4,6 +4,24 @@ export const PHONE_TEL = 'tel:+212786449572'
 export const WHATSAPP_MSISDN = '212786449572'
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_MSISDN}`
 
+export const SOCIAL_LINKS = [
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    href: 'https://www.instagram.com/supra_v3/',
+  },
+  {
+    id: 'tiktok',
+    label: 'TikTok',
+    href: 'https://www.tiktok.com/@supravofficiel',
+  },
+  {
+    id: 'snapchat',
+    label: 'Snapchat',
+    href: 'https://snapchat.com/t/jL89tQsB',
+  },
+]
+
 export function whatsappUrl(encodedText = '') {
   if (!encodedText) return WHATSAPP_URL
   return `${WHATSAPP_URL}?text=${encodedText}`

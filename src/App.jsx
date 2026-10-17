@@ -8,30 +8,22 @@ import SiteHeader from './components/SiteHeader.jsx'
 import SiteFooter from './components/SiteFooter.jsx'
 import { ParallaxBackground } from './useParallax.jsx'
 import { DURATION, EASING, STAGGER, ANIMATE_VARIANTS, TRANSITION_PROPS, VIEWPORT_SETTINGS, HOVER_TRANSITION } from './animationConstants.js'
-import { HOMEPAGE_VIDEO_ITEMS } from './data/videoProjects.js'
+import { HOMEPAGE_VIDEO_ITEMS, shuffleVideoItems } from './data/videoProjects.js'
 import { SEO_PAGES } from './data/seoPages.js'
 import { partnerImage } from './data/partnerAssets.js'
 import useFinePointer from './hooks/useFinePointer.js'
 const VideoReelModal = lazy(() => import('./components/ui/VideoReelModal.jsx'))
 import HomeWebsiteShowcase from './components/home/HomeWebsiteShowcase.jsx'
-import TargetingSection from './components/home/TargetingSection.jsx'
 import AnimatedText from './components/animations/AnimatedText.jsx'
 import { PHONE_DISPLAY, PHONE_TEL } from './data/contactChannels.js'
+import { trackContactIntent, trackEvent } from './utils/analytics.js'
 
 const LOGO_SRC = '/logo.webp'
-const nousImage = '/nous.webp'
 
 /* ============================================================
    HELPERS
    ============================================================ */
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
-const mix = (start, end, amount) => start + (end - start) * amount
-const easeOutCubic = (value) => 1 - Math.pow(1 - value, 3)
-const easeInOutCubic = (value) => (
-  value < 0.5
-    ? 4 * value * value * value
-    : 1 - Math.pow(-2 * value + 2, 3) / 2
-)
 const CONTACT_API_ENDPOINT = '/api/contact.php'
 const IS_LOCAL_FORM_PREVIEW = import.meta.env.DEV
 const CONTACT_RECAP_STORAGE_KEY = 'suprav-contact-recap'
@@ -48,7 +40,6 @@ const INITIAL_CONTACT_VALUES = {
 const ERROR_MESSAGES = {
   requiredName: 'Veuillez indiquer votre nom complet.',
   invalidName: 'Veuillez indiquer votre nom complet.',
-  requiredEmail: 'Merci de saisir votre adresse email.',
   invalidEmail: 'Merci de saisir une adresse email valide.',
   requiredPhone: 'Merci d’indiquer votre numéro de téléphone.',
   invalidPhone: 'Merci d’indiquer un numéro de téléphone valide.',
@@ -166,8 +157,7 @@ const validateContactForm = (values, options = {}) => {
     || /\d/.test(normalized.name)
   ) errors.name = ERROR_MESSAGES.invalidName
 
-  if (!normalized.email) errors.email = ERROR_MESSAGES.requiredEmail
-  else if (normalized.email.length > 120 || !EMAIL_PATTERN.test(normalized.email)) errors.email = ERROR_MESSAGES.invalidEmail
+  if (normalized.email && (normalized.email.length > 120 || !EMAIL_PATTERN.test(normalized.email))) errors.email = ERROR_MESSAGES.invalidEmail
 
   if (!normalized.phone) errors.phone = ERROR_MESSAGES.requiredPhone
   else if (!isLikelyPhone(normalized.phone)) errors.phone = ERROR_MESSAGES.invalidPhone
@@ -1341,6 +1331,7 @@ function CtaSection() {
       setFormStartedAt(Date.now())
       setFormStatus('sent')
       resetTurnstile()
+      trackEvent('generate_lead', { form_name: 'rendez_vous_accueil' })
     } catch {
       setContactErrors({ form: 'Votre message n’a pas pu être envoyé pour le moment. Merci de réessayer dans quelques instants.' })
       setFormStatus('blocked')
@@ -1381,7 +1372,7 @@ function CtaSection() {
               </motion.div>
 
               <motion.div className="cta-contact-copy__details" variants={fadeUpChild}>
-                <a href={PHONE_TEL}>{PHONE_DISPLAY}</a>
+                <a href={PHONE_TEL} onClick={() => trackContactIntent('phone', 'home_cta')}>{PHONE_DISPLAY}</a>
                 <a href="/contact">contact@suprav3.com</a>
               </motion.div>
 
@@ -1492,6 +1483,7 @@ function CtaSection() {
                     href="https://wa.me/212786449572?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackContactIntent('whatsapp', 'home_cta_urgence')}
                   >
                     Appel d'urgence
                   </a>
@@ -1549,7 +1541,7 @@ function CtaSection() {
                   </motion.label>
 
                   <motion.label className="cta-field" variants={fadeUpChild}>
-                    <span>Email</span>
+                    <span>Email <em className="cta-field__optional">(facultatif)</em></span>
                     <input
                       name="email"
                       type="email"
@@ -1557,7 +1549,6 @@ function CtaSection() {
                       autoComplete="email"
                       inputMode="email"
                       maxLength="120"
-                      required
                       value={contactValues.email}
                       onChange={handleContactChange}
                       onBlur={handleContactBlur}
@@ -1737,6 +1728,11 @@ function MediaVideoCard({ item, onOpen }) {
             decoding="async"
           />
         ) : null}
+        {item.stat ? (
+          <span className="media-clouds__stat">
+            <strong>{item.stat.value}</strong> {item.stat.label}
+          </span>
+        ) : null}
         <span className="media-clouds__play" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5.14v14.72a1 1 0 0 0 1.52.85l11.02-7.36a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z" />
@@ -1747,7 +1743,7 @@ function MediaVideoCard({ item, onOpen }) {
   )
 }
 
-function MediaCloudsSection({ items }) {
+function MediaCloudsSection({ items, showHeader = true, className = '' }) {
   const sectionRef = useRef(null)
   const [shouldLoadVideos, setShouldLoadVideos] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
@@ -1778,28 +1774,36 @@ function MediaCloudsSection({ items }) {
   }, [shouldLoadVideos])
 
   return (
-    <section className="media-clouds section" id="works" ref={sectionRef}>
-      <motion.div
-        className="media-clouds__header"
-        variants={stagger}
-        initial="hidden"
-        whileInView="visible"
-        viewport={revealViewport}
-      >
-        <motion.p variants={fadeUpChild} className="label">01 — Production vidéo</motion.p>
-        <motion.h2 variants={fadeUpChild} className="heading-2">
-          Production vidéo pour marques ambitieuses
-        </motion.h2>
-        <motion.p variants={fadeUpChild} className="media-clouds__lead">
-          Des vidéos pensées pour capter l&apos;attention, raconter votre marque et transformer vos
-          contenus en vrais leviers de visibilité.
-        </motion.p>
-        <motion.p variants={fadeUpChild} style={{ marginTop: 20 }}>
-          <a href="/realisations" className="btn btn--secondary">
-            Découvrir nos réalisations vidéo →
-          </a>
-        </motion.p>
-      </motion.div>
+    <section
+      className={['media-clouds', 'section', !showHeader && 'media-clouds--hero', className]
+        .filter(Boolean)
+        .join(' ')}
+      id="works"
+      ref={sectionRef}
+    >
+      {showHeader ? (
+        <motion.div
+          className="media-clouds__header"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={revealViewport}
+        >
+          <motion.p variants={fadeUpChild} className="label">01 — Production vidéo</motion.p>
+          <motion.h2 variants={fadeUpChild} className="heading-2">
+            Production vidéo pour marques ambitieuses
+          </motion.h2>
+          <motion.p variants={fadeUpChild} className="media-clouds__lead">
+            Des vidéos pensées pour capter l&apos;attention, raconter votre marque et transformer vos
+            contenus en vrais leviers de visibilité.
+          </motion.p>
+          <motion.p variants={fadeUpChild} style={{ marginTop: 20 }}>
+            <a href="/realisations" className="btn btn--secondary">
+              Découvrir nos réalisations vidéo →
+            </a>
+          </motion.p>
+        </motion.div>
+      ) : null}
 
       <div className="media-clouds__frame">
         <div className="media-clouds__viewport">
@@ -1809,7 +1813,10 @@ function MediaCloudsSection({ items }) {
                 <MediaVideoCard
                   key={`${item.id}-${index}`}
                   item={item}
-                  onOpen={() => setActiveIndex(index % items.length)}
+                  onOpen={() => {
+                    setActiveIndex(index % items.length)
+                    trackEvent('select_content', { content_type: 'video', item_id: item.id })
+                  }}
                 />
               ))}
           </div>
@@ -1827,136 +1834,6 @@ function MediaCloudsSection({ items }) {
           />
         </Suspense>
       ) : null}
-    </section>
-  )
-}
-
-function StorySection() {
-  const sectionRef = useRef(null)
-  const [isMobile, setIsMobile] = useState(() => (
-    typeof window === 'undefined' ? false : window.matchMedia('(max-width: 768px)').matches
-  ))
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  })
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 32,
-    mass: 0.35,
-  })
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)')
-    const updateMobile = () => setIsMobile(mediaQuery.matches)
-
-    updateMobile()
-    mediaQuery.addEventListener('change', updateMobile)
-
-    return () => mediaQuery.removeEventListener('change', updateMobile)
-  }, [])
-
-  const growPhase = useTransform(progress, (latest) => easeInOutCubic(clamp((latest - 0.08) / 0.72, 0, 1)))
-  const introPhase = useTransform(progress, (latest) => clamp(latest / 0.18, 0, 1))
-  const footerPhase = useTransform(progress, (latest) => easeOutCubic(clamp((latest - 0.78) / 0.16, 0, 1)))
-  const labelFade = useTransform(progress, (latest) => 1 - easeOutCubic(clamp((latest - 0.26) / 0.28, 0, 1)))
-  const captionOpacity = useTransform(progress, (latest) => {
-    const captionPhase = easeOutCubic(clamp((latest - 0.22) / 0.22, 0, 1))
-    const footer = easeOutCubic(clamp((latest - 0.78) / 0.16, 0, 1))
-    return mix(0, 1, captionPhase) * (1 - footer * 0.35)
-  })
-  const captionTranslate = useTransform(progress, (latest) => {
-    const captionPhase = easeOutCubic(clamp((latest - 0.22) / 0.22, 0, 1))
-    return `translate(-50%, ${mix(18, 0, captionPhase)}px)`
-  })
-  const storyClipPath = useTransform(growPhase, (latest) => {
-    const clipStartX = mix(isMobile ? 32 : 42, 0, latest)
-    const clipEndX = mix(isMobile ? 68 : 58, 100, latest)
-    const clipStartY = mix(isMobile ? 31 : 16, 0, latest)
-    const clipEndY = mix(isMobile ? 69 : 84, 100, latest)
-    const radius = mix(50, 0, latest)
-
-    return `inset(${clipStartY}% ${100 - clipEndX}% ${100 - clipEndY}% ${clipStartX}% round ${radius}px)`
-  })
-  const storyBackgroundSize = useTransform(progress, (latest) => (
-    `${isMobile ? 260 : mix(170, 100, clamp(latest / 0.9, 0, 1))}%`
-  ))
-  const storyRadius = useTransform(growPhase, (latest) => `${mix(50, 0, latest)}px`)
-  const storyShadeOpacity = useTransform(growPhase, (latest) => mix(0.38, 0, latest))
-  const storyIntroOpacity = useTransform(progress, (latest) => 1 - easeOutCubic(clamp((latest - 0.15) / 0.1, 0, 1)))
-  const storyPhotoOpacity = useTransform(progress, (latest) => easeOutCubic(clamp((latest - 0.15) / 0.1, 0, 1)))
-  const leftCopyRight = useTransform([introPhase, growPhase], ([intro, grow]) => {
-    const copyGap = mix(18, isMobile ? 28 : 36, intro)
-    const sideAnchor = mix(isMobile ? 66 : 90, isMobile ? 148 : 290, grow) + copyGap
-    const sideDrift = mix(0, isMobile ? 8 : 18, grow)
-
-    return `calc(50% + ${sideAnchor - sideDrift}px)`
-  })
-  const rightCopyLeft = leftCopyRight
-  const copyTransform = useTransform(footerPhase, (footer) => (
-    `translateY(calc(-50% + ${mix(0, -18, footer)}px))`
-  ))
-
-  return (
-    <section className="story-shell lstory-shel" ref={sectionRef} id="about">
-      <div className="story-shell__sticky">
-        <div className="story-scene">
-          <motion.div
-            className="story-copy story-copy--left"
-            style={{
-              right: leftCopyRight,
-              opacity: labelFade,
-              transform: copyTransform,
-            }}
-          >
-            Nous sommes
-          </motion.div>
-
-          <motion.div
-            className="story-card"
-            style={{
-              clipPath: storyClipPath,
-              borderRadius: storyRadius,
-            }}
-          >
-            <motion.div
-              className="story-card__photo"
-              style={{
-                backgroundImage: `url(${nousImage})`,
-                backgroundSize: storyBackgroundSize,
-                opacity: storyPhotoOpacity,
-              }}
-            />
-            <motion.div className="story-card__shade" style={{ opacity: storyShadeOpacity }} />
-            <div className="story-card__veil" />
-            <motion.div
-              className="story-card__caption"
-              style={{
-                opacity: captionOpacity,
-                transform: captionTranslate,
-              }}
-            >
-              Pas qu'une
-              <br />
-              agence.
-            </motion.div>
-            <motion.div className="story-card__intro" style={{ opacity: storyIntroOpacity }}>
-              <img src="/favicon.svg" alt="" aria-hidden="true" />
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="story-copy story-copy--right"
-            style={{
-              left: rightCopyLeft,
-              opacity: labelFade,
-              transform: copyTransform,
-            }}
-          >
-            Supra<span className="story-copy__mark">v3</span>
-          </motion.div>
-        </div>
-      </div>
     </section>
   )
 }
@@ -2026,7 +1903,8 @@ function App() {
     }
   })
 
-  const homepageVideos = HOMEPAGE_VIDEO_ITEMS
+  // Ordre aléatoire à chaque chargement de la page (mélange une seule fois par montage).
+  const [homepageVideos] = useState(() => shuffleVideoItems(HOMEPAGE_VIDEO_ITEMS))
 
   return (
     <div className="app">
@@ -2042,95 +1920,82 @@ function App() {
         <section className="hero">
           <div className="hero__background" aria-hidden="true" />
 
-          <div className="trust-bar">
-            <div className="trust-bar__inner">
-              <div className="trust-bar__avatars" aria-hidden="true">
-                <div className="trust-bar__avatar">
-                  <img src={partnerImage(3)} alt="Client accompagné par Supra v3" width={32} height={32} decoding="async" />
+          <div className="hero__content">
+            <div className="trust-bar">
+              <div className="trust-bar__inner">
+                <div className="trust-bar__avatars">
+                  <div className="trust-bar__avatar">
+                    <img src={partnerImage(3)} alt="Client accompagné par Supra v3" width={32} height={32} decoding="async" />
+                  </div>
+                  <div className="trust-bar__avatar">
+                    <img src={partnerImage(5)} alt="Marque accompagnée par Supra v3" width={32} height={32} decoding="async" />
+                  </div>
+                  <div className="trust-bar__avatar">
+                    <img src={partnerImage(12)} alt="Projet réalisé avec Supra v3" width={32} height={32} decoding="async" />
+                  </div>
                 </div>
-                <div className="trust-bar__avatar">
-                  <img src={partnerImage(5)} alt="Marque accompagnée par Supra v3" width={32} height={32} decoding="async" />
-                </div>
-                <div className="trust-bar__avatar">
-                  <img src={partnerImage(12)} alt="Projet réalisé avec Supra v3" width={32} height={32} decoding="async" />
-                </div>
+                <p className="trust-bar__text">
+                  Marrakech · Disponible pour de nouveaux projets
+                </p>
               </div>
-              <p className="trust-bar__text">
-                Marrakech · Disponible pour de nouveaux projets
-              </p>
+            </div>
+
+            <AnimatedText
+              as="h1"
+              className="heading-hero hero__title"
+              lineClassName="hero__title-line"
+              lines={[
+                [
+                  { text: 'Agence' },
+                  { text: 'de' },
+                  { text: 'communication' },
+                  { text: '360°', className: 'text-accent hero__number' },
+                ],
+                [
+                  { text: 'à' },
+                  { text: 'Marrakech' },
+                  { text: 'pour', className: 'hero__title-muted' },
+                  { text: 'faire' },
+                  { text: 'grandir' },
+                ],
+                [
+                  { text: 'votre', className: 'hero__title-muted' },
+                  { text: 'marque', className: 'text-accent' },
+                ],
+              ]}
+              animateBy="words"
+              direction="top"
+              delay={90}
+              stepDuration={0.35}
+              instant
+            />
+
+            <div className="hero__cta">
+              <a href="/realisations" className="btn btn--primary">
+                Voir nos réalisations
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+              <HoverButtonLink href="/contact" className="btn btn--secondary hero-hover-button">
+                Demander un diagnostic
+              </HoverButtonLink>
             </div>
           </div>
 
-          <AnimatedText
-            as="h1"
-            className="heading-hero hero__title"
-            lineClassName="hero__title-line"
-            lines={[
-              [
-                { text: 'Agence' },
-                { text: 'de' },
-                { text: 'communication' },
-                { text: '360°', className: 'text-accent hero__number' },
-              ],
-              [
-                { text: 'à' },
-                { text: 'Marrakech' },
-                { text: 'pour', className: 'hero__title-muted' },
-                { text: 'faire' },
-                { text: 'grandir' },
-              ],
-              [
-                { text: 'votre', className: 'hero__title-muted' },
-                { text: 'marque', className: 'text-accent' },
-              ],
-            ]}
-            animateBy="words"
-            direction="top"
-            delay={90}
-            stepDuration={0.35}
-            instant
-          />
+          {/* Vidéos — juste sous les CTA */}
+          <MediaCloudsSection items={homepageVideos} showHeader={false} />
 
-          <AnimatedText
-            as="p"
-            className="text-body hero__subtitle"
-            text="Supra v3 aide les marques ambitieuses à Marrakech à construire une image forte, un site performant et une communication qui génère des demandes concrètes — branding, contenus, web, marketing digital et automatisation IA."
-            animateBy="words"
-            direction="top"
-            delay={80}
-            stepDuration={0.32}
-            instant
-          />
-
-          <div className="hero__cta">
-            <a href="/services" className="btn btn--primary">
-              Découvrir nos services
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-            <HoverButtonLink href="/contact" className="btn btn--secondary hero-hover-button">
-              Demander un diagnostic
-            </HoverButtonLink>
-          </div>
+          {/* Bandeau vitrine sites web */}
+          <HomeWebsiteShowcase />
         </section>
 
-        {/* Bandeau vitrine sites web (remplace l’ancien ticker secteurs noir) */}
-        <HomeWebsiteShowcase />
-
-        {/* ========== COLLABORATEURS ========== */}
+        {/* ========== NOS CLIENTS ========== */}
         <CollaboratorsSection />
-
-        {/* ========== RÉALISATIONS (existant) ========== */}
-        <MediaCloudsSection items={homepageVideos} />
 
         {/* ========== NEW SECTIONS ========== */}
         <ServicesSection />
-        <TargetingSection />
         <MethodeSection />
-
-        {/* ========== STORY (après Process / Méthode) ========== */}
-        <StorySection />
 
         <SegmentsSection />
         <FaqSection />
@@ -2142,4 +2007,5 @@ function App() {
   )
 }
 
+export { MediaCloudsSection } // réutilisé tel quel en tête de la landing /votre-projet
 export default App

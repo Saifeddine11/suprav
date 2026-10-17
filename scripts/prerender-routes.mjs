@@ -9,6 +9,7 @@ export const PRERENDER_ROUTES = [
   '/realisations/websites',
   '/realisations/production-videos',
   '/contact',
+  '/votre-projet',
   '/blog',
   '/mentions-legales',
 ]

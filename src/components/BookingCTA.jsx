@@ -8,6 +8,7 @@ import { motion } from 'motion/react'
 import '../App.css'
 import { ANIMATE_VARIANTS, VIEWPORT_SETTINGS } from '../animationConstants.js'
 import { PHONE_DISPLAY, PHONE_TEL, WHATSAPP_URL } from '../data/contactChannels.js'
+import { trackContactIntent, trackEvent } from '../utils/analytics.js'
 import AnimatedText from './animations/AnimatedText.jsx'
 
 import { partnerImage } from '../data/partnerAssets.js'
@@ -184,8 +185,8 @@ export default function BookingCTA({ pageHero = false }) {
               </motion.div>
 
               <motion.div className="cta-contact-copy__details" variants={fadeUp}>
-                <a href={PHONE_TEL}>{PHONE_DISPLAY}</a>
-                <a href="mailto:contact@suprav3.com">contact@suprav3.com</a>
+                <a href={PHONE_TEL} onClick={() => trackContactIntent('phone', 'contact_page')}>{PHONE_DISPLAY}</a>
+                <a href="mailto:contact@suprav3.com" onClick={() => trackContactIntent('email', 'contact_page')}>contact@suprav3.com</a>
               </motion.div>
 
               <motion.div className="cta-social-proof" variants={fadeUp} aria-label="Note clients 4.9 sur 5">
@@ -268,7 +269,11 @@ export default function BookingCTA({ pageHero = false }) {
                       className={`cta-booking__time-slot${effectiveTime === time ? ' is-selected' : ''}`}
                       whileHover={{ y: -2, scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => setSelectedTime(time)}
+                      onClick={() => {
+                        setSelectedTime(time)
+                        trackEvent('schedule', { form_name: 'rendez_vous_contact', slot_time: time })
+                        trackContactIntent('whatsapp', 'contact_page_creneau')
+                      }}
                     >
                       {time}
                     </motion.a>
@@ -283,6 +288,7 @@ export default function BookingCTA({ pageHero = false }) {
                 href="https://wa.me/212786449572?text=Bonjour%2C%20je%20viens%20de%20votre%20site%20web%20et%20j%27ai%20besoin%20d%27un%20appel%20d%27urgence%20pour%20mon%20projet."
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackContactIntent('whatsapp', 'contact_page_urgence')}
               >
                 Appel d'urgence
               </a>
