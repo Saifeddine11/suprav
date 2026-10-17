@@ -1,7 +1,7 @@
 /**
  * Équipe Supra v3 — source unique pour la page /agence.
- * Les pôles s'affichent toujours ; les cartes membres apparaissent dès que TEAM contient des entrées.
- * Photos : public/media/equipe/<prenom-nom>.webp (portrait 4:5, 900 px de large) et <prenom-nom>-480.webp.
+ * Les pôles décrivent ce que fait le studio ; TEAM liste les personnes (carte avec photo, ou initiale en attendant la photo).
+ * Photos : public/media/equipe/<prenom>.webp (portrait 4:5, 900 px de large) et <prenom>-480.webp.
  */
 
 /**
@@ -23,13 +23,18 @@ export const POLES = [
 
 /**
  * @typedef {Object} TeamMember
- * @property {string} name — « Prénom Nom »
+ * @property {string} name — prénom ou nom d'usage, tel qu'il doit apparaître
  * @property {string} role — intitulé du poste
- * @property {Pole['id']} pole
- * @property {string} photo — chemin public, ex. '/media/equipe/prenom-nom.webp'
+ * @property {string} [photo] — chemin public, ex. '/media/equipe/prenom.webp' (portrait 4:5) ; sans photo, la carte affiche l'initiale
  * @property {string} [photo480] — version légère pour mobile
  * @property {string} [instagram] — URL du profil, facultatif
  */
 
-/** @type {TeamMember[]} */
-export const TEAM = []
+/** @type {TeamMember[]} — dans l'ordre d'affichage */
+export const TEAM = [
+  { name: 'Youli', role: 'Directeur marketing et senior editor' },
+  { name: 'Fali', role: 'Expert en cadrage' },
+  { name: 'Mymy', role: 'Project manager' },
+  { name: 'Abdel', role: 'Expert en media buying et stratégie digitale' },
+  { name: 'Saif Eddine', role: 'Expert en cybersécurité, agents IA, automatisation et développement web' },
+]

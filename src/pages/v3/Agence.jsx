@@ -108,12 +108,20 @@ function WorldMap() {
   )
 }
 
-function Member({ m }) {
+function Member({ m, i }) {
   return (
-    <li className="ag-mem" data-hov>
-      <figure>
-        <img src={m.photo} srcSet={m.photo480 ? `${m.photo480} 480w, ${m.photo} 900w` : undefined} sizes="(max-width: 600px) 50vw, 260px" width="900" height="1125" loading="lazy" decoding="async" alt={`${m.name}, ${m.role} chez Supra v3`} />
-      </figure>
+    <li className="ag-mem" data-hov style={{ '--i': i }}>
+      {m.photo ? (
+        <figure>
+          <img src={m.photo} srcSet={m.photo480 ? `${m.photo480} 480w, ${m.photo} 900w` : undefined} sizes="(max-width: 600px) 62vw, 240px" width="900" height="1125" loading="lazy" decoding="async" alt={`${m.name}, ${m.role} chez Supra v3`} />
+        </figure>
+      ) : (
+        <div className="ag-mono" aria-hidden="true">
+          <span className="ag-no">{String(i + 1).padStart(2, '0')}</span>
+          <span className="ag-ini">{m.name.charAt(0)}</span>
+          <span className="ag-stu">Supra v3 · Marrakech</span>
+        </div>
+      )}
       <div className="who">
         <b>{m.name}</b>
         <span>{m.role}</span>
@@ -124,9 +132,6 @@ function Member({ m }) {
 }
 
 export default function Agence() {
-  const byPole = POLES.map((p) => ({ ...p, people: TEAM.filter((m) => m.pole === p.id) }))
-  const crew = byPole.filter((p) => p.people.length)
-
   return (
     <PageV3 seo={SEO} init={initAgence} className="ag">
       <PageHero
@@ -185,40 +190,30 @@ export default function Agence() {
         </div>
       </section>
 
-      {/* L'équipe : les pôles toujours, les personnes dès que TEAM est rempli */}
+      {/* L'équipe : les personnes, puis les pôles du studio */}
       <section className="sec dark wrap ag-team" id="equipe">
         <div className="c">
           <SecHead
             badge="L'équipe"
-            label="Un seul studio"
-            title={<>Cinq pôles, <SwashR>une</SwashR> seule équipe.</>}
-            lede="Chaque pôle travaille dans le même studio : la vidéo, la publicité, le site et l'agent IA avancent ensemble, sans relais extérieur."
+            label="Le studio"
+            title={<>Les visages derrière <SwashR>vos</SwashR> projets.</>}
+            lede="Marketing, cadrage, gestion de projet, media buying, IA et web : chacun son métier, tous dans le même studio à Marrakech."
           />
+          <ul className="ag-mems">{TEAM.map((m, i) => <Member m={m} i={i} key={m.name} />)}</ul>
+
+          <div className="ag-sub" data-r>
+            <h3>Cinq pôles, une seule équipe.</h3>
+            <p>Chaque pôle travaille dans le même studio : la vidéo, la publicité, le site et l'agent IA avancent ensemble, sans relais extérieur.</p>
+          </div>
           <ul className="ag-poles">
-            {byPole.map((p, i) => (
+            {POLES.map((p, i) => (
               <li className="bc ag-pole" key={p.id} data-r={(i % 3) * 90}>
                 <div className="tp"><span className="ib"><Li k={p.icon} /></span><span className="n">{String(i + 1).padStart(2, '0')}</span></div>
                 <h3>{p.name}</h3>
                 <p>{p.text}</p>
-                {p.people.length ? (
-                  <div className="ag-faces" aria-label={`${p.people.length} personne${p.people.length > 1 ? 's' : ''}`}>
-                    {p.people.slice(0, 4).map((m) => <img key={m.name} src={m.photo480 || m.photo} alt="" width="34" height="34" loading="lazy" />)}
-                    <small>{p.people.length} personne{p.people.length > 1 ? 's' : ''}</small>
-                  </div>
-                ) : null}
               </li>
             ))}
           </ul>
-          {crew.length ? (
-            <div className="ag-crew">
-              {crew.map((p) => (
-                <div className="ag-grp" key={p.id} data-r>
-                  <h3><span className="ib"><Li k={p.icon} /></span>{p.name}</h3>
-                  <ul className="ag-mems">{p.people.map((m) => <Member m={m} key={m.name} />)}</ul>
-                </div>
-              ))}
-            </div>
-          ) : null}
         </div>
       </section>
 
