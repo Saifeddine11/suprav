@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { WEBSITE_PROJECTS, websitePosterAlt } from '../../data/websiteProjects.js'
 import AnimatedText from '../animations/AnimatedText.jsx'
+import BrowserMockup from '../ui/BrowserMockup.jsx'
 import '../../styles/home-website-showcase.css'
 
 const STRIP_ITEMS = [
-  { slug: 'emara-estates', size: 'lg' },
-  { slug: 'hachkar', size: 'md' },
-  { slug: 'by-merrachi', size: 'md' },
-  { slug: 'africa-beauty', size: 'md' },
-  { slug: 'gatsby-barber', size: 'md' },
-  { slug: 'verde-paris', size: 'lg' },
+  { slug: 'emara-estates' },
+  { slug: 'hachkar' },
+  { slug: 'by-merrachi' },
+  { slug: 'africa-beauty' },
+  { slug: 'gatsby-barber' },
+  { slug: 'verde-paris' },
 ]
 
 function projectBySlug(slug) {
@@ -21,34 +22,24 @@ function ShowcaseCard({ entry }) {
   if (!project?.poster) return null
 
   return (
-    <div className={`home-website-showcase__card home-website-showcase__card--${entry.size}`}>
-      <img
-        src={project.poster}
+    <div className="home-website-showcase__card">
+      <BrowserMockup
+        image={project.poster}
+        title={project.name}
+        url={project.publicUrl}
         alt={websitePosterAlt(project.name)}
-        width={480}
-        height={300}
-        loading="lazy"
-        decoding="async"
-        draggable="false"
+        aspectRatio="16 / 10"
+        className="home-website-showcase__mockup"
       />
     </div>
   )
 }
 
-/** Bandeau visuel projets web — une seule bande horizontale sous le hero */
+/** Bandeau visuel projets web — défilement auto + swipe horizontal (comme les vidéos) */
 export default function HomeWebsiteShowcase() {
-  const [loopTrack, setLoopTrack] = useState(false)
   const viewportRef = useRef(null)
   const [isOffscreen, setIsOffscreen] = useState(false)
   const [isNearViewport, setIsNearViewport] = useState(false)
-
-  useEffect(() => {
-    const media = window.matchMedia('(min-width: 769px)')
-    const update = () => setLoopTrack(media.matches)
-    update()
-    media.addEventListener('change', update)
-    return () => media.removeEventListener('change', update)
-  }, [])
 
   useEffect(() => {
     const viewport = viewportRef.current
@@ -70,7 +61,7 @@ export default function HomeWebsiteShowcase() {
     project: projectBySlug(entry.slug),
   })).filter(({ project }) => project?.poster)
 
-  const trackItems = loopTrack ? [...cards, ...cards] : cards
+  const trackItems = [...cards, ...cards]
 
   return (
     <section className="home-website-showcase" aria-label="Aperçu de projets web Supra v3">

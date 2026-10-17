@@ -474,6 +474,11 @@
     padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
   }
 
+  /* Page sans barre basse (landing) : rien à réserver sous le contenu */
+  .app.app--no-mobile-nav {
+    padding-bottom: 0;
+  }
+
   .whatsapp-fab {
     bottom: calc(92px + env(safe-area-inset-bottom, 0px));
     right: 16px;

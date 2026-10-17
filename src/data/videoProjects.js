@@ -1,3 +1,4 @@
+/** `stat` (facultatif) : chiffre affiché en haut de la carte — ex. { value: '2 M', label: 'de vues' }. */
 const VIDEO_BASE = '/media/videos/realisations'
 const POSTER_BASE = '/media/videos/posters'
 
@@ -64,20 +65,96 @@ const NEW_REALISATION_VIDEOS = [
     tags: ['Publicité', 'Vertical', '9:16'],
   },
   {
-    id: 'video-06',
-    slug: 'ehab-ads',
-    title: 'Emara Estates - Video ADS',
-    ariaLabel: 'Vidéo publicitaire — Supra v3',
-    sector: 'Contenu',
-    tags: ['Publicité', 'Vertical', '9:16'],
-  },
-  {
     id: 'video-07',
     slug: 'home-tour-bm',
     title: 'Home tour BM Conciergerie',
     ariaLabel: 'Home tour villa — BM Conciergerie — Supra v3',
     sector: 'Immobilier',
     tags: ['Home tour', 'Vertical', '9:16'],
+  },
+]
+
+/**
+ * Productions récentes — pour l’instant dans le bandeau de /votre-projet uniquement (ni l’accueil
+ * ni /realisations). Les déplacer dans NEW_REALISATION_VIDEOS les affiche partout.
+ */
+const LANDING_REALISATION_VIDEOS = [
+  {
+    id: 'video-08',
+    slug: 'prime-golf-ad',
+    title: 'Prime Golf',
+    ariaLabel: 'Vidéo publicitaire Prime Golf — Supra v3',
+    sector: 'Loisirs',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-09',
+    slug: 'pauline-localisation-ads',
+    title: 'Emara Estates - Ads emplacement et prix',
+    ariaLabel: 'Vidéo publicitaire immobilière, emplacement et prix — Supra v3',
+    sector: 'Immobilier',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-10',
+    slug: 'ava-bay',
+    title: 'Ava Bay',
+    ariaLabel: 'Vidéo lifestyle Ava Bay — Supra v3',
+    sector: 'Hospitality',
+    tags: ['Contenu', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-11',
+    slug: 'gym-factory',
+    stat: { value: '2 M', label: 'de vues' },
+    title: 'The Gym Factory',
+    ariaLabel: 'Vidéo publicitaire The Gym Factory — Supra v3',
+    sector: 'Fitness',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-12',
+    slug: 'prime-golf-match-cut',
+    title: 'Prime Golf - Match cut',
+    ariaLabel: 'Vidéo publicitaire Prime Golf, version match cut — Supra v3',
+    sector: 'Loisirs',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-14',
+    slug: 'faissal-ads-1',
+    stat: { value: '400', label: 'prospects générés' },
+    title: 'Faissal - Video ADS',
+    ariaLabel: 'Vidéo publicitaire Faissal — Supra v3',
+    sector: 'Contenu',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-15',
+    slug: 'fayssal-ads-2',
+    stat: { value: '400', label: 'prospects générés' },
+    title: 'Fayssal - Video ADS 2',
+    ariaLabel: 'Vidéo publicitaire Fayssal, seconde version — Supra v3',
+    sector: 'Contenu',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-16',
+    slug: 'gym-factory-ad',
+    stat: { value: '2 M', label: 'de vues' },
+    title: 'The Gym Factory - Video ADS',
+    ariaLabel: 'Vidéo publicitaire The Gym Factory, version sans hook — Supra v3',
+    sector: 'Fitness',
+    tags: ['Publicité', 'Vertical', '9:16'],
+  },
+  {
+    id: 'video-17',
+    slug: 'gym-factory-tour',
+    stat: { value: '2 M', label: 'de vues' },
+    title: 'The Gym Factory - Visite',
+    ariaLabel: 'Visite de la salle The Gym Factory — Supra v3',
+    sector: 'Fitness',
+    tags: ['Contenu', 'Vertical', '9:16'],
   },
 ]
 
@@ -103,7 +180,6 @@ const ALL_REALISATION_VIDEOS = [...LEGACY_REALISATION_VIDEOS, ...NEW_REALISATION
 const HOMEPAGE_PRIORITY_SLUGS = [
   'yasmine-ads',
   'scultbody-video-01',
-  'ehab-ads',
   'africa-beauty-ad',
   'home-tour-bm',
   'legacy-film-immobilier',
@@ -131,5 +207,41 @@ export const VIDEO_PROJECTS = buildOrderedVideoItems(VIDEO_BASE)
 
 /** Homepage — même fichiers MP4 que réalisations (`VIDEO_BASE`) */
 export const HOMEPAGE_VIDEO_ITEMS = VIDEO_PROJECTS
+
+const fisherYates = (items) => {
+  const shuffled = [...items]
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    ;[shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]]
+  }
+  return shuffled
+}
+
+/** Copie mélangée — ordre aléatoire à chaque chargement, sans toucher à la source. */
+export function shuffleVideoItems(items) {
+  return fisherYates(items)
+}
+
+/**
+ * Bandeau de /votre-projet : uniquement les vidéos du dossier `media/videos/Landing page videos`
+ * (sources brutes, non servies), dans l’ordre du dossier. Chaque slug correspond au MP4 optimisé
+ * de `public/media/videos/realisations` encodé depuis cette source.
+ */
+const LANDING_SLUGS = [
+  'faissal-ads-1', // ADS FAISSAL 1.mp4
+  'fayssal-ads-2', // Fayssal.mov
+  'gym-factory-ad', // final version gym without hook.mp4
+  'gym-factory-tour', // gym factory tour full quality.mp4
+  'prime-golf-match-cut', // match cut hook_1.mp4
+  'legacy-film-immobilier', // vid1.mp4
+]
+
+const LANDING_CATALOG = [...ALL_REALISATION_VIDEOS, ...LANDING_REALISATION_VIDEOS]
+
+export const LANDING_VIDEO_ITEMS = LANDING_SLUGS.map((slug) => {
+  const item = LANDING_CATALOG.find((entry) => entry.slug === slug)
+  if (!item) throw new Error(`Missing landing video slug: ${slug}`)
+  return toVideoItem(item)
+})
 
 export const HOMEPAGE_VIDEO_SRCS = HOMEPAGE_VIDEO_ITEMS.map((item) => item.videoSrc)

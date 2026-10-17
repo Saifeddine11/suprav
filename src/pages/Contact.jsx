@@ -15,7 +15,7 @@ const seo = {
     mainEntity: {
       '@type': 'LocalBusiness',
       name: 'Supra v3',
-      telephone: '+212728521896',
+      telephone: '+212786449572',
       email: 'contact@suprav3.com',
       address: {
         '@type': 'PostalAddress',
