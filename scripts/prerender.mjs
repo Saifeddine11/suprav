@@ -192,5 +192,6 @@ main()
   .then(() => process.exit(0))
   .catch((err) => {
     console.error('[prerender] Failed:', err)
+    if (process.env.GITHUB_ACTIONS) console.log(`::error::Pré-rendu impossible : ${String(err?.message || err).split('\n')[0]}`)
     process.exit(1)
   })
