@@ -1,14 +1,5 @@
 /* Page /agence (À propos) — classes ag-, scopées sous .v3. */
 
-/* ---------- photo du studio : dévoilée au défilement, à cheval entre le haut sombre et le manifeste clair ---------- */
-.v3 .ag-shot{background:linear-gradient(180deg,var(--ink) 0 50%,var(--paper) 50% 100%);padding-bottom:clamp(8px,2vw,24px)}
-.v3 .ag-ph{--p:1;position:relative;margin:0;border-radius:28px;overflow:hidden;aspect-ratio:16/8.6;background:#151515;clip-path:inset(calc((1 - var(--p)) * 7%) calc((1 - var(--p)) * 9%) round 28px);will-change:clip-path}
-.v3 .ag-ph img{display:block;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 42%;transform:scale(calc(1.16 - var(--p) * .16));transform-origin:50% 60%}
-.v3 .ag-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,8,8,.55));pointer-events:none}
-.v3 .ag-cap{position:absolute;z-index:1;left:calc(clamp(14px,2.2vw,28px) + (1 - var(--p,1)) * 9%);bottom:calc(clamp(14px,2.2vw,28px) + (1 - var(--p,1)) * 7%);display:inline-flex;align-items:center;gap:10px;padding:9px 15px 9px 11px;border-radius:999px;font-size:13px;color:#fff;background:rgba(12,12,12,.5);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.v3 .ag-cap .pin{width:9px;height:9px;border-radius:50%;background:var(--ac);animation:v3-pdot 2.4s infinite}
-@media (max-width:700px){.v3 .ag-ph{aspect-ratio:4/3.4;border-radius:22px}.v3 .ag-cap{font-size:12px;right:14px}}
-
 /* ---------- manifeste : les mots s'allument au défilement ---------- */
 .v3 .ag-mani{padding-top:clamp(72px,8vw,120px)}
 .v3 .ag-say-w{display:grid;gap:26px;justify-items:start;max-width:1040px}
