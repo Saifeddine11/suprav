@@ -80,7 +80,6 @@ jobs:
           test -f dist/api/candidature.php || (echo "::error::dist/api/candidature.php is missing" && exit 1)
 
       - name: Check FTP secrets
-        if: github.ref == 'refs/heads/main'
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -103,8 +102,32 @@ jobs:
           echo "Port : $FTP_PORT"
 
       - name: Install lftp
-        if: github.ref == 'refs/heads/main'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      # Lecture seule : se connecte, affiche le dossier d'arrivée et le dossier cible, n'envoie rien.
+      - name: Probe FTP
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_REMOTE_PATH: ${{ secrets.FTP_REMOTE_PATH }}
+        run: |
+          set -uo pipefail
+          if [ "$FTP_PORT" = "21" ]; then PROTO="ftp"; else PROTO="sftp"; fi
+          REMOTE_PATH="${FTP_REMOTE_PATH:-public_html}"
+          OPTS="set sftp:auto-confirm yes; set ftp:ssl-allow yes; set ftp:passive-mode yes; set ssl:verify-certificate no; set net:timeout 25; set net:max-retries 1"
+          clean() { sed 's#//[^@/]*@#//#g' | tr '\n' ' ' | cut -c1-700; }
+          root=$(lftp -u "${FTP_USERNAME},${FTP_PASSWORD}" -e "${OPTS}; pwd; cls -1; bye" "${PROTO}://${FTP_HOST}:${FTP_PORT}" 2>&1); rc=$?
+          echo "$root"
+          echo "::notice::${PROTO}, port ${FTP_PORT} — arrivée : $(echo "$root" | clean)"
+          target=$(lftp -u "${FTP_USERNAME},${FTP_PASSWORD}" -e "${OPTS}; cd \"${REMOTE_PATH}\"; pwd; cls -1; bye" "${PROTO}://${FTP_HOST}:${FTP_PORT}" 2>&1); rc2=$?
+          echo "$target"
+          echo "::notice::dossier cible « ${REMOTE_PATH} » : $(echo "$target" | clean)"
+          if [ $rc -ne 0 ] || [ $rc2 -ne 0 ]; then
+            echo "::error::Connexion ou dossier cible impossible (codes ${rc}/${rc2}) : voir les deux notes ci-dessus."
+            exit 1
+          fi
 
       - name: Deploy via FTP / SFTP
         if: github.ref == 'refs/heads/main'
@@ -164,14 +187,17 @@ jobs:
               echo "bye"
             } > "$COMMAND_FILE"
 
-            if lftp -u "${FTP_USERNAME},${FTP_PASSWORD}" "${PROTO}://${FTP_HOST}:${FTP_PORT}" < "$COMMAND_FILE"
+            if lftp -u "${FTP_USERNAME},${FTP_PASSWORD}" "${PROTO}://${FTP_HOST}:${FTP_PORT}" < "$COMMAND_FILE" > lftp.log 2>&1
             then
+              tail -5 lftp.log
               rm -f "$COMMAND_FILE"
               echo "Deployment completed successfully."
               exit 0
             fi
 
             rm -f "$COMMAND_FILE"
+            tail -20 lftp.log
+            echo "::warning::lftp (essai ${attempt}) : $(tail -3 lftp.log | sed 's#//[^@/]*@#//#g' | tr '\n' ' ' | cut -c1-600)"
 
             if [ "$attempt" -lt "$ATTEMPTS" ]; then
               sleep_seconds=$((attempt * 20))
