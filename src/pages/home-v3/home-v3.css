@@ -1,5 +1,3 @@
-@font-face{font-family:"Supra Cut";src:url("/fonts/supra-cut-500.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
-
 /*
  * Page d'accueil v3 — styles scopés sous .v3 (aucune fuite vers le reste du site).
  * Les keyframes sont préfixées v3- pour éviter les collisions avec index.css.
@@ -14,7 +12,7 @@
   --ac:#E8491C; --ac-2:#FF6B3D; --ac-ink:#B5350D; --on-ac:#150A05; --ac-soft:rgba(232,73,28,.16);
   --display:"Montserrat",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Poppins",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --cut:"Supra Cut","Montserrat",ui-sans-serif,system-ui,sans-serif;
+  --serif:"Libre Baskerville",Georgia,"Times New Roman",serif;
   --ease:cubic-bezier(.16,1,.3,1);
   --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
   color-scheme:light;
@@ -58,8 +56,7 @@
 .v3 .mk{position:relative;display:inline-block;white-space:nowrap;z-index:0}
 .v3 .mk::before{content:"";position:absolute;z-index:-1;left:-2%;right:-2%;bottom:.04em;height:.5em;border-radius:6px 10px 8px 12px;background:var(--ac);transform:scaleX(0) skewX(-6deg);transform-origin:left;transition:transform 1s var(--ease) .2s}
 .v3 .mk.on::before{transform:scaleX(1) skewX(-6deg)}
-/* mots clés : « Supra Cut », notre police dérivée de Montserrat (licence OFL, public/fonts/supra-cut-OFL.txt) */
-.v3 .it{font-family:var(--cut);font-style:normal;font-weight:500;letter-spacing:-.035em}
+.v3 .it{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.02em}
 
 /* buttons: arrow circle on the left (Panthera) */
 .v3 .vbtn{--h:54px;display:inline-flex;align-items:center;gap:14px;height:var(--h);padding:0 24px 0 7px;border-radius:999px;font:600 15px/1 var(--body);letter-spacing:-.01em;white-space:nowrap;border:1px solid transparent;transition:transform .5s var(--ease),background .35s,box-shadow .5s var(--ease)}
