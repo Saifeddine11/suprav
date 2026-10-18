@@ -113,7 +113,8 @@ jobs:
           FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_REMOTE_PATH: ${{ secrets.FTP_REMOTE_PATH }}
         run: |
-          set -uo pipefail
+          # +e : on veut lire l'erreur de lftp au lieu de sortir au premier échec (bash -e par défaut)
+          set +e -uo pipefail
           if [ "$FTP_PORT" = "21" ]; then PROTO="ftp"; else PROTO="sftp"; fi
           REMOTE_PATH="${FTP_REMOTE_PATH:-public_html}"
           OPTS="set sftp:auto-confirm yes; set ftp:ssl-allow yes; set ftp:passive-mode yes; set ssl:verify-certificate no; set net:timeout 25; set net:max-retries 1"
