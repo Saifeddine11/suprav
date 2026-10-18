@@ -10,7 +10,7 @@ const LOGO_SRC = '/logo.webp'
  * Header principal — navigation tubelight flottante (desktop) + barre basse (mobile).
  * `mobileNav` : `false` retire la barre basse (landing de campagne, sans menu du site).
  */
-export default function SiteHeader({ scrolled, navOpen, setNavOpen, className = '', mobileNav = true }) {
+export default function SiteHeader({ scrolled, setNavOpen, className = '', mobileNav = true }) {
   const { pathname } = useLocation()
   const [realisationsOpen, setRealisationsOpen] = useState(false)
   const closeTimerRef = useRef(null)

@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 /* Pages de l'agence, puis sections de l'accueil (« /#… » : défilement doux si l'on est déjà sur l'accueil). */
 const LINKS = [
   { to: '/realisations', label: 'Réalisations' },
-  { to: '/#systeme', label: 'Services' },
+  { to: '/services', label: 'Services' },
   { to: '/agence', label: 'Agence' },
   { to: '/#tarifs', label: 'Tarifs' },
   { to: '/blog', label: 'Blog' },

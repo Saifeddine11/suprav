@@ -1,0 +1,52 @@
+/* Page Services v3 (classes sv-) */
+.v3.sv .chead .l{justify-items:start}
+
+/* carte d'appoint du haut de page : les 9 métiers */
+.v3 .sv-aside{padding:22px 22px 18px;display:grid;gap:14px}
+.v3 .sv-aside ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.v3 .sv-aside li{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#E6E1DB;line-height:1.3}
+.v3 .sv-aside .ib{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:rgba(232,73,28,.14);color:#FF8A5C}
+.v3 .sv-aside .ib svg{width:15px;height:15px}
+@media (max-width:420px){.v3 .sv-aside ul{grid-template-columns:1fr}}
+
+/* approche */
+.v3 .sv-intro-g{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:clamp(28px,5vw,80px);align-items:center}
+.v3 .sv-intro-g .chead{margin-bottom:0}
+.v3 .sv-ins{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.v3 .sv-ins li{border-radius:20px;background:var(--mist);border:1px solid var(--line-l);padding:22px;display:grid;gap:8px;align-content:start}
+.v3 .sv-ins b{font:600 12px var(--display);color:var(--ac-ink);letter-spacing:.06em}
+.v3 .sv-ins h3{font:500 20px/1.2 var(--display);letter-spacing:-.03em}
+.v3 .sv-ins p{font-size:14px;color:var(--tx-2);line-height:1.6}
+@media (max-width:900px){.v3 .sv-intro-g{grid-template-columns:1fr}}
+@media (max-width:460px){.v3 .sv-ins{grid-template-columns:1fr}}
+
+/* grille des services */
+.v3 .sv-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.v3 .sv-card{gap:12px}
+.v3 .sv-top{display:flex;align-items:center;justify-content:space-between}
+.v3 .sv-top .ib{margin-bottom:0}
+.v3 .sv-n{font:600 12px var(--display);color:#9a948d;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.v3 .sv-card .chips{margin-top:2px}
+.v3 .sv-links{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line-l)}
+.v3 .sv-links a{display:inline-flex;align-items:center;gap:6px;font:500 13.5px var(--body);color:var(--ac-ink);transition:gap .35s var(--ease)}
+.v3 .sv-links a:hover{gap:10px}
+.v3 .sv-links svg{width:14px;height:14px}
+@media (max-width:900px){.v3 .sv-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.v3 .sv-grid{grid-template-columns:1fr}}
+
+/* méthode en 5 étapes */
+.v3 .sv-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;position:relative}
+.v3 .sv-steps::before{content:"";position:absolute;left:10%;right:10%;top:22px;height:2px;background:linear-gradient(90deg,var(--ac),rgba(232,73,28,.15))}
+.v3 .sv-steps li{position:relative;display:grid;gap:10px;justify-items:center;text-align:center}
+.v3 .sv-dot{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:var(--on-ac);font:600 13px var(--display);box-shadow:0 0 0 8px rgba(232,73,28,.14)}
+.v3 .sv-steps h3{margin-top:8px;font:500 21px/1.2 var(--display);letter-spacing:-.03em}
+.v3 .sv-steps p{font-size:14px;color:var(--fg-2);max-width:24ch;line-height:1.6}
+.v3 .sv-cta{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:clamp(40px,5vw,64px)}
+@media (max-width:900px){
+  .v3 .sv-steps{grid-template-columns:1fr;gap:0}
+  .v3 .sv-steps::before{left:21px;right:auto;top:22px;bottom:22px;width:2px;height:auto;background:linear-gradient(180deg,var(--ac),rgba(232,73,28,.15))}
+  .v3 .sv-steps li{grid-template-columns:44px 1fr;justify-items:start;text-align:left;gap:4px 18px;padding-bottom:26px}
+  .v3 .sv-steps .sv-dot{grid-row:span 2}
+  .v3 .sv-steps h3{margin-top:9px}
+  .v3 .sv-steps p{max-width:none}
+}

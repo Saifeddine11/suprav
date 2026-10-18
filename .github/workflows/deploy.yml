@@ -41,16 +41,18 @@ jobs:
       - name: Verify prerender output
         run: |
           set -euo pipefail
-          for route in services realisations realisations/websites realisations/production-videos contact mentions-legales blog; do
-            test -f "dist/${route}/index.html"
+          check() { test -f "dist/$1/index.html" || { echo "::error::dist/$1/index.html manquant"; exit 1; }; grep -q '<h1' "dist/$1/index.html" || { echo "::error::pas de H1 dans dist/$1"; exit 1; }; }
+          for route in services realisations realisations/websites realisations/production-videos agence contact rejoindre blog mentions-legales; do
+            check "$route"
           done
-          grep -q 'Blog' dist/blog/index.html
-          grep -q 'Les prochains articles arrivent' dist/blog/index.html
-          grep -q 'Nos services' dist/services/index.html
+          for article in src/data/blog/*.js; do
+            slug="$(basename "$article" .js)"
+            case "$slug" in _*) continue ;; esac
+            check "blog/$slug"
+          done
+          grep -q 'rel="canonical" href="https://www.suprav3.com/agence"' dist/agence/index.html
           grep -q 'Réalisations' dist/realisations/index.html
-          grep -q 'Sites web' dist/realisations/websites/index.html
-          grep -q 'Production vidéos' dist/realisations/production-videos/index.html
-          grep -q 'Contact' dist/contact/index.html
+          grep -q 'Rejoignez' dist/rejoindre/index.html
           ! grep -q '15 000 MAD' dist/index.html
           ! grep -q '15 000 MAD' dist/realisations/index.html
 
@@ -60,6 +62,7 @@ jobs:
           test -f dist/index.html || (echo "::error::dist/index.html is missing" && exit 1)
           test -f dist/.htaccess || (echo "::error::dist/.htaccess is missing" && exit 1)
           test -f dist/api/contact.php || (echo "::error::dist/api/contact.php is missing" && exit 1)
+          test -f dist/api/candidature.php || (echo "::error::dist/api/candidature.php is missing" && exit 1)
 
       - name: Check SFTP secrets
         env:

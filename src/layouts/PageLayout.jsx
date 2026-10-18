@@ -4,6 +4,7 @@ import { TopNavbar } from '../TopNavbar.jsx'
 import SiteHeader from '../components/SiteHeader.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import '../seo-pages.css'
+import '../styles/site-chrome.css'
 
 /**
  * Layout partagé pour les pages secondaires (réalisations, contact, légal).
@@ -18,7 +19,7 @@ export default function PageLayout({
   mobileNav = true,
 }) {
   const [scrolled, setScrolled] = useState(false)
-  const [navOpen, setNavOpen] = useState(false)
+  const [, setNavOpen] = useState(false)
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, 'change', (current) => {
@@ -30,7 +31,7 @@ export default function PageLayout({
       {topNavbar ? <TopNavbar /> : null}
 
       <main className={`page-content${topNavbar ? '' : ' page-content--no-badge'}`}>
-        <SiteHeader scrolled={scrolled} navOpen={navOpen} setNavOpen={setNavOpen} mobileNav={mobileNav} />
+        <SiteHeader scrolled={scrolled} setNavOpen={setNavOpen} mobileNav={mobileNav} />
 
         <div className="seo-layout__content">
           {children}
