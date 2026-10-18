@@ -147,6 +147,16 @@ async function main() {
 
     const page = await browser.newPage()
     await page.setViewport({ width: 1280, height: 800 })
+    // Instantané figé : sans animations (prefers-reduced-motion), les pages se rendent vite même sur une
+    // machine lente (runner GitHub sans carte graphique) et le HTML pré-rendu montre tout le contenu.
+    if (process.env.PRERENDER_MOTION !== '1') {
+      await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }])
+    }
+    // Pour reproduire en local une machine lente : PRERENDER_CPU_THROTTLE=8
+    if (process.env.PRERENDER_CPU_THROTTLE) {
+      const cdp = await page.createCDPSession()
+      await cdp.send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.PRERENDER_CPU_THROTTLE) })
+    }
     page.setDefaultNavigationTimeout(NAV_TIMEOUT_MS)
     await page.setRequestInterception(true)
     page.on('request', (request) => {
@@ -164,6 +174,8 @@ async function main() {
         console.log(`  ✓ ${route} → dist/${out}`)
       } catch (err) {
         console.error(`  ✗ ${route}:`, err.message)
+        // Annotation visible dans l'onglet Actions de GitHub
+        if (process.env.GITHUB_ACTIONS) console.log(`::error::Pré-rendu de ${route} impossible : ${err.message}`)
         throw err
       }
     }
@@ -175,7 +187,10 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error('[prerender] Failed:', err)
-  process.exit(1)
-})
+main()
+  // Sortie explicite : le serveur de prévisualisation lancé via npx peut garder le processus en vie.
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error('[prerender] Failed:', err)
+    process.exit(1)
+  })

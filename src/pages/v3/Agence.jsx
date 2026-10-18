@@ -12,7 +12,6 @@ const SEO = {
   title: "L'agence Supra v3 : équipe et studio à Marrakech",
   description: DESC,
   path: '/agence',
-  image: `${SITE}/media/agence/studio-equipe.webp`,
   schema: {
     '@context': 'https://schema.org',
     '@graph': [
@@ -24,7 +23,6 @@ const SEO = {
         description: DESC,
         inLanguage: 'fr',
         about: { '@id': 'https://suprav3.com/#agence' },
-        primaryImageOfPage: { '@type': 'ImageObject', url: `${SITE}/media/agence/studio-equipe.webp`, width: 1600, height: 1326 },
       },
       {
         '@type': 'BreadcrumbList',
@@ -143,22 +141,6 @@ export default function Agence() {
         <Btn to="/contact">Réserver un appel</Btn>
         <Btn to="/realisations" tone="dk">Voir nos réalisations</Btn>
       </PageHero>
-
-      {/* Le studio, en vrai : la photo se dévoile au défilement */}
-      <section className="ag-shot wrap" aria-label="Le studio Supra v3">
-        <div className="c">
-          <figure className="ag-ph" id="agph">
-            <img
-              src="/media/agence/studio-equipe.webp"
-              srcSet="/media/agence/studio-equipe-800.webp 800w, /media/agence/studio-equipe.webp 1600w"
-              sizes="(max-width: 1280px) 100vw, 1240px"
-              width="1600" height="1326" decoding="async"
-              alt="L'équipe Supra v3 au travail autour d'une table, ordinateurs ouverts, dans le studio de Marrakech, devant une baie vitrée donnant sur des palmiers"
-            />
-            <figcaption className="ag-cap"><span className="pin" aria-hidden="true" />Le studio · Business Center Paul, Marrakech</figcaption>
-          </figure>
-        </div>
-      </section>
 
       {/* Manifeste et façon de travailler */}
       <section className="sec light wrap ag-mani" id="manifeste">

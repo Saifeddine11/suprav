@@ -6,6 +6,9 @@
 export default function initVeil(ctx, veil, heroEl) {
   if (!veil || !heroEl) return
   const { rAF, IO, onWin, onDispose, R } = ctx
+  /* Navigateur piloté (pré-rendu, tests automatisés) : dégradé fixe, pas de WebGL.
+     Les runners sans carte graphique peuvent bloquer sur la création du contexte. */
+  if (navigator.webdriver) { veil.classList.add('flat'); return }
   const gl = veil && veil.getContext && (veil.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power' }) || veil.getContext('experimental-webgl'));
   const veilProg = gl && (() => {
     /* y0/sl: position et pente, amp/k: houle, s: vitesse, w: demi-largeur, tw/ts: torsion, a: intensité */

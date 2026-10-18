@@ -1,5 +1,5 @@
 /*
- * Comportements de /agence : photo du studio dévoilée au défilement, manifeste qui s'allume mot à mot,
+ * Comportements de /agence : manifeste qui s'allume mot à mot,
  * repères qui comptent, heures locales des villes, lien liste ↔ carte, halo sous le pointeur des pôles.
  */
 import { startClocks, countUp } from './v3fx.js'
@@ -7,17 +7,13 @@ import { startClocks, countUp } from './v3fx.js'
 export default function initAgence(ctx) {
   const { root, $id, on, IO, rAF, onWin, R, clamp } = ctx
 
-  /* photo + manifeste : une seule mesure par image */
-  const ph = $id('agph'), say = $id('agsay')
+  /* manifeste : les mots s'allument au défilement */
+  const say = $id('agsay')
   const words = say ? [...say.querySelectorAll('.wd')] : []
   let queued = false
   const frame = () => {
     queued = false
     const vh = innerHeight
-    if (ph) {
-      const r = ph.getBoundingClientRect()
-      ph.style.setProperty('--p', R ? 1 : clamp((vh - r.top) / (vh * .7)).toFixed(3))
-    }
     if (words.length) {
       const r = say.getBoundingClientRect()
       const p = R ? 1 : clamp((vh * .82 - r.top) / (r.height + vh * .3))
