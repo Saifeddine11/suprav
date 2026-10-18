@@ -41,6 +41,8 @@ export default function MentionsLegales() {
           <h2>Éditeur du site</h2>
           <p>Le site suprav3.com est édité par <b>Supra v3</b>, agence de communication 360° basée à Marrakech.</p>
           <ul>
+            <li>ICE : 003908571000024</li>
+            <li>RC n° 178175</li>
             <li>Adresse : {ADDRESS}, Maroc</li>
             <li>Téléphone : <a href={TEL}>{PHONE}</a></li>
             <li>E-mail : <a href={`mailto:${MAIL}`}>{MAIL}</a></li>
