@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -32,7 +32,11 @@ jobs:
         run: npm run build:spa
 
       - name: Prerender routes
-        run: npm run prerender 2>&1 | tee prerender.log
+        shell: bash
+        run: |
+          # pipefail : sans lui, un échec du pré-rendu était masqué par « tee »
+          set -o pipefail
+          npm run prerender 2>&1 | tee prerender.log
 
       - name: Show prerender log on failure
         if: failure()
