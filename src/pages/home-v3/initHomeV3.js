@@ -476,6 +476,29 @@ export default function initHomeV3(root) {
   /* barre de contact (core/dock.js) */
   initDock(ctx)
 
+  /* vision : de la vue au rendez-vous, une étape après l'autre (survol d'une carte = cette étape) */
+  const vj = $id('vjpath')
+  if (vj) {
+    const vSteps = [...vj.querySelectorAll('.vj-s')], vNodes = [...vj.querySelectorAll('.vj-track b')], last = vSteps.length - 1
+    let vCur = -1, vTimer = 0, vSeen = false, vHold = false
+    const vSet = (i) => {
+      vCur = i; vj.style.setProperty('--p', String(Math.max(0, i) / last))
+      vSteps.forEach((s, k) => { s.classList.toggle('on', k <= i); s.classList.toggle('cur', k === i) })
+      vNodes.forEach((n, k) => { n.classList.toggle('on', k <= i); n.classList.toggle('cur', k === i) })
+    }
+    const vStop = () => { clearTimeout(vTimer); vTimer = 0 }
+    const vTick = () => { vSet(vCur >= last ? 0 : vCur + 1); vTimer = later(vTick, vCur === last ? 3400 : 2200) }
+    const vGo = () => { if (!vTimer && vSeen && !vHold) vTimer = later(vTick, vCur < 0 ? 200 : 1200) }
+    if (R || !('IntersectionObserver' in window)) vSet(last)
+    else {
+      IO((es) => { vSeen = es[0].isIntersecting; if (vSeen) vGo(); else vStop() }, { threshold: .35 }).observe(vj)
+      vSteps.forEach((s, k) => {
+        ctx.on(s, 'pointerenter', (e) => { if (e.pointerType !== 'mouse') return; vHold = true; vStop(); vSet(k) })
+        ctx.on(s, 'pointerleave', (e) => { if (e.pointerType !== 'mouse') return; vHold = false; vGo() })
+      })
+    }
+  }
+
   /* agent steps */
   const steps = [...root.querySelectorAll('#agent .st')]; let si = 0;
   const tick = () => { steps.forEach((s, i) => s.classList.toggle('on', i <= si)); si = (si + 1) % (steps.length + 2); };
