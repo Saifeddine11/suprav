@@ -63,7 +63,7 @@
 .v3 .ct-map svg{display:block;width:100%;height:auto;overflow:visible}
 .v3 .ct-map .oth{fill:none;stroke:rgba(255,255,255,.07);stroke-width:4.4;stroke-linecap:round}
 .v3 .ct-map .ma{fill:none;stroke:rgba(255,255,255,.3);stroke-width:4.4;stroke-linecap:round}
-.v3 .ct-map .sea{font:italic 400 17px var(--serif);fill:rgba(255,255,255,.3);letter-spacing:.01em}
+.v3 .ct-map .sea{font:500 17px var(--cut);fill:rgba(255,255,255,.3);letter-spacing:.01em}
 .v3 .ct-map .lk{fill:none;stroke:var(--ac);stroke-width:2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0;opacity:.85}
 .v3 .ct-map.pre .lk{stroke-dashoffset:1}
 .v3 .ct-map.pre.in .lk{animation:ct-draw 1.4s var(--ease) forwards;animation-delay:calc(var(--k,0) * 220ms + 500ms)}
