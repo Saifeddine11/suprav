@@ -109,6 +109,38 @@
   color: #111111;
 }
 
+/* Chiffre clé (vues, prospects) en haut à gauche, face au badge de marque. */
+.video-reel-card__stat {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(14, 14, 14, 0.72);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: 0 8px 20px rgba(14, 14, 14, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: rgba(247, 244, 235, 0.88);
+  pointer-events: none;
+}
+
+.video-reel-card__stat strong {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
 .video-reel-card__brand {
   position: absolute;
   top: 14px;

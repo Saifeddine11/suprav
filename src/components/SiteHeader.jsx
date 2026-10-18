@@ -1,14 +1,16 @@
 import { useCallback, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { TUBELIGHT_NAV_ICONS, TubelightMobileNav, TubelightNavItem } from './TubelightNav.jsx'
+import { trackEvent } from '../utils/analytics.js'
 import '../styles/tubelight-nav.css'
 
 const LOGO_SRC = '/logo.webp'
 
 /**
  * Header principal — navigation tubelight flottante (desktop) + barre basse (mobile).
+ * `mobileNav` : `false` retire la barre basse (landing de campagne, sans menu du site).
  */
-export default function SiteHeader({ scrolled, navOpen, setNavOpen, className = '' }) {
+export default function SiteHeader({ scrolled, setNavOpen, className = '', mobileNav = true }) {
   const { pathname } = useLocation()
   const [realisationsOpen, setRealisationsOpen] = useState(false)
   const closeTimerRef = useRef(null)
@@ -69,7 +71,12 @@ export default function SiteHeader({ scrolled, navOpen, setNavOpen, className = 
             <img src={LOGO_SRC} alt="Supra v3" width={120} height={36} fetchPriority="high" decoding="async" />
           </Link>
 
-          <Link to="/contact" className="nav__audit-mobile" aria-label="Demander un audit gratuit">
+          <Link
+            to="/contact"
+            className="nav__audit-mobile"
+            aria-label="Demander un audit gratuit"
+            onClick={() => trackEvent('cta_click', { cta_place: 'header', cta_label: 'Audit gratuit' })}
+          >
             Audit gratuit
           </Link>
 
@@ -159,13 +166,17 @@ export default function SiteHeader({ scrolled, navOpen, setNavOpen, className = 
             </div>
           </div>
 
-          <Link to="/contact" className="btn btn--primary nav__cta">
+          <Link
+            to="/contact"
+            className="btn btn--primary nav__cta"
+            onClick={() => trackEvent('cta_click', { cta_place: 'header', cta_label: 'Parlons de votre projet' })}
+          >
             Parlons de votre projet →
           </Link>
         </nav>
       </div>
 
-      <TubelightMobileNav items={mobileItems} onNavigate={closeMenus} />
+      {mobileNav ? <TubelightMobileNav items={mobileItems} onNavigate={closeMenus} /> : null}
     </header>
   )
 }

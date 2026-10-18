@@ -1,0 +1,9 @@
+/* Mentions légales v3 (classes lg-) */
+.v3 .lg-body{max-width:760px;display:grid;gap:14px;font-size:16px;line-height:1.75;color:#2b2723}
+.v3 .lg-body h2{margin-top:26px;font:500 clamp(24px,2.4vw,30px)/1.2 var(--display);letter-spacing:-.035em;color:var(--tx)}
+.v3 .lg-body h2:first-of-type{margin-top:8px}
+.v3 .lg-body ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.v3 .lg-body li::marker{color:var(--ac)}
+.v3 .lg-body a{color:var(--ac-ink);text-decoration:underline;text-decoration-color:rgba(232,73,28,.4);text-underline-offset:3px}
+.v3 .lg-body a:hover{text-decoration-color:currentColor}
+.v3 .lg-up{font-size:13px;color:var(--tx-2)}

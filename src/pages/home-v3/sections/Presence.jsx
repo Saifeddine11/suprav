@@ -1,0 +1,17 @@
+export default function Presence() {
+  return (
+    <section className="sec light wrap" id="presence" style={{ paddingTop: "0" }}>
+      <div className="c">
+        <div className="gpanel" data-r>
+          <div className="gl">
+            <span className="nb"><b>Présence</b>Où on travaille</span>
+            <h2 className="h2">Basés au Maroc, présents à Dubaï et à Paris. <span className="it">Et à distance, jusqu'à Miami.</span></h2>
+            <p className="lede">Le studio est à Marrakech. On accompagne des marques à Casablanca, Rabat, Dubaï et Paris, et on gère à distance les comptes Meta Ads de clients aux États-Unis.</p>
+          </div>
+          <ul className="cl2" id="cl2"><li data-c={0} tabIndex={0}><span className="pin" /><span className="nm"><b>Marrakech</b><small>Maroc</small><span className="tg s">Studio</span></span><span className="tm" data-tz="Africa/Casablanca">--:--</span></li><li data-c={1} tabIndex={0}><span className="pin" /><span className="nm"><b>Casablanca</b><small>Maroc</small></span><span className="tm" data-tz="Africa/Casablanca">--:--</span></li><li data-c={2} tabIndex={0}><span className="pin" /><span className="nm"><b>Rabat</b><small>Maroc</small></span><span className="tm" data-tz="Africa/Casablanca">--:--</span></li><li data-c={3} tabIndex={0}><span className="pin" /><span className="nm"><b>Dubaï</b><small>Émirats arabes unis</small></span><span className="tm" data-tz="Asia/Dubai">--:--</span></li><li data-c={4} tabIndex={0}><span className="pin" /><span className="nm"><b>Paris</b><small>France</small></span><span className="tm" data-tz="Europe/Paris">--:--</span></li><li data-c={5} tabIndex={0}><span className="pin rm" /><span className="nm"><b>Miami</b><small>États-Unis</small><span className="tg"><span className="ap ap-meta" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z" /></svg></span>À distance · Meta Ads</span></span><span className="tm" data-tz="America/New_York">--:--</span></li></ul>
+          <div className="gr"><canvas id="globe" role="img" aria-label="Globe terrestre avec Marrakech, Casablanca, Rabat, Dubaï, Paris et Miami" /><span className="ghint">Faites tourner la Terre</span></div>
+        </div>
+      </div>
+    </section>
+  )
+}

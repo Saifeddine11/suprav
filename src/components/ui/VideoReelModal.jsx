@@ -44,12 +44,9 @@ export default function VideoReelModal({ item, items, activeIndex, onNext, onPre
     return matchedIndex >= 0 ? matchedIndex : 0
   }, [activeIndex, item, modalItems])
   const activeItem = safeIndex >= 0 ? modalItems[safeIndex] : item
-  if (!activeItem) return null
 
   const canNavigate = modalItems.length > 1
-  const titleId = `video-reel-modal-title-${activeItem.id}`
-  const displayTitle = videoDisplayTitle(activeItem)
-  const videoSrc = activeItem.videoSrc || activeItem.video
+  const videoSrc = activeItem ? activeItem.videoSrc || activeItem.video : undefined
 
   const handlePrev = useCallback((event) => {
     event.stopPropagation()
@@ -96,6 +93,11 @@ export default function VideoReelModal({ item, items, activeIndex, onNext, onPre
       el.currentTime = 0
     }
   }, [activeItem, videoSrc])
+
+  /* Les hooks ci-dessus sont toujours appelés : le retour anticipé vient après (règle des hooks). */
+  if (!activeItem) return null
+  const titleId = `video-reel-modal-title-${activeItem.id}`
+  const displayTitle = videoDisplayTitle(activeItem)
 
   const handleBackdropClick = (event) => {
     if (event.target === event.currentTarget) onClose()

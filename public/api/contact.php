@@ -62,7 +62,7 @@ $headers = [
     'MIME-Version: 1.0',
     'Content-Type: text/html; charset=UTF-8',
     'From: Supra v <' . mail_safe_header($config['mail_from']) . '>',
-    'Reply-To: ' . mail_safe_header($values['email']),
+    ...($values['email'] !== '' ? ['Reply-To: ' . mail_safe_header($values['email'])] : []),
     'X-Mailer: PHP/' . phpversion(),
 ];
 
@@ -119,6 +119,13 @@ function build_html_contact_email(array $values, string $ip): string
     $mailtoHref = html_escape('mailto:' . $values['email'] . '?subject=' . rawurlencode('Re: Votre demande — Supra V3'));
     $whatsappHref = html_escape('https://wa.me/' . phone_digits_with_country($values['phone']));
     $telHref = html_escape('tel:' . phone_digits_with_country($values['phone']));
+    $hasEmail = $values['email'] !== '';
+    $emailLine = $hasEmail
+        ? '<a href="mailto:' . $email . '" style="color:#E8491C;text-decoration:none;">' . $email . '</a>'
+        : '<span style="color:rgba(255,255,255,0.45);">Non renseigné</span>';
+    $replyByEmailCell = $hasEmail
+        ? '<td style="padding-right:10px;"><a href="' . $mailtoHref . '" style="display:inline-block;background:#E8491C;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:13px 22px;border-radius:10px;">Répondre par email</a></td>'
+        : '';
 
     return <<<HTML
 <!DOCTYPE html>
@@ -180,7 +187,7 @@ function build_html_contact_email(array $values, string $ip): string
                 <tr>
                   <td colspan="2" style="padding:16px 18px;">
                     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Email</div>
-                    <div style="font-size:14px;font-weight:600;line-height:1.45;"><a href="mailto:{$email}" style="color:#E8491C;text-decoration:none;">{$email}</a></div>
+                    <div style="font-size:14px;font-weight:600;line-height:1.45;">{$emailLine}</div>
                   </td>
                 </tr>
               </table>
@@ -200,9 +207,7 @@ function build_html_contact_email(array $values, string $ip): string
             <td style="padding:0 36px 28px;">
               <table role="presentation" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td style="padding-right:10px;">
-                    <a href="{$mailtoHref}" style="display:inline-block;background:#E8491C;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:13px 22px;border-radius:10px;">Répondre par email</a>
-                  </td>
+                  {$replyByEmailCell}
                   <td>
                     <a href="{$whatsappHref}" style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.78);text-decoration:none;font-size:13px;font-weight:700;padding:12px 22px;border-radius:10px;">WhatsApp</a>
                   </td>
@@ -478,9 +483,7 @@ function validate_contact(array $values, int $startedAt, string $turnstileToken,
         $errors['name'] = 'Veuillez indiquer votre nom complet.';
     }
 
-    if ($email === '') {
-        $errors['email'] = 'Merci de saisir votre adresse email.';
-    } elseif (strlen($email) > 120 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if ($email !== '' && (strlen($email) > 120 || !filter_var($email, FILTER_VALIDATE_EMAIL))) {
         $errors['email'] = 'Merci de saisir une adresse email valide.';
     }
 

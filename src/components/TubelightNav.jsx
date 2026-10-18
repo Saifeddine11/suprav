@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react-hooks/set-state-in-effect, react-hooks/preserve-manual-memoization, react-refresh/only-export-components -- composant historique, utilisé seulement par la landing /votre-projet */
 import { motion } from 'motion/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'

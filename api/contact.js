@@ -86,7 +86,7 @@ export default async function handler(req, res) {
 
   const subject = `Nouveau projet Supra v - ${safeHeader(values.name)}`
   const html = buildHtmlEmail(values, ip)
-  const sent = await sendSmtpMail(cfg, subject, html, safeHeader(values.email))
+  const sent = await sendSmtpMail(cfg, subject, html, values.email ? safeHeader(values.email) : '')
 
   if (!sent) {
     respond(res, 500, { ok: false, message: 'Votre message n’a pas pu être envoyé pour le moment. Merci de réessayer dans quelques instants.' })
@@ -163,8 +163,7 @@ function validateContact(values) {
     || /\d/.test(values.name)
   ) errors.name = 'Veuillez indiquer votre nom complet.'
 
-  if (!email) errors.email = 'Merci de saisir votre adresse email.'
-  else if (email.length > 120 || !EMAIL_PATTERN.test(email)) errors.email = 'Merci de saisir une adresse email valide.'
+  if (email && (email.length > 120 || !EMAIL_PATTERN.test(email))) errors.email = 'Merci de saisir une adresse email valide.'
 
   if (!values.phone) errors.phone = 'Merci d’indiquer votre numéro de téléphone.'
   else if (!isLikelyPhone(values.phone)) errors.phone = 'Merci d’indiquer un numéro de téléphone valide.'
@@ -215,7 +214,7 @@ async function verifyTurnstile(secret, token, ip) {
 
 function buildHtmlEmail(values, ip) {
   const name = escapeHtml(values.name)
-  const email = escapeHtml(values.email)
+  const email = values.email ? escapeHtml(values.email) : 'Non renseigné'
   const phone = escapeHtml(values.phone)
   const message = escapeHtml(values.message).replace(/\n/g, '<br>')
   const date = escapeHtml(values.date)
@@ -234,9 +233,9 @@ function buildHtmlEmail(values, ip) {
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td style="font-size:22px;font-weight:800;color:#ffffff;">SUPRA<span style="color:#E8491C;">V3</span></td><td align="right"><span style="display:inline-block;background:rgba(232,73,28,0.12);border:1px solid rgba(232,73,28,0.28);color:#E8491C;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 12px;border-radius:999px;">● Nouveau lead</span></td></tr></table>
 <h1 style="margin:22px 0 0;font-size:20px;line-height:1.3;font-weight:700;color:#ffffff;">Nouvelle demande de projet</h1><p style="margin:5px 0 0;font-size:13px;line-height:1.5;color:rgba(255,255,255,0.45);">Reçue le ${receivedAt}</p></td></tr>
 <tr><td style="padding:24px 36px 0;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:rgba(232,73,28,0.08);border:1px solid rgba(232,73,28,0.16);border-radius:10px;"><tr><td width="54" style="padding:14px 0 14px 18px;vertical-align:middle;"><div style="width:42px;height:36px;line-height:36px;text-align:center;background:rgba(232,73,28,0.15);border-radius:8px;color:#E8491C;font-size:11px;font-weight:800;letter-spacing:0.8px;">RDV</div></td><td style="padding:14px 18px 14px 12px;"><div style="font-size:14px;font-weight:700;color:#ffffff;line-height:1.4;">${date}</div><div style="font-size:12px;color:rgba(255,255,255,0.48);line-height:1.5;">Créneau souhaité · ${time}</div></td></tr></table></td></tr>
-<tr><td style="padding:28px 36px 20px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;"><tr><td width="50%" style="padding:16px 18px;border-right:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Nom</div><div style="font-size:14px;font-weight:600;color:#ffffff;line-height:1.45;">${name}</div></td><td width="50%" style="padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Téléphone</div><div style="font-size:14px;font-weight:600;line-height:1.45;"><a href="${telHref}" style="color:#E8491C;text-decoration:none;">${phone}</a></div></td></tr><tr><td colspan="2" style="padding:16px 18px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Email</div><div style="font-size:14px;font-weight:600;line-height:1.45;"><a href="mailto:${email}" style="color:#E8491C;text-decoration:none;">${email}</a></div></td></tr></table>
+<tr><td style="padding:28px 36px 20px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;"><tr><td width="50%" style="padding:16px 18px;border-right:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Nom</div><div style="font-size:14px;font-weight:600;color:#ffffff;line-height:1.45;">${name}</div></td><td width="50%" style="padding:16px 18px;border-bottom:1px solid rgba(255,255,255,0.06);"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Téléphone</div><div style="font-size:14px;font-weight:600;line-height:1.45;"><a href="${telHref}" style="color:#E8491C;text-decoration:none;">${phone}</a></div></td></tr><tr><td colspan="2" style="padding:16px 18px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:6px;">Email</div><div style="font-size:14px;font-weight:600;line-height:1.45;">${values.email ? `<a href="mailto:${email}" style="color:#E8491C;text-decoration:none;">${email}</a>` : `<span style="color:rgba(255,255,255,0.45);">${email}</span>`}</div></td></tr></table>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;"><tr><td style="padding:20px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.35);margin-bottom:10px;">Message</div><div style="font-size:15px;line-height:1.65;color:rgba(255,255,255,0.82);">${message}</div></td></tr></table></td></tr>
-<tr><td style="padding:0 36px 28px;"><table role="presentation" cellspacing="0" cellpadding="0"><tr><td style="padding-right:10px;"><a href="${mailtoHref}" style="display:inline-block;background:#E8491C;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:13px 22px;border-radius:10px;">Répondre par email</a></td><td><a href="${whatsappHref}" style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.78);text-decoration:none;font-size:13px;font-weight:700;padding:12px 22px;border-radius:10px;">WhatsApp</a></td></tr></table></td></tr>
+<tr><td style="padding:0 36px 28px;"><table role="presentation" cellspacing="0" cellpadding="0"><tr>${values.email ? `<td style="padding-right:10px;"><a href="${mailtoHref}" style="display:inline-block;background:#E8491C;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:13px 22px;border-radius:10px;">Répondre par email</a></td>` : ''}<td><a href="${whatsappHref}" style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.78);text-decoration:none;font-size:13px;font-weight:700;padding:12px 22px;border-radius:10px;">WhatsApp</a></td></tr></table></td></tr>
 <tr><td style="padding:20px 36px;border-top:1px solid rgba(255,255,255,0.06);"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td style="font-size:11px;color:rgba(255,255,255,0.3);">Formulaire · suprav3.com</td><td align="right" style="font-size:11px;color:rgba(255,255,255,0.25);">IP <span style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.05);padding:3px 6px;border-radius:4px;color:rgba(255,255,255,0.4);">${ipText}</span></td></tr></table></td></tr>
 </table></td></tr></table></body></html>`
 }
@@ -245,7 +244,7 @@ async function sendSmtpMail(cfg, subject, html, replyTo) {
   const headers = [
     `From: Supra v <${safeHeader(cfg.mailFrom)}>`,
     `To: ${safeHeader(cfg.mailTo)}`,
-    `Reply-To: ${replyTo}`,
+    ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
     `Subject: ${safeHeader(subject)}`,
     'MIME-Version: 1.0',
     'Content-Type: text/html; charset=UTF-8',

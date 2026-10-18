@@ -20,11 +20,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        // React d'abord (sinon il finit dans le bloc « motion » et ce bloc se charge sur toutes les pages) ;
+        // motion n'est utilisé que par la landing /votre-projet : il reste dans ses blocs à la demande.
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined
-          if (id.includes('motion') || id.includes('framer-motion')) return 'motion'
+          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react-vendor'
           if (id.includes('react-router')) return 'router'
-          if (id.includes('react-dom') || id.includes('/react/')) return 'react-vendor'
           return undefined
         },
       },
