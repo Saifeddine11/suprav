@@ -27,25 +27,31 @@ const ANALYTICS_HOSTS = ['googletagmanager.com', 'google-analytics.com', 'facebo
 // Balise insérée dans le DOM par le snippet du pixel : retirée de l’instantané, le snippet la recrée au chargement.
 const INJECTED_PIXEL_SCRIPT = /<script[^>]*src="https:\/\/connect\.facebook\.net\/[^"]*fbevents\.js"[^>]*><\/script>/g
 
+// Prêt dès que le serveur répond. La sortie de vite n'est pas fiable sur CI : avec CI=true elle est
+// colorée (codes ANSI au milieu de « Local: » et du port), ce qui bloquait le pré-rendu sur GitHub Actions.
 function waitForPreviewReady(proc, timeoutMs = 60000) {
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('vite preview startup timeout')), timeoutMs)
+    let done = false
+    const finish = (err) => {
+      if (done) return
+      done = true
+      clearTimeout(timer)
+      clearInterval(poll)
+      if (err) reject(err)
+      else resolve()
+    }
+    const timer = setTimeout(() => finish(new Error('vite preview startup timeout')), timeoutMs)
+    const poll = setInterval(() => {
+      fetch(`${PREVIEW_URL}/`).then((r) => { if (r.ok) finish() }).catch(() => {})
+    }, 300)
     const onData = (chunk) => {
-      const text = chunk.toString()
-      if (text.includes('Local:') || text.includes(`127.0.0.1:${PREVIEW_PORT}`)) {
-        clearTimeout(timer)
-        proc.stdout?.off('data', onData)
-        proc.stderr?.off('data', onData)
-        resolve()
-      }
+      const text = chunk.toString().replace(/\x1b\[[0-9;]*m/g, '')
+      if (text.includes('Local:') || text.includes(`127.0.0.1:${PREVIEW_PORT}`)) finish()
     }
     proc.stdout?.on('data', onData)
     proc.stderr?.on('data', onData)
     proc.on('exit', (code) => {
-      if (code !== null && code !== 0) {
-        clearTimeout(timer)
-        reject(new Error(`vite preview exited with code ${code}`))
-      }
+      if (code !== null && code !== 0) finish(new Error(`vite preview exited with code ${code}`))
     })
   })
 }
@@ -55,7 +61,7 @@ function startPreview() {
     const proc = spawn(
       'npx',
       ['vite', 'preview', '--host', '127.0.0.1', '--port', String(PREVIEW_PORT), '--strictPort'],
-      { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NODE_ENV: 'production' } },
+      { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, NODE_ENV: 'production', NO_COLOR: '1' } },
     )
     waitForPreviewReady(proc)
       .then(() => resolve(proc))
