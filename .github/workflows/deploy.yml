@@ -1,18 +1,21 @@
 name: Deploy to Hostinger via FTP
 
+# main : construit, vérifie et envoie sur Hostinger.
+# refonte-accueil-v3 : construit et vérifie seulement (aucun envoi), pour tester avant de fusionner.
 on:
   push:
     branches:
       - main
+      - refonte-accueil-v3
   workflow_dispatch:
 
 concurrency:
-  group: hostinger-production
+  group: hostinger-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build-and-deploy:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
@@ -26,6 +29,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        env:
+          # Le pré-rendu utilise le Chrome déjà installé sur le runner
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
         run: npm install
 
       - name: Build SPA
@@ -36,11 +42,16 @@ jobs:
         run: |
           # pipefail : sans lui, un échec du pré-rendu était masqué par « tee »
           set -o pipefail
+          export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          echo "Chrome : ${PUPPETEER_EXECUTABLE_PATH:-celui de puppeteer}"
           npm run prerender 2>&1 | tee prerender.log
 
       - name: Show prerender log on failure
         if: failure()
-        run: tail -80 prerender.log || true
+        run: |
+          tail -80 prerender.log || true
+          # Les dernières lignes en annotations : lisibles depuis le résumé de l'exécution
+          tail -8 prerender.log 2>/dev/null | sed 's/^/::error::/' || true
 
       - name: Verify prerender output
         run: |
@@ -69,6 +80,7 @@ jobs:
           test -f dist/api/candidature.php || (echo "::error::dist/api/candidature.php is missing" && exit 1)
 
       - name: Check FTP secrets
+        if: github.ref == 'refs/heads/main'
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -91,9 +103,11 @@ jobs:
           echo "Port : $FTP_PORT"
 
       - name: Install lftp
-        run: brew install lftp
+        if: github.ref == 'refs/heads/main'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
 
       - name: Deploy via FTP / SFTP
+        if: github.ref == 'refs/heads/main'
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -128,7 +142,7 @@ jobs:
               echo "lcd dist"
               echo "cd \"${REMOTE_PATH}\""
 
-              find dist -type d -mindepth 1 | sort | while IFS= read -r directory; do
+              find dist -mindepth 1 -type d | sort | while IFS= read -r directory; do
                 remote_directory="${directory#dist/}"
                 printf 'mkdir -p "./%s"\n' "$remote_directory"
               done
