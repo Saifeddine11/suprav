@@ -1,4 +1,4 @@
-name: Deploy to Hostinger via SFTP
+name: Deploy to Hostinger via FTP
 
 on:
   push:
@@ -68,54 +68,59 @@ jobs:
           test -f dist/api/contact.php || (echo "::error::dist/api/contact.php is missing" && exit 1)
           test -f dist/api/candidature.php || (echo "::error::dist/api/candidature.php is missing" && exit 1)
 
-      - name: Check SFTP secrets
+      - name: Check FTP secrets
         env:
-          SFTP_HOST: ${{ secrets.SFTP_HOST }}
-          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
         run: |
           set -euo pipefail
 
-          test -n "$SFTP_HOST" || (echo "::error::SFTP_HOST secret is missing" && exit 1)
-          test -n "$SFTP_USERNAME" || (echo "::error::SFTP_USERNAME secret is missing" && exit 1)
-          test -n "$SFTP_PASSWORD" || (echo "::error::SFTP_PASSWORD secret is missing" && exit 1)
-          test -n "$SFTP_PORT" || (echo "::error::SFTP_PORT secret is missing. Use 22 for SFTP." && exit 1)
+          test -n "$FTP_HOST" || (echo "::error::Secret FTP_HOST manquant" && exit 1)
+          test -n "$FTP_USERNAME" || (echo "::error::Secret FTP_USERNAME manquant" && exit 1)
+          test -n "$FTP_PASSWORD" || (echo "::error::Secret FTP_PASSWORD manquant" && exit 1)
+          test -n "$FTP_PORT" || (echo "::error::Secret FTP_PORT manquant (21 pour FTP, 65002 pour SFTP chez Hostinger)" && exit 1)
 
-          if ! [[ "$SFTP_PORT" =~ ^[0-9]+$ ]]; then
-            echo "::error::SFTP_PORT must be a number. Use 22 for SFTP."
+          if ! [[ "$FTP_PORT" =~ ^[0-9]+$ ]]; then
+            echo "::error::FTP_PORT doit être un nombre (21 pour FTP, 65002 pour SFTP chez Hostinger)."
             exit 1
           fi
 
-          echo "SFTP host: $SFTP_HOST"
-          echo "SFTP port: $SFTP_PORT"
+          echo "Hôte : $FTP_HOST"
+          echo "Port : $FTP_PORT"
 
       - name: Install lftp
         run: brew install lftp
 
-      - name: Deploy via SFTP
+      - name: Deploy via FTP / SFTP
         env:
-          SFTP_HOST: ${{ secrets.SFTP_HOST }}
-          SFTP_USERNAME: ${{ secrets.SFTP_USERNAME }}
-          SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
-          SFTP_PORT: ${{ secrets.SFTP_PORT }}
-          SFTP_REMOTE_PATH: ${{ secrets.SFTP_REMOTE_PATH }}
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_REMOTE_PATH: ${{ secrets.FTP_REMOTE_PATH }}
         run: |
           set -euo pipefail
 
           ATTEMPTS=3
-          REMOTE_PATH="${SFTP_REMOTE_PATH:-public_html}"
+          REMOTE_PATH="${FTP_REMOTE_PATH:-public_html}"
+          # Port 21 : FTP (chiffré en TLS quand le serveur le propose) ; tout autre port : SFTP
+          if [ "$FTP_PORT" = "21" ]; then PROTO="ftp"; else PROTO="sftp"; fi
 
-          echo "Deploying the contents of dist/ to ${REMOTE_PATH} on ${SFTP_HOST}:${SFTP_PORT}"
+          echo "Deploying the contents of dist/ to ${REMOTE_PATH} on ${PROTO}://${FTP_HOST}:${FTP_PORT}"
           echo "Remote config file api/contact-config.php will be preserved."
 
           for attempt in $(seq 1 "$ATTEMPTS"); do
-            echo "SFTP deployment attempt ${attempt}/${ATTEMPTS}"
+            echo "Deployment attempt ${attempt}/${ATTEMPTS} (${PROTO})"
 
             COMMAND_FILE="$(mktemp)"
             {
               echo "set cmd:fail-exit yes"
               echo "set sftp:auto-confirm yes"
+              echo "set ftp:ssl-allow yes"
+              echo "set ftp:passive-mode yes"
+              echo "set ssl:verify-certificate no"
               echo "set net:timeout 45"
               echo "set net:max-retries 3"
               echo "set net:reconnect-interval-base 5"
@@ -145,7 +150,7 @@ jobs:
               echo "bye"
             } > "$COMMAND_FILE"
 
-            if lftp -u "${SFTP_USERNAME},${SFTP_PASSWORD}" "sftp://${SFTP_HOST}:${SFTP_PORT}" < "$COMMAND_FILE"
+            if lftp -u "${FTP_USERNAME},${FTP_PASSWORD}" "${PROTO}://${FTP_HOST}:${FTP_PORT}" < "$COMMAND_FILE"
             then
               rm -f "$COMMAND_FILE"
               echo "Deployment completed successfully."
@@ -156,10 +161,10 @@ jobs:
 
             if [ "$attempt" -lt "$ATTEMPTS" ]; then
               sleep_seconds=$((attempt * 20))
-              echo "::warning::SFTP deployment failed. Retrying in ${sleep_seconds}s..."
+              echo "::warning::Deployment failed. Retrying in ${sleep_seconds}s..."
               sleep "$sleep_seconds"
             fi
           done
 
-          echo "::error::SFTP deployment failed after ${ATTEMPTS} attempts. Check SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD, SFTP_REMOTE_PATH and Hostinger SFTP access."
+          echo "::error::Envoi impossible après ${ATTEMPTS} essais (${PROTO}). Vérifiez FTP_HOST, FTP_PORT, FTP_USERNAME, FTP_PASSWORD, FTP_REMOTE_PATH et l'accès FTP/SSH dans hPanel."
           exit 1
